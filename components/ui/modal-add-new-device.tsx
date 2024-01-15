@@ -37,7 +37,7 @@ export function AddNewDeviceDialog({ setIsOpen, onClose }: AddNewDeviceDialogPro
                 {
                     withCredentials: true,
                 });
-            console.log("response", response);
+            setIsOpen(false);
         } catch (error) {
             console.error("Error", error);
             setIsOpen(false);
@@ -63,4 +63,3 @@ export function AddNewDeviceDialog({ setIsOpen, onClose }: AddNewDeviceDialogPro
         </Dialog>
     )
 }
-
