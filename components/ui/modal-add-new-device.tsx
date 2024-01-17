@@ -32,8 +32,9 @@ export function AddNewDeviceDialog({ setIsOpen, onClose }: AddNewDeviceDialogPro
 
     const handleNewSignerRequest = async () => {
         try {
+            console.log(user!.address);
             const addSignerRequest = await initNewSignerRequest(user!.address);
-            const response = await axios.post('http://localhost:3000/api/new-signer-request', addSignerRequest,
+            const response = await axios.post('https://api.develop.cosmikbattle.com/api/new-signer-request', addSignerRequest,
                 {
                     withCredentials: true,
                 });

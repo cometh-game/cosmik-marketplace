@@ -83,7 +83,9 @@ export function Web3OnboardProvider({
       apiKey: process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
     })
 
+    console.log("walletAddress", walletAddress);
     await wallet.connect(walletAddress);
+    console.log("wallet connected", walletAddress);
   }
 
   const initOnboard = useCallback((options: SetOnboardOptions) => {
