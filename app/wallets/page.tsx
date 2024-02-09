@@ -52,7 +52,8 @@ export default function WalletsPage() {
     const wallets = await onboard?.connectWallet()
 
     console.log("wallets", wallets)
-    const walletAddress = wallets?.[0].accounts[0]?.address
+    const walletAddress = ethers.utils.getAddress(wallets?.[0].accounts[0]?.address)
+
     console.log("walletAddress", walletAddress)
     // const nonceResponse = await fetch('https://api.develop.cosmikbattle.com/api/auth/init');
     // const { nonce } = await nonceResponse.json();
@@ -66,7 +67,7 @@ export default function WalletsPage() {
 
     try {
       nonce = await cosmikClient.post("/auth/init", {
-        walletAddress,
+        address: walletAddress,
       })
       console.log("nonce", nonce);
     } catch (error) {
@@ -78,11 +79,12 @@ export default function WalletsPage() {
 
     const message = new SiweMessage({
       domain,
-      address: "0xaCAEeda102b64678F6B9cc06FBE7B8E813acdb44",
+      address: walletAddress,
       statement: 'Add external wallet to link existing assets to your cosmik Battle Account',
       uri: origin,
       version: '1',
-      chainId: Number(numberToHex(env.NEXT_PUBLIC_NETWORK_ID) as SupportedNetworks)
+      chainId: Number(numberToHex(env.NEXT_PUBLIC_NETWORK_ID) as SupportedNetworks),
+      nonce: nonce?.data.nonce,
     });
     console.log("message", message)
     // const signer = _getSigner();
