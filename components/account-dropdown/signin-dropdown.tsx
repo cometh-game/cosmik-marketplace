@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { AuthorizationProcess } from "@/components/connect-actions/buttons/authorization-process"
 import { SignInForm } from "@/components/signin/signin-form"
+import { toast } from "../ui/toast/use-toast"
 
 export type SigninDropdownProps = {
   disabled: boolean
@@ -72,7 +73,7 @@ export function SigninDropdown({
         })
         await connectWallet({ isComethWallet: true })
         setIsconnected(true)
-      } catch (error) {
+      } catch (error: any) {
         // If an error occurs, likely due to a first-time connection, display the authorization modal
         setDisplaySigninDialog(false)
         setDisplayAutorizationProcess(true)

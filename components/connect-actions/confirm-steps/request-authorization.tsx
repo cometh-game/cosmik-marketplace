@@ -25,11 +25,11 @@ export const RequestAuthorizationStep: React.FC<
       if (response.data.success) {
         onValid()
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error sending the authorization request", error)
       toast({
         title: "Error",
-        description: "There was an error sending the authorization request.",
+        description: error.message || "There was an error sending the authorization request.",
         variant: "destructive",
       })
     }

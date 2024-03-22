@@ -40,6 +40,7 @@ import walletConnectModule from '@web3-onboard/walletconnect'
 import { env } from "@/config/env"
 import networks from "@/config/networks"
 import { COMETH_CONNECT_STORAGE_LABEL } from "@/config/site"
+import { isAddress } from "ethers/lib/utils"
 
 // const walletConnect = walletConnectModule({
 //   version: 2,
@@ -125,7 +126,9 @@ export function Web3OnboardProvider({
       apiKey: process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
       baseUrl: process.env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL!,
     })
-
+    if (isAddress(walletAddress)) {
+      throw new Error("Invalid wallet address.")
+    }
     return await connectAuthAdaptor.initNewSignerRequest(walletAddress)
   }
 
@@ -140,7 +143,9 @@ export function Web3OnboardProvider({
       authAdapter: connectAuthAdaptor,
       apiKey: process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
     })
-
+    if (isAddress(walletAddress)) {
+      throw new Error("Invalid wallet address.")
+    }
     await wallet.connect(walletAddress)
   }
 
