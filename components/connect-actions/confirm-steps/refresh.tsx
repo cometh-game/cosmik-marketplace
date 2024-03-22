@@ -44,6 +44,7 @@ export const RefreshStep: React.FC<RefreshStepProps> = ({
           walletAddress: comethWalletAddressInStorage!,
         })
         await connectWallet({ isComethWallet: true })
+        localStorage.setItem("currentWalletAddress", comethWalletAddressInStorage!)
         setIsconnected(true)
         onValid()
       } catch (error) {

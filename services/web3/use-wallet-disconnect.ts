@@ -12,10 +12,10 @@ export function useWalletDisconnect() {
   const disconnectFunction = useCallback(
     async (wallet: DisconnectOptions) => {
       // localStorage.removeItem("selectedWallet")
-      setIsconnected(false)
+      // setIsconnected(false)
       return await onboard?.disconnectWallet(wallet)
     },
-    [onboard, setIsconnected]
+    [onboard]
   )
 
   return { disconnect: disconnectFunction }

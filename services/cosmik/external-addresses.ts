@@ -41,7 +41,7 @@ export const useAddExternalWallet = () => {
           title: "Failed to add wallet",
           description: "Please retry or contact support",
           variant: "destructive",
-          duration: 3000,
+          duration: 5000,
         })
       }
     },
