@@ -1,4 +1,3 @@
-import { useMemo } from "react"
 import {
   AssetAttribute,
   AssetWithTradeData,
@@ -23,6 +22,6 @@ export const getAssetColor = (
   const colorAttribute = asset.metadata.attributes?.find(
     (attr: { trait_type: string }) => attr.trait_type === "Scarcity"
   )?.value as string | null | undefined
-  
+
   return colorAttribute ? COLORS[colorAttribute] : null
 }

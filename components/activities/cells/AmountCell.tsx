@@ -1,0 +1,17 @@
+import { Row } from "@tanstack/react-table"
+
+import { BuyOffer } from "@/types/buy-offers"
+import { Price } from "@/components/ui/Price"
+import { BigNumber } from "ethers"
+
+export type AmountCellProps = {
+  row: Row<BuyOffer>
+}
+
+export const AmountCell = ({ row }: AmountCellProps) => {
+  const amount = row.original.amount
+  const fees = row.original.trade.totalFees
+  const amountWithFees = BigNumber.from(amount).add(fees).toString()
+  
+  return <Price amount={amountWithFees} className="font-medium" isNativeToken={true} />
+}

@@ -1,13 +1,14 @@
 import { useCallback, useEffect } from "react"
-import { useNeedsToUnwrap } from "@/services/exchange/needs-to-unwrap"
-import { useUnwrapToken } from "@/services/exchange/unwrap-token"
+import { useIsComethConnectWallet } from "@/providers/authentication/comethConnectHooks"
+import { useNeedsToUnwrap } from "@/services/exchange/unwrapService"
+import { useUnwrapToken } from "@/services/exchange/unwrapTokenService"
 import { BigNumber } from "ethers"
+import { useAccount } from "wagmi"
 
 import globalConfig from "@/config/globalConfig"
-import { useCurrentViewerAddress, useIsComethWallet } from "@/lib/web3/auth"
-import { Button } from "@/components/ui/button"
-import { Price } from "@/components/ui/price"
-import { ButtonLoading } from "@/components/button-loading"
+import { Button } from "@/components/ui/Button"
+import { Price } from "@/components/ui/Price"
+import { ButtonLoading } from "@/components/ButtonLoading"
 
 export type UnwrapStepProps = {
   price: BigNumber | null

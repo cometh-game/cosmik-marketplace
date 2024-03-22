@@ -8,7 +8,7 @@ export interface InputProps
 }
 
 import React from 'react';
-import { trimDecimals } from "@/lib/utils/priceUtil";
+import { trimDecimals } from "@/lib/utils/priceUtils";
 import globalConfig from "@/config/globalConfig";
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(

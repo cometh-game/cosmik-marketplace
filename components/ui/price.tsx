@@ -6,7 +6,7 @@ import { formatUnits } from "ethers/lib/utils"
 
 import { env } from "@/config/env"
 import globalConfig from "@/config/globalConfig"
-import { smartRounding } from "@/lib/utils/priceUtil"
+import { smartRounding } from "@/lib/utils/priceUtils"
 import { cn } from "@/lib/utils/utils"
 
 const priceTriggerVariants = cva("", {

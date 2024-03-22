@@ -1,0 +1,77 @@
+import { useMemo } from "react"
+import { ChevronDown } from "lucide-react"
+
+import { CardFiltersRaw } from "@/types/assets"
+import { useNFTFilters } from "@/lib/utils/nftFilters"
+import { Button } from "@/components/ui/Button"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandList,
+} from "@/components/ui/Command"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/Popover"
+
+import { CheckboxFilter } from "./CheckboxFilter"
+
+export const FilterMultiCombobox = ({
+  label,
+  values,
+}: {
+  label: string
+  values: Set<string>
+}) => {
+  const { filters } = useNFTFilters()
+
+  const checkedCount = useMemo(() => {
+    return filters[label]?.length
+  }, [filters, label])
+
+  return (
+    <Popover>
+      <div className="flex w-full flex-col justify-between">
+        <PopoverTrigger asChild>
+          <Button
+            variant="neutral"
+            className="flex justify-between gap-2 p-2 hover:bg-white/[0.05] hover:text-accent-foreground"
+          >
+            <span className="font-medium capitalize">
+              {label}
+              {checkedCount && (
+                <span className="ml-2 text-xs font-bold text-primary/80">
+                  ({checkedCount})
+                </span>
+              )}
+            </span>
+            <ChevronDown size={16} />
+          </Button>
+        </PopoverTrigger>
+      </div>
+      <PopoverContent className="p-0">
+        <Command>
+          <CommandInput placeholder="Search" />
+          <CommandList>
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup>
+              {[...values]
+                .sort((a, b) => a.localeCompare(b))
+                .map((value, index) => (
+                  <CheckboxFilter
+                    key={index}
+                    label={value}
+                    queryKey={label as keyof CardFiltersRaw}
+                    queryValue={value}
+                  />
+                ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  )
+}

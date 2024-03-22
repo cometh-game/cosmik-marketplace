@@ -2,11 +2,11 @@
 
 import { useState } from "react"
 import dynamic from "next/dynamic"
-import { User } from "@/services/cosmik/signin"
+import { User } from "@/services/cosmik/signinService"
 
 const DynamicSigninDialog = dynamic(
   () =>
-    import("../../components/signin/signin-dialog").then(
+    import("../../components/signin/SignInDialog").then(
       (mod) => mod.SignInDialog
     ),
   { ssr: false }
@@ -14,7 +14,7 @@ const DynamicSigninDialog = dynamic(
 
 const DynamicWalletsDialog = dynamic(
   () =>
-    import("../../components/wallets-dialog").then(
+    import("../../components/WalletsDialog").then(
       (mod) => mod.WalletsDialog
     ),
   { ssr: false }

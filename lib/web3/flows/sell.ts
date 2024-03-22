@@ -1,4 +1,4 @@
-import { fetchHasEnoughGas } from "@/services/balance/has-enough-gas"
+import { fetchHasEnoughGas } from "@/services/balance/gasService"
 import {
   AssetWithTradeData,
   SearchAssetWithTradeData,

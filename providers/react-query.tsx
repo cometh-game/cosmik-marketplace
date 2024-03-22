@@ -1,9 +1,15 @@
 "use client"
 
 import { useState } from "react"
-import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { toast } from "@/components/ui/toast/use-toast"
+import {
+  MutationCache,
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+
+import { toast } from "@/components/ui/toast/hooks/useToast"
 
 export function ReactQueryProvider({
   children,
@@ -31,20 +37,20 @@ export function ReactQueryProvider({
         }),
         mutationCache: new MutationCache({
           onError: (error, _variables, _context, mutation) => {
-            if (mutation.options.onError) return;
+            if (mutation.options.onError) return
             toast({
               variant: "destructive",
               title: "Something went wrong.",
               description: error.message,
             })
           },
-        })
+        }),
       })
   )
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )
 }

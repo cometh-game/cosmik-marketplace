@@ -1,31 +1,31 @@
 "use client"
 
-import { useFilters } from "@/services/cometh-marketplace/filters"
-import { useUsername } from "@/services/user/use-username"
+import { useAttributeFilters } from "@/services/cometh-marketplace/filtersService"
+import { useUsername } from "@/services/user/userNameService"
 import { ArrowLeftIcon, UserIcon } from "lucide-react"
 import { Address } from "viem"
 
 import { shortenAddress } from "@/lib/utils/addresses"
-import { Button } from "@/components/ui/button"
-import { CopyButton } from "@/components/ui/copy-button"
-import { Link } from "@/components/ui/link"
-import { ShareButton } from "@/components/ui/share-button"
-import { AccountAssetActivities } from "@/components/activities/account/tabs"
-import { AssetsSearchGrid } from "@/components/marketplace/grid/asset-search-grid"
+import { Button } from "@/components/ui/Button"
+import { CopyButton } from "@/components/ui/CopyButton"
+import { Link } from "@/components/ui/Link"
+import { ShareButton } from "@/components/ui/ShareButton"
+import { AccountAssetActivities } from "@/components/activities/account/tabs/AccountAssetActivities"
+import { AssetsSearchGrid } from "@/components/marketplace/grid/AssetSearchGrid"
 
 export default function ProfilePage({
   params,
 }: {
   params: { address: Address }
 }) {
-  const { filtersRaw } = useFilters()
+  const attributesFilters = useAttributeFilters()
   const { username, isFetchingUsername } = useUsername(params.address)
   const user =
     username && !isFetchingUsername
       ? `@${username}`
       : shortenAddress(params.address)
 
-  if (!filtersRaw) {
+  if (!attributesFilters) {
     return null
   }
 
@@ -43,14 +43,18 @@ export default function ProfilePage({
             <UserIcon size="28" className="mr-2" />
             Profile {user}
           </h1>
-          <CopyButton label="Copy wallet address" size="sm" textToCopy={params.address} />
+          <CopyButton
+            label="Copy wallet address"
+            size="sm"
+            textToCopy={params.address}
+          />
         </div>
         <ShareButton textToShow={`Check my assets on`} />
       </div>
       <AccountAssetActivities walletAddress={params.address}>
         <AssetsSearchGrid
           filteredBy={{ owner: params.address }}
-          filters={filtersRaw}
+          filters={attributesFilters}
         />
       </AccountAssetActivities>
     </div>

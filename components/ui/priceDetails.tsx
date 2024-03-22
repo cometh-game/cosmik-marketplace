@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { manifest } from "@/manifests"
+import { manifest } from "@/manifests/manifests"
 import { useGetCollection } from "@/services/cometh-marketplace/collection"
 import { parseUnits } from "viem"
 
@@ -10,7 +10,7 @@ import {
 } from "@/lib/utils/fees"
 import { useIsComethWallet } from "@/lib/web3/auth"
 
-import { Price } from "./price"
+import { Price } from "./Price"
 
 type PriceDetailsProps = {
   fullPrice: string
