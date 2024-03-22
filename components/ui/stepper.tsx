@@ -51,7 +51,7 @@ export const StepperStep = ({ index, active, name }: StepperStepProps) => {
           active ? "bg-white/10" : "bg-card"
         )}
       >
-        <span className={"text-sm font-bold text-accent-foreground"}>
+        <span className={"text-accent-foreground text-sm font-bold"}>
           {index + 1}
         </span>
       </div>

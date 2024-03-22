@@ -10,7 +10,7 @@ export function ProductBlockContainer({
   children,
 }: ProductBlockContainerProps) {
   return (
-    <Card className="btn-default relative bg-primary/20 text-accent before:bg-primary/20 after:content-none">
+    <Card className="btn-default bg-primary/20 text-accent before:bg-primary/20 relative after:content-none">
       <CardContent className="py-[22px]">
         <div className="flex h-full flex-wrap items-stretch justify-between gap-4">
           {children}

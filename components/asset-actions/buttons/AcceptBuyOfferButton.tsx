@@ -1,18 +1,20 @@
+import { useState } from "react"
+
 import { BuyOffer } from "@/types/buy-offers"
-import { useAcceptBuyOfferAssetButton } from "@/lib/web3/flows/"
-import { TransactionDialogButton } from "@/components/dialog-button"
+import { useAcceptBuyOfferAssetButton } from "@/lib/web3/flows/acceptBuyOffer"
+import { TransactionDialogButton } from "@/components/TransactionDialogButton"
 import { Case, Switch } from "@/components/utils/Switch"
 
+import { AddGasStep } from "../transaction-steps/AddGasStep"
 import { CollectionApprovalStep } from "../transaction-steps/CollectionApprovalStep"
 import { ConfirmAcceptBuyOfferStep } from "../transaction-steps/ConfirmAcceptBuyOfferStep"
-import { AddGasStep } from "../transaction-steps/AddGasStep"
-import { useState } from "react"
+import { Button } from "@/components/ui/Button"
 
 export type AcceptBuyOfferButtonProps = {
   offer: BuyOffer
-}
+} & React.ComponentProps<typeof Button>
 
-export function AcceptBuyOfferButton({ offer }: AcceptBuyOfferButtonProps) {
+export function AcceptBuyOfferButton({ offer, size }: AcceptBuyOfferButtonProps) {
   const { requiredSteps, isLoading, currentStep, nextStep, reset } =
     useAcceptBuyOfferAssetButton({ offer })
   const [open, setOpen] = useState(false)
@@ -23,8 +25,6 @@ export function AcceptBuyOfferButton({ offer }: AcceptBuyOfferButtonProps) {
     setOpen(false)
   }
 
-  if (!requiredSteps?.length || !currentStep) return null
-
   return (
     <TransactionDialogButton
       label="Accept"
@@ -33,9 +33,8 @@ export function AcceptBuyOfferButton({ offer }: AcceptBuyOfferButtonProps) {
       currentStep={currentStep}
       steps={requiredSteps}
       onClose={reset}
-      isVariantLink={true}
+      size={size}
       isLoading={isLoading}
-      isDisabled={isLoading}
     >
       <Switch value={currentStep.value}>
         <Case value="add-gas">

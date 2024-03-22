@@ -1,3 +1,4 @@
+import { useState } from "react"
 import {
   AssetWithTradeData,
   SearchAssetWithTradeData,
@@ -6,7 +7,7 @@ import { BigNumber } from "ethers"
 
 import { useBuyAssetButton } from "@/lib/web3/flows/buy"
 import { Price } from "@/components/ui/Price"
-import { TransactionDialogButton } from "@/components/dialog-button"
+import { TransactionDialogButton } from "@/components/TransactionDialogButton"
 import { Case, Switch } from "@/components/utils/Switch"
 
 import { AddGasStep } from "../transaction-steps/AddGasStep"
@@ -14,7 +15,7 @@ import { AllowanceStep } from "../transaction-steps/AllowanceStep"
 import { BuyStep } from "../transaction-steps/BuyStep"
 import { FundsStep } from "../transaction-steps/FundsStep"
 import { UnwrapStep } from "../transaction-steps/UnwrapStep"
-import { useState } from "react"
+import { Button } from "@/components/ui/Button"
 
 export type BuyAssetButtonProps = {
   asset: SearchAssetWithTradeData | AssetWithTradeData

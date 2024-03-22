@@ -15,9 +15,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog"
-import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
 import { Price } from "@/components/ui/Price"
+import { PriceInput } from "@/components/ui/PriceInput"
 import {
   Select,
   SelectContent,
@@ -26,8 +26,8 @@ import {
   SelectValue,
 } from "@/components/ui/Select"
 import { ButtonLoading } from "@/components/ButtonLoading"
-import { TransactionDialogButton } from "@/components/dialog-button"
 import { AssetHeaderImage } from "@/components/marketplace/asset/AssetHeaderImage"
+import { TransactionDialogButton } from "@/components/TransactionDialogButton"
 import { Case, Switch } from "@/components/utils/Switch"
 
 import { AddGasStep } from "../transaction-steps/AddGasStep"

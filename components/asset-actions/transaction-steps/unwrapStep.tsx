@@ -17,8 +17,9 @@ export type UnwrapStepProps = {
 
 export function UnwrapStep({ price, onValid }: UnwrapStepProps) {
   const { mutateAsync: unwrapToken, isPending } = useUnwrapToken()
-  const viewerAddress = useCurrentViewerAddress()
-  const isComethWallet = useIsComethWallet()
+  const account = useAccount()
+  const viewerAddress = account.address
+  const isComethWallet = useIsComethConnectWallet()
 
   const { data: needsToUnwrapData } = useNeedsToUnwrap({
     price,
