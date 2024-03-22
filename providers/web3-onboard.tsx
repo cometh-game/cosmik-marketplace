@@ -115,19 +115,24 @@ export function Web3OnboardProvider({
   }
 
   const initNewSignerRequest = async (walletAddress: string) => {
+    if (!isAddress(walletAddress)) {
+      throw new Error("Invalid wallet address.")
+    }
+
     const connectAuthAdaptor = new ConnectAdaptor({
       chainId: chainId,
       apiKey: process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
       baseUrl: process.env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL!,
     })
-
-    if (isAddress(walletAddress)) {
-      throw new Error("Invalid wallet address.")
-    }
+    
     return await connectAuthAdaptor.initNewSignerRequest(walletAddress)
   }
 
   const retrieveWalletAddressFromSigner = async (walletAddress: string) => {
+    if (!isAddress(walletAddress)) {
+      throw new Error("Invalid wallet address.")
+    }
+
     const connectAuthAdaptor = new ConnectAdaptor({
       chainId: chainId,
       apiKey: process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
@@ -139,9 +144,6 @@ export function Web3OnboardProvider({
       apiKey: process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
     })
 
-    if (isAddress(walletAddress)) {
-      throw new Error("Invalid wallet address.")
-    }
     await wallet.connect(walletAddress)
   }
 
@@ -223,9 +225,7 @@ export function Web3OnboardProvider({
     const currentWalletInStorage = localStorage.getItem("selectedWallet")
     const isComethWallet =
       currentWalletInStorage === COMETH_CONNECT_STORAGE_LABEL
-    console.log("currentWalletInStorage", currentWalletInStorage)
     if (isComethWallet) {
-      console.log("comethWalletAddressInStorage", comethWalletAddressInStorage)
       initOnboard({
         isComethWallet,
         walletAddress: comethWalletAddressInStorage!,
@@ -242,7 +242,6 @@ export function Web3OnboardProvider({
               disableModals: true,
             },
           })
-          console.log("connectionResult", connectionResult)
           if (connectionResult?.length) {
             setIsconnected(true)
             setReconnecting(false)
