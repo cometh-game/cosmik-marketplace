@@ -36,7 +36,6 @@ import infinityWalletWalletModule from '@web3-onboard/infinity-wallet'
 import zealWalletModule from '@web3-onboard/zeal'
 import xdefiWalletModule from '@web3-onboard/xdefi'
 import phantomModule from '@web3-onboard/phantom'
-import walletConnectModule from '@web3-onboard/walletconnect'
 import { env } from "@/config/env"
 import networks from "@/config/networks"
 import { COMETH_CONNECT_STORAGE_LABEL } from "@/config/site"
@@ -121,18 +120,24 @@ export function Web3OnboardProvider({
   }
 
   const initNewSignerRequest = async (walletAddress: string) => {
+    if (!isAddress(walletAddress)) {
+      throw new Error("Invalid wallet address.")
+    }
+
     const connectAuthAdaptor = new ConnectAdaptor({
       chainId: chainId,
       apiKey: process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
       baseUrl: process.env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL!,
     })
-    if (isAddress(walletAddress)) {
-      throw new Error("Invalid wallet address.")
-    }
+    
     return await connectAuthAdaptor.initNewSignerRequest(walletAddress)
   }
 
   const retrieveWalletAddressFromSigner = async (walletAddress: string) => {
+    if (!isAddress(walletAddress)) {
+      throw new Error("Invalid wallet address.")
+    }
+
     const connectAuthAdaptor = new ConnectAdaptor({
       chainId: chainId,
       apiKey: process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,

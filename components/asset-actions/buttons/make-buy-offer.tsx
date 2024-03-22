@@ -58,7 +58,6 @@ export function MakeBuyOfferPriceDialog({
   const orderParams = useMemo(() => {
     try {
       const parsedPrice = parseUnits(price, globalConfig.ordersErc20.decimals)
-      console.log("validity 2", validity)
       return { price: parsedPrice, validity }
 
     } catch (e) {
