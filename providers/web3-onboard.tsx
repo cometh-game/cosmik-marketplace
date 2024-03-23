@@ -128,7 +128,7 @@ export function Web3OnboardProvider({
 
   const retrieveWalletAddressFromSigner = async (walletAddress: string) => {
     if (!isAddress(walletAddress)) {
-      throw new Error("Invalid wallet address. 1")
+      throw new Error("Invalid wallet address.")
     }
 
     const connectAuthAdaptor = new ConnectAdaptor({
@@ -147,7 +147,7 @@ export function Web3OnboardProvider({
 
   const initNewSignerRequest = async (walletAddress: string) => {
     if (!isAddress(walletAddress)) {
-      throw new Error("Invalid wallet address. 2")
+      throw new Error("Invalid wallet address.")
     }
 
     const connectAuthAdaptor = new ConnectAdaptor({
@@ -247,7 +247,6 @@ export function Web3OnboardProvider({
     }
 
     const startReconnecting = async () => {
-      console.log("reconnecting wallet")
       setReconnecting(true)
       try {
         const connectionResult = await onboard?.connectWallet({
@@ -257,13 +256,12 @@ export function Web3OnboardProvider({
           },
         })
         const walletAddress = connectionResult?.[0].accounts[0]?.address
-        console.log("walletAddress", walletAddress)
         if (walletAddress !== getUser()?.address) {
           walletLogout({
             label: connectionResult?.[0]?.label!,
           })
           throw new Error(
-            "Your Cosmik wallet address doesn't match the one stored in your browser. Please contact support. 3"
+            "Your Cosmik wallet address doesn't match the one stored in your browser. Please contact support. #2"
           )
         }
         if (connectionResult?.length) {

@@ -64,7 +64,8 @@ export function SigninDropdown({
         setIsLoading(true)
         setUser(user)
         // Attempt to retrieve the wallet address to determine if it is the first connection
-        await retrieveWalletAddressFromSigner(user.address)
+        const test = await retrieveWalletAddressFromSigner(user.address)
+        console.log("test", test)
         initOnboard({
           isComethWallet: true,
           walletAddress: user.address,
@@ -78,7 +79,7 @@ export function SigninDropdown({
             label: wallet.label,
           })
           throw new Error(
-            "Your Cosmik wallet address doesn't match the one stored in your browser. Please contact support. 3"
+            "Your Cosmik wallet address doesn't match the one stored in your browser. Please contact support. #1"
           )
         }
         // console.log("connectionResult", connectionResult)
