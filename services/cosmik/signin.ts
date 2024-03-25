@@ -29,7 +29,8 @@ export const useCosmikSignin = () => {
       return data
     },
     onSuccess: async (data) => {
-      if (!isAddress(data.user.walletAddress)) {
+      console.log("data", data)
+      if (!isAddress(data.user.address)) {
         throw new Error("Wallet address is not defined. Please, contact support.")
       }
 
