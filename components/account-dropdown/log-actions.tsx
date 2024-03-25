@@ -10,15 +10,26 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useCosmikLogout } from "@/services/cosmik/logout"
+import { useWeb3OnboardContext } from "@/providers/web3-onboard"
 
 export function AccountLogAction() {
   const wallet = useWallet()
-  const logout = useDisconnect()
+  const walletLogout = useDisconnect()
+  const { mutateAsync: cosmikLogout } = useCosmikLogout()
+  const { setIsconnected } = useWeb3OnboardContext()
 
   async function handleLogout() {
-    await logout({
-      label: wallet!.label,
-    })
+    // await logout()
+    try {
+      await walletLogout({
+        label: wallet!.label,
+      })
+      await cosmikLogout();
+      setIsconnected(false)
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return (

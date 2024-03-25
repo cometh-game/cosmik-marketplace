@@ -21,22 +21,39 @@ export function useStorageWallet() {
   }
 }
 
-export function useRetrieveWalletAddress() {
-  const [
-    hasRetrieveWalletAddressInStorage,
-    setHasRetrieveWalletAddressInStorage,
-  ] = useState<boolean>(false)
+export function useWalletAddressFromStorage() {
+  const [walletAddressFromStorage, setWalletAddressFromStorage] =
+    useState<string | null>(null)
 
   useEffect(() => {
-    const hasRetrieveWalletAddress = localStorage.getItem(
-      "hasRetrieveWalletAddress"
-    )
-    if (hasRetrieveWalletAddress === "true") {
-      setHasRetrieveWalletAddressInStorage(true)
+    const currentWalletAddress = localStorage.getItem("currentWalletAddress")
+    if (currentWalletAddress) {
+
+      setWalletAddressFromStorage(currentWalletAddress)
     }
   }, [])
 
   return {
-    hasRetrieveWalletAddressInStorage,
+    walletAddressFromStorage,
   }
 }
+
+// export function useRetrieveWalletAddress() {
+//   const [
+//     hasRetrieveWalletAddressInStorage,
+//     setHasRetrieveWalletAddressInStorage,
+//   ] = useState<boolean>(false)
+
+//   useEffect(() => {
+//     const hasRetrieveWalletAddress = localStorage.getItem(
+//       "hasRetrieveWalletAddress"
+//     )
+//     if (hasRetrieveWalletAddress === "true") {
+//       setHasRetrieveWalletAddressInStorage(true)
+//     }
+//   }, [])
+
+//   return {
+//     hasRetrieveWalletAddressInStorage,
+//   }
+// }

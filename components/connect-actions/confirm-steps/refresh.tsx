@@ -5,6 +5,8 @@ import { useWalletConnect } from "@/services/web3/use-wallet-connect"
 
 import { Button } from "@/components/ui/button"
 import { toast } from "@/components/ui/toast/use-toast"
+import { ethers } from "ethers"
+import { useDisconnect } from "@/lib/web3/auth"
 
 export type RefreshStepProps = {
   userAddress: string
@@ -19,8 +21,8 @@ export const RefreshStep: React.FC<RefreshStepProps> = ({
     useWeb3OnboardContext()
   const [isLoading, setIsLoading] = useState(false)
   const { connect: connectWallet } = useWalletConnect()
-  const { comethWalletAddressInStorage } = useStorageWallet()
   const [canRefresh, setCanRefresh] = useState(false)
+  const walletLogout = useDisconnect()
 
   useEffect(() => {
     const retrieveWalletAddress = async () => {
@@ -41,9 +43,22 @@ export const RefreshStep: React.FC<RefreshStepProps> = ({
       try {
         initOnboard({
           isComethWallet: true,
-          walletAddress: comethWalletAddressInStorage!,
+          walletAddress: userAddress,
         })
-        await connectWallet({ isComethWallet: true })
+        // await connectWallet({ isComethWallet: true })
+        const wallet = await connectWallet({ isComethWallet: true })
+        const walletAddress = ethers.utils.getAddress(
+          wallet.accounts[0].address
+        )
+        if (walletAddress !== userAddress) {
+          walletLogout({
+            label: wallet.label,
+          })
+          throw new Error(
+            "Your Cosmik wallet address doesn't match the one stored in your browser. Please contact support. #3"
+          )
+        }
+        localStorage.setItem("currentWalletAddress", userAddress)
         setIsconnected(true)
         onValid()
       } catch (error) {

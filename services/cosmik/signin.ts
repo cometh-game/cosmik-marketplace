@@ -1,8 +1,8 @@
 import { cosmikClient } from "@/services/clients"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { isAddress } from "ethers/lib/utils"
 
 import { toast } from "@/components/ui/toast/use-toast"
+import { isAddress } from "ethers/lib/utils"
 
 interface SignInBody {
   username: string
