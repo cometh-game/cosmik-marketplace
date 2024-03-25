@@ -45,10 +45,10 @@ import { isAddress } from "ethers/lib/utils"
 import { env } from "@/config/env"
 import networks from "@/config/networks"
 import { COMETH_CONNECT_STORAGE_LABEL } from "@/config/site"
+import { useDisconnect } from "@/lib/web3/auth"
 import { toast } from "@/components/ui/toast/use-toast"
 
 import { useAuthContext } from "./auth"
-import { useDisconnect } from "@/lib/web3/auth"
 
 // const walletConnect = walletConnectModule({
 //   version: 2,
@@ -121,8 +121,7 @@ export function Web3OnboardProvider({
   const [isConnected, setIsconnected] = useState<boolean>(false)
   const [reconnecting, setReconnecting] = useState<boolean>(false)
   const { walletAddressFromStorage } = useWalletAddressFromStorage()
-  const { getUser, isUserLoggedFetched } =
-    useAuthContext()
+  const { getUser, isUserLoggedFetched } = useAuthContext()
   const walletLogout = useDisconnect()
 
   const chainId = getSupportedNetworkId(env.NEXT_PUBLIC_NETWORK_ID)
@@ -242,12 +241,14 @@ export function Web3OnboardProvider({
     const currentWalletInStorage = localStorage.getItem("selectedWallet")
     const isComethWallet =
       currentWalletInStorage === COMETH_CONNECT_STORAGE_LABEL
-    // const walletAddressIsValid =
-    //   isUserLoggedFetched && getUser()?.address === walletAddressFromStorage
-    if (isComethWallet) {
+    if (
+      isComethWallet &&
+      walletAddressFromStorage &&
+      isAddress(walletAddressFromStorage)
+    ) {
       initOnboard({
         isComethWallet,
-        walletAddress: walletAddressFromStorage!,
+        walletAddress: walletAddressFromStorage,
       })
     }
 
@@ -287,11 +288,22 @@ export function Web3OnboardProvider({
     }
 
     /* if user exist, start reconnecting */
-    if (isUserLoggedFetched && currentWalletInStorage) {
+    if (
+      isUserLoggedFetched &&
+      currentWalletInStorage &&
+      walletAddressFromStorage
+    ) {
       console.log("userLoaded", getUser())
       startReconnecting()
     }
-  }, [initOnboard, onboard, walletAddressFromStorage, isUserLoggedFetched])
+  }, [
+    initOnboard,
+    onboard,
+    walletAddressFromStorage,
+    isUserLoggedFetched,
+    getUser,
+    walletLogout,
+  ])
 
   return (
     <Web3OnboardContext.Provider

@@ -63,8 +63,7 @@ export function SigninDropdown({
         setIsLoading(true)
         setUser(user)
         // Attempt to retrieve the wallet address to determine if it is the first connection
-        const test = await retrieveWalletAddressFromSigner(user.address)
-        console.log("test", test)
+        await retrieveWalletAddressFromSigner(user.address)
         initOnboard({
           isComethWallet: true,
           walletAddress: user.address,

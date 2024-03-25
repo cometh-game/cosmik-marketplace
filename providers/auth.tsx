@@ -20,7 +20,8 @@ export function useAuthContext() {
 }
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { userLogged, isFetchingUserLogged, isUserLoggedFetched } = useCosmikLogged()
+  const { userLogged, isFetchingUserLogged, isUserLoggedFetched } =
+    useCosmikLogged()
   const user = useRef<any | null>(null)
 
   function setUser(newValue: any) {
@@ -39,7 +40,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [userLogged, isFetchingUserLogged, user])
 
   return (
-    <AuthContext.Provider value={{ getUser, setUser, userLogged, isFetchingUserLogged, isUserLoggedFetched }}>
+    <AuthContext.Provider
+      value={{
+        getUser,
+        setUser,
+        userLogged,
+        isFetchingUserLogged,
+        isUserLoggedFetched,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )

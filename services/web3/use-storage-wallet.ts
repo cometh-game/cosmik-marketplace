@@ -28,7 +28,6 @@ export function useWalletAddressFromStorage() {
   useEffect(() => {
     const currentWalletAddress = localStorage.getItem("currentWalletAddress")
     if (currentWalletAddress) {
-
       setWalletAddressFromStorage(currentWalletAddress)
     }
   }, [])
