@@ -1,5 +1,5 @@
 import { cosmikClient } from "@/services/clients"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { isAddress } from "ethers/lib/utils"
 
 import { toast } from "@/components/ui/toast/use-toast"
@@ -20,6 +20,8 @@ export type User = {
 }
 
 export const useCosmikSignin = () => {
+  const client = useQueryClient()
+  
   return useMutation({
     mutationKey: ["cosmik, signin"],
     mutationFn: async (credentials: SignInBody) => {
@@ -30,6 +32,10 @@ export const useCosmikSignin = () => {
       if (!isAddress(data.user.walletAddress)) {
         throw new Error("Wallet address is not defined. Please, contact support.")
       }
+
+      client.invalidateQueries({
+        queryKey: ["cosmik", "logged"],
+      })
       
       const hasRetrieveWalletAddressInStorage = localStorage.getItem(
         "hasRetrieveWalletAddress"
