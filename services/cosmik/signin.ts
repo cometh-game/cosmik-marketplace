@@ -2,6 +2,7 @@ import { cosmikClient } from "@/services/clients"
 import { useMutation } from "@tanstack/react-query"
 
 import { toast } from "@/components/ui/toast/use-toast"
+import { isAddress } from "ethers/lib/utils"
 
 interface SignInBody {
   username: string
@@ -26,23 +27,10 @@ export const useCosmikSignin = () => {
       return data
     },
     onSuccess: async (data) => {
-      // if (data.user) {
-      //   localStorage.setItem("user", JSON.stringify(data.user))
-      // }
+      if (!isAddress(data.user.walletAddress)) {
+        throw new Error("Wallet address is not defined. Please, contact support.")
+      }
       const hasRetrieveWalletAddressInStorage = localStorage.getItem("hasRetrieveWalletAddress")
-
-      // if (typeof walletAddress === "undefined" || !walletAddress) {
-      //   return push(APP_ROUTES.WALLET_REGISTER.PATH);
-      // } else {
-      //   if (isConnectKeyStore) {
-      //     localStorage.setItem(
-      //       "selectedWallet",
-      //       JSON.stringify(COMETH_CONNECT_LABEL)
-      //     );
-      //   }
-      //   push(callbackUrl || APP_ROUTES.HOME.PATH);
-      // }
-
       if (hasRetrieveWalletAddressInStorage) {
         toast({
           title: "Login successful",
