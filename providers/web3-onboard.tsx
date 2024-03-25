@@ -132,6 +132,7 @@ export function Web3OnboardProvider({
   }
 
   const retrieveWalletAddressFromSigner = async (walletAddress: string) => {
+    console.log("walletAddress 1", walletAddress)
     if (!isAddress(walletAddress)) {
       throw new Error("Invalid wallet address.")
     }
@@ -146,9 +147,6 @@ export function Web3OnboardProvider({
       authAdapter: connectAuthAdaptor,
       apiKey: process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
     })
-    if (isAddress(walletAddress)) {
-      throw new Error("Invalid wallet address.")
-    }
     await wallet.connect(walletAddress)
   }
 
