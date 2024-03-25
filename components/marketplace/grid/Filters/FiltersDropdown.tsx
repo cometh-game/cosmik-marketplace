@@ -1,6 +1,6 @@
 import { FilterIcon } from "lucide-react"
 
-import { useNFTFilters } from "@/lib/utils/nft-filters"
+import { useNFTFilters } from "@/lib/utils/nftFilters"
 import { MarketplacePanelFilters } from "@/lib/utils/seed"
 import { Button } from "@/components/ui/Button"
 import {

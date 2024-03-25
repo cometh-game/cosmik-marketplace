@@ -2,9 +2,9 @@ import { useCallback, useEffect } from "react"
 import { useNeedsToWrap } from "@/services/exchange/wrapService"
 import { useWrapToken } from "@/services/exchange/wrapTokenService"
 import { BigNumber } from "ethers"
+import { useAccount } from "wagmi"
 
 import globalConfig from "@/config/globalConfig"
-import { useCurrentViewerAddress } from "@/lib/web3/auth"
 import { Button } from "@/components/ui/Button"
 import { Price } from "@/components/ui/Price"
 import { ButtonLoading } from "@/components/ButtonLoading"
@@ -16,7 +16,8 @@ export type WrapStepProps = {
 
 export function WrapStep({ price, onValid }: WrapStepProps) {
   const { mutateAsync: wrapToken, isPending } = useWrapToken()
-  const viewerAddress = useCurrentViewerAddress()
+  const account = useAccount()
+  const viewerAddress = account.address
 
   const needsToWrap = useNeedsToWrap({
     price,

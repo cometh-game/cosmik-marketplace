@@ -1,5 +1,5 @@
 import { manifest } from "@/manifests/manifests"
-import { useApproveCollection } from "@/services/token-approval/"
+import { useApproveCollection } from "@/services/token-approval/approveCollectionService"
 import { AssetWithTradeData } from "@cometh/marketplace-sdk"
 
 import { Button } from "@/components/ui/Button"
@@ -15,6 +15,7 @@ export function CollectionApprovalStep({
   onValid,
 }: CollectionApprovalStepProps) {
   const { mutate: approveCollection, isPending } = useApproveCollection({
+    tokenAddress: asset.contractAddress,
     tokenId: asset.tokenId,
     onSuccess: onValid,
   })

@@ -22,7 +22,7 @@ import {
 import { Address, isAddressEqual } from "viem"
 
 import globalConfig from "@/config/globalConfig"
-import { useCurrentViewerAddress } from "@/lib/web3/auth"
+import { useAccount } from "wagmi"
 import {
   Table,
   TableBody,

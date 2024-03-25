@@ -1,14 +1,13 @@
 "use client"
 
-import { useMemo } from "react"
+import { ComponentProps, memo, useMemo } from "react"
 import { User } from "lucide-react"
 
-import { AnyUser } from "@/types/user"
 import { cn } from "@/lib/utils/utils"
 
-import { Button } from "../Button"
 import { Link } from "../Link"
 import { useContent } from "./hooks/useContent"
+import { UserButtonProps } from "./UserButton"
 
 export const UserLink = memo(function UserLink({
   user,

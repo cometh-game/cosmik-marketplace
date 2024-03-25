@@ -1,5 +1,5 @@
 import { useCallback } from "react"
-import { useBuyAsset } from "@/services/orders/buy-asset"
+import { useBuyAsset } from "@/services/orders/buyAssetService"
 import {
   AssetWithTradeData,
   SearchAssetWithTradeData,

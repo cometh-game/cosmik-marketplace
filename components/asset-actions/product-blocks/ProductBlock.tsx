@@ -1,20 +1,20 @@
 import { AssetWithTradeData } from "@cometh/marketplace-sdk"
 import { Address, isAddressEqual } from "viem"
 
-import { useCurrentViewerAddress } from "@/lib/web3/auth"
+import { useAccount } from "wagmi"
 
 import { BuyProductBlock } from "./BuyProductBlock"
 import { NotListedProductBlock } from "./NotListedProductBlock"
 import { SellProductBlock } from "./SellProductBlock"
 import { ViewerListingProductBlock } from "./ViewerListingProductBlock"
-import { useUsername } from "@/services/user/userNameService"
 
 export type ProductBlockProps = {
   asset: AssetWithTradeData
 }
 
 export function ProductBlock({ asset }: ProductBlockProps) {
-  const viewerAddress = useCurrentViewerAddress()
+  const account = useAccount()
+  const viewerAddress = account.address
   const isOnSale = !!asset.orderbookStats.lowestListingPrice
 
   const viewerIsOwner =

@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 import { manifest } from "@/manifests/manifests"
-import { useERC20Allow } from "@/services/allowance/wrapped-token-allowance"
+import { useERC20Allow } from "@/services/allowance/allowanceService"
 import { BigNumberish } from "ethers"
 
 import globalConfig from "@/config/globalConfig"

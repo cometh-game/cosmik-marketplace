@@ -1,12 +1,20 @@
-import { AssetWithTradeData, SearchAssetWithTradeData } from "@cometh/marketplace-sdk"
+import {
+  AssetWithTradeData,
+  SearchAssetWithTradeData,
+} from "@cometh/marketplace-sdk"
+import { useAccount } from "wagmi"
 
 import { cn } from "@/lib/utils/utils"
-import { useCurrentViewerAddress } from "@/lib/web3/auth"
 import { AspectRatio } from "@/components/ui/AspectRatio"
 import { AssetImage } from "@/components/ui/AssetImage"
 
-export const AssetHeaderImage = ({ asset }: { asset: SearchAssetWithTradeData | AssetWithTradeData }) => {
-  const viewerAddress = useCurrentViewerAddress()
+export const AssetHeaderImage = ({
+  asset,
+}: {
+  asset: SearchAssetWithTradeData | AssetWithTradeData
+}) => {
+  const account = useAccount()
+  const viewerAddress = account.address
   const owner = asset.owner === viewerAddress
 
   if (
@@ -20,7 +28,7 @@ export const AssetHeaderImage = ({ asset }: { asset: SearchAssetWithTradeData | 
   return (
     <div
       className={cn(
-        "btn-default relative w-full overflow-hidden text-accent before:bg-transparent after:content-none lg:w-[55%]",
+        "btn-default text-accent relative w-full overflow-hidden before:bg-transparent after:content-none lg:w-[55%]",
         owner ? "bg-[#f4f2e8]" : "bg-primary/20"
       )}
     >

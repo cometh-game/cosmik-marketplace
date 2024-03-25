@@ -8,9 +8,9 @@ import { AssetWithTradeData } from "@cometh/marketplace-sdk"
 import { Address } from "viem"
 
 import { Price } from "@/components/ui/Price"
-import { UserLink } from "@/components/ui/user/UserButton"
-import { AuthenticationButton }  from "@/components/AuthentificationButton"
-import { AssetStatusBadge } from "@/components/marketplace/asset/"
+import { UserLink } from "@/components/ui/user/UserLink"
+import { AuthenticationButton }  from "@/components/AuthenticationButton"
+import { AssetStatusBadge } from "@/components/marketplace/asset/AssetStatusBadge"
 import {
   ProductBlockCenteredColumn,
   ProductBlockContainer,
@@ -52,11 +52,11 @@ export function ViewerListingProductBlock({ asset }: SellProductBlockProps) {
       </ProductBlockDividedColumn>
 
       <ProductBlockCenteredColumn>
-        <ConnectButton fullVariant>
+        <AuthenticationButton fullVariant>
           <SwitchNetwork>
             <CancelListingButton asset={asset} />
           </SwitchNetwork>
-        </ConnectButton>
+        </AuthenticationButton>
       </ProductBlockCenteredColumn>
     </ProductBlockContainer>
   )

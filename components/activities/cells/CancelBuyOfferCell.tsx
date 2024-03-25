@@ -1,8 +1,8 @@
-import { useCanAcceptBuyOffer } from "@/services/orders/accept-buy-offer"
+import { useCanAcceptBuyOffer } from "@/services/orders/acceptBuyOfferService"
 import {
   useCanCancelBuyOffer,
   useCancelBuyOffer,
-} from "@/services/orders/cancel-buy-offer"
+} from "@/services/orders/cancelBuyOfferService"
 import { Row } from "@tanstack/react-table"
 
 import { BuyOffer } from "@/types/buy-offers"
@@ -18,6 +18,7 @@ const CancelBuyOfferCell = ({ row }: CTACellProps) => {
 
   return (
     <Button
+      variant="link"
       onClick={async () => await cancel({ offer: row.original })}
       isLoading={isPending}
       disabled={isPending}

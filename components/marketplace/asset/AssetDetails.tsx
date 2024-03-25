@@ -54,7 +54,7 @@ export default function AssetDetails({ asset }: AssetDetailsProps) {
             Marketplace
           </BreadcrumbElement>
           /
-          <BreadcrumbElement href={`/marketplace/${asset.tokenId}`}>
+          <BreadcrumbElement href={`/nfts/${asset.contractAddress}/${asset.tokenId}`}>
             {asset.metadata.name}
           </BreadcrumbElement>
         </BreadcrumbContainer>

@@ -3,9 +3,9 @@ import { AssetWithTradeData } from "@cometh/marketplace-sdk"
 import { Address } from "viem"
 
 import { Price } from "@/components/ui/Price"
-import { UserLink } from "@/components/ui/user/UserButton"
-import { AuthenticationButton }  from "@/components/AuthentificationButton"
-import { AssetStatusBadge } from "@/components/marketplace/asset/"
+import { UserLink } from "@/components/ui/user/UserLink"
+import { AuthenticationButton }  from "@/components/AuthenticationButton"
+import { AssetStatusBadge } from "@/components/marketplace/asset/AssetStatusBadge"
 import {
   ProductBlockCenteredColumn,
   ProductBlockContainer,
@@ -46,12 +46,12 @@ export function BuyProductBlock({ asset }: BuyProductBlockProps) {
         )}
       </ProductBlockDividedColumn>
       <ProductBlockCenteredColumn>
-        <ConnectButton fullVariant customText="Login to buy">
+        <AuthenticationButton fullVariant customText="Login to buy">
           <SwitchNetwork>
             <BuyAssetButton asset={asset} />
             <MakeBuyOfferButton asset={asset} />
           </SwitchNetwork>
-        </ConnectButton>
+        </AuthenticationButton>
       </ProductBlockCenteredColumn>
     </ProductBlockContainer>
   )

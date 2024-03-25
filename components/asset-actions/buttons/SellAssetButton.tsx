@@ -1,14 +1,14 @@
+import { useState } from "react"
 import { AssetWithTradeData } from "@cometh/marketplace-sdk"
 
 import { useSellAssetButton } from "@/lib/web3/flows/sell"
-import { TransactionDialogButton } from "@/components/dialog-button"
+import { ButtonLoading } from "@/components/ButtonLoading"
+import { TransactionDialogButton } from "@/components/TransactionDialogButton"
 import { Case, Switch } from "@/components/utils/Switch"
 
+import { AddGasStep } from "../transaction-steps/AddGasStep"
 import { CollectionApprovalStep } from "../transaction-steps/CollectionApprovalStep"
 import { SellStep } from "../transaction-steps/SellStep"
-import { AddGasStep } from "../transaction-steps/AddGasStep"
-import { ButtonLoading } from "@/components/ButtonLoading"
-import { useState } from "react"
 
 export type SellAssetButtonProps = {
   asset: AssetWithTradeData
@@ -28,7 +28,6 @@ export function SellAssetButton({
       <ButtonLoading
         size={isVariantLink ? "default" : "lg"}
         variant="default"
-        // className={cn(isVariantLink && "h-auto p-0")}
       />
     )
   }
@@ -48,9 +47,8 @@ export function SellAssetButton({
       onOpenChange={setOpen}
       onClose={reset}
       variant="third"
-      isVariantLink={isVariantLink}
+      // isVariantLink={isVariantLink}
       isLoading={isLoading}
-      isDisabled={isLoading}
     >
       <Switch value={currentStep.value}>
         <Case value="add-gas">

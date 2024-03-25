@@ -2,9 +2,9 @@ import { useUsername } from "@/services/user/userNameService"
 import { AssetWithTradeData } from "@cometh/marketplace-sdk"
 import { Address } from "viem"
 
-import { UserLink } from "@/components/ui/user/UserButton"
-import { AuthenticationButton }  from "@/components/AuthentificationButton"
-import { AssetStatusBadge } from "@/components/marketplace/asset/"
+import { UserLink } from "@/components/ui/user/UserLink"
+import { AuthenticationButton }  from "@/components/AuthenticationButton"
+import { AssetStatusBadge } from "@/components/marketplace/asset/AssetStatusBadge"
 import {
   ProductBlockCenteredColumn,
   ProductBlockContainer,
@@ -44,11 +44,11 @@ export function NotListedProductBlock({ asset }: NotListedProductBlockProps) {
       </ProductBlockDividedColumn>
 
       <ProductBlockCenteredColumn>
-        <ConnectButton customText="Login to make an offer" fullVariant>
+        <AuthenticationButton customText="Login to make an offer" fullVariant>
           <SwitchNetwork>
             <MakeBuyOfferButton asset={asset} />
           </SwitchNetwork>
-        </ConnectButton>
+        </AuthenticationButton>
       </ProductBlockCenteredColumn>
     </ProductBlockContainer>
   )

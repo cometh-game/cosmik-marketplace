@@ -1,10 +1,10 @@
 import { useCallback } from "react"
-import { useMakeBuyOfferAsset } from "@/services/orders/make-buy-offer"
+import { useIsComethConnectWallet } from "@/providers/authentication/comethConnectHooks"
+import { useMakeBuyOfferAsset } from "@/services/orders/makeBuyOfferService"
 import { AssetWithTradeData } from "@cometh/marketplace-sdk"
 import { BigNumber } from "ethers"
 
 import globalConfig from "@/config/globalConfig"
-import { useIsComethWallet } from "@/lib/web3/auth"
 import { Button } from "@/components/ui/Button"
 import { Price } from "@/components/ui/Price"
 import { ButtonLoading } from "@/components/ButtonLoading"
@@ -22,8 +22,8 @@ export function ConfirmMakeBuyOfferStep({
   validity,
   onValid,
 }: ConfirmBuyOfferStepProps) {
-  const { mutateAsync: makeBuyOffer, isPending } = useMakeBuyOfferAsset()
-  const isComethWallet = useIsComethWallet()
+  const { mutateAsync: makeBuyOffer, isPending } = useMakeBuyOfferAsset(asset)
+  const isComethWallet = useIsComethConnectWallet()
 
   const onConfirm = useCallback(async () => {
     await makeBuyOffer({ asset, price, validity })

@@ -10,7 +10,7 @@ import { X } from "lucide-react"
 import { env } from "@/config/env"
 import { siteConfig } from "@/config/site"
 
-import { AuthenticationButton }  from "./AuthentificationButton"
+import { AuthenticationButton }  from "./AuthenticationButton"
 import { MainNav } from "./MainNav"
 
 export function SiteHeader() {

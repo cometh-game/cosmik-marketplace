@@ -2,11 +2,11 @@ import { useEffect, useState } from "react"
 import {
   fetchHasSufficientFunds,
   useHasSufficientFunds,
-} from "@/services/balance/has-sufficient-funds"
+} from "@/services/balance/fundsService"
 import { BigNumber } from "ethers"
+import { useAccount } from "wagmi"
 
 import globalConfig from "@/config/globalConfig"
-import { useCurrentViewerAddress } from "@/lib/web3/auth"
 import { Button } from "@/components/ui/Button"
 import { Price } from "@/components/ui/Price"
 
@@ -16,7 +16,8 @@ export type FundsStepProps = {
 }
 
 export function FundsStep({ price, onValid }: FundsStepProps) {
-  const viewer = useCurrentViewerAddress()
+  const account = useAccount()
+  const viewer = account.address
   const [isRefreshingBalance, setIsRefreshingBalance] = useState(false)
 
   const { data } = useHasSufficientFunds({

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
+import { useIsComethConnectWallet } from "@/providers/authentication/comethConnectHooks"
 import {
   fetchHasEnoughGas,
   useHasEnoughGas,
 } from "@/services/balance/gasService"
+import { useAccount } from "wagmi"
 
 import globalConfig from "@/config/globalConfig"
-import { useCurrentViewerAddress, useIsComethWallet } from "@/lib/web3/auth"
 import { Button } from "@/components/ui/Button"
 import { Price } from "@/components/ui/Price"
 
@@ -14,9 +15,10 @@ export type AddGasStepProps = {
 }
 
 export function AddGasStep({ onValid }: AddGasStepProps) {
-  const viewer = useCurrentViewerAddress()
+  const account = useAccount()
+  const viewer = account.address
   const [isRefreshingBalance, setIsRefreshingBalance] = useState(false)
-  const isComethWallet = useIsComethWallet()
+  const isComethWallet = useIsComethConnectWallet()
 
   const { data } = useHasEnoughGas(viewer)
 

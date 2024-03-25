@@ -1,10 +1,11 @@
-import { useOpenLoginModal } from "@/providers/authentication/authenticationUiSwitch"
 import { cx } from "class-variance-authority"
 import { Wallet } from "lucide-react"
 import { useAccount } from "wagmi"
 
 import { CurrentAccountDropdown } from "./account-dropdown/CurrentAccountDropdown"
 import { Button } from "./ui/Button"
+import { useOpenLoginModal } from "@/providers/authentication/authenticationUiSwitch"
+
 
 export function AuthenticationButton({
   children,

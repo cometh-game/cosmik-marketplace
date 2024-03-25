@@ -38,28 +38,24 @@ import { WrapStep } from "../transaction-steps/WrapStep"
 
 export type MakeBuyOfferProps = {
   asset: AssetWithTradeData
-  isVariantLink?: boolean
-  variant?: string
-}
+} & React.ComponentProps<typeof Button>
+
+type MakeBuyOfferPriceDialogProps = {
+  submitCallback: (price: BigNumber, validity: string) => void
+  asset: AssetWithTradeData
+} & React.ComponentProps<typeof Button>
 
 export function MakeBuyOfferPriceDialog({
   onSubmit,
   asset,
-  isVariantLink,
-  variant,
-}: {
-  onSubmit: (price: BigNumber, validity: string) => void
-  asset: AssetWithTradeData
-  isVariantLink?: boolean
-  variant?: string
-}) {
+  size = "lg",
+}: MakeBuyOfferPriceDialogProps) {
   const [price, setPrice] = useState("")
   const [validity, setValidity] = useState("10")
   const orderParams = useMemo(() => {
     try {
       const parsedPrice = parseUnits(price, globalConfig.ordersErc20.decimals)
       return { price: parsedPrice, validity }
-
     } catch (e) {
       return null
     }
@@ -71,7 +67,7 @@ export function MakeBuyOfferPriceDialog({
     <Dialog modal>
       <DialogTrigger asChild>
         <Button
-          size={isVariantLink ? "default" : "lg"}
+          size={size}
           variant="default"
           disabled={!isChainSupported}
         >
@@ -92,11 +88,9 @@ export function MakeBuyOfferPriceDialog({
             <Label htmlFor="make-buy-offer-price">
               Offer price in {globalConfig.ordersDisplayCurrency.symbol} *
             </Label>
-            <Input
+            <PriceInput
               id="make-buy-offer-price"
-              type="number"
               onInputUpdate={(inputValue) => setPrice(inputValue)}
-              min={0}
             />
           </div>
           <div className="flex w-full flex-col gap-3 md:w-1/3">

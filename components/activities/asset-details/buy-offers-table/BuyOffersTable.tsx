@@ -5,7 +5,7 @@ import { BigNumber } from "ethers"
 import { Address, isAddressEqual } from "viem"
 
 import { BuyOffer } from "@/types/buy-offers"
-import { useCurrentViewerAddress } from "@/lib/web3/auth"
+import { useAccount } from "wagmi"
 import { DataTable } from "@/components/DataTable"
 
 import { columns } from "./columns"
@@ -16,7 +16,8 @@ export type BuyOffersTableProps = {
 }
 
 export function BuyOffersTable({ offers }: BuyOffersTableProps) {
-  const viewer = useCurrentViewerAddress()
+  const account = useAccount()
+  const viewerAddress = account.address
 
   const addresses = useMemo(() => {
     return Array.from(
@@ -33,11 +34,11 @@ export function BuyOffersTable({ offers }: BuyOffersTableProps) {
       .filter((offer) => {
         if (offer.trade.tokenId !== offer.asset?.tokenId) return false
         if (
-          viewer &&
-          isAddressEqual(offer.emitter.address, viewer) &&
+          viewerAddress &&
+          isAddressEqual(offer.emitter.address, viewerAddress) &&
           isAddressEqual(
             (offer.asset?.owner as Address) ?? offer.owner.address,
-            viewer
+            viewerAddress
           )
         )
           return false
@@ -68,7 +69,7 @@ export function BuyOffersTable({ offers }: BuyOffersTableProps) {
           },
         }
       })
-  }, [offers, viewer])
+  }, [offers, viewerAddress])
 
   return <DataTable columns={columns} data={data} />
 }

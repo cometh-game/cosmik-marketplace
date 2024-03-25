@@ -1,5 +1,5 @@
 import { useCallback } from "react"
-import { useAcceptBuyOffer } from "@/services/orders/accept-buy-offer"
+import { useAcceptBuyOffer } from "@/services/orders/acceptBuyOfferService"
 import { BigNumber } from "ethers"
 
 import { BuyOffer } from "@/types/buy-offers"

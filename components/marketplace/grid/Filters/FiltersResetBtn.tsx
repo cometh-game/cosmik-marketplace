@@ -1,6 +1,6 @@
 import { XIcon } from "lucide-react"
 
-import { useNFTFilters } from "@/lib/utils/nft-filters"
+import { useNFTFilters } from "@/lib/utils/nftFilters"
 import { Button } from "@/components/ui/Button"
 
 export const FiltersResetBtn = () => {

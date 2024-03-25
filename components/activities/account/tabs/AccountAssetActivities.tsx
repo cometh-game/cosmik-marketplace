@@ -7,7 +7,7 @@ import {
 } from "@/services/orders/asset-buy-offers"
 import { Address } from "viem"
 
-import { useCurrentViewerAddress } from "@/lib/web3/auth"
+import { useAccount } from "wagmi"
 
 import { Tabs } from "../../../ui/Tabs"
 import { TabBar } from "./TabBar"
@@ -24,7 +24,8 @@ export const AccountAssetActivities = ({
   walletAddress,
   children,
 }: AccountAssetActivitiesProps) => {
-  const viewerAddress = useCurrentViewerAddress()
+  const account = useAccount()
+  const viewerAddress = account.address
   const owner = useMemo(() => {
     return walletAddress === viewerAddress
   }, [viewerAddress, walletAddress])

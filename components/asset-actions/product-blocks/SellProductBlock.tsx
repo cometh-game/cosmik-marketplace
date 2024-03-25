@@ -2,9 +2,9 @@ import { useUsername } from "@/services/user/userNameService"
 import { AssetWithTradeData } from "@cometh/marketplace-sdk"
 import { Address } from "viem"
 
-import { UserLink } from "@/components/ui/user/UserButton"
-import { AuthenticationButton }  from "@/components/AuthentificationButton"
-import { AssetStatusBadge } from "@/components/marketplace/asset/"
+import { UserLink } from "@/components/ui/user/UserLink"
+import { AuthenticationButton }  from "@/components/AuthenticationButton"
+import { AssetStatusBadge } from "@/components/marketplace/asset/AssetStatusBadge"
 import {
   ProductBlockCenteredColumn,
   ProductBlockContainer,
@@ -44,11 +44,11 @@ export function SellProductBlock({ asset }: SellProductBlockProps) {
       </ProductBlockDividedColumn>
 
       <ProductBlockCenteredColumn>
-        <ConnectButton fullVariant>
+        <AuthenticationButton fullVariant>
           <SwitchNetwork>
             <SellAssetButton asset={asset} />
           </SwitchNetwork>
-        </ConnectButton>
+        </AuthenticationButton>
       </ProductBlockCenteredColumn>
     </ProductBlockContainer>
   )

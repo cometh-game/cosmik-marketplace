@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback } from "react"
-import { useCancelListing } from "@/services/orders/cancel-listing"
+import { useCancelListing } from "@/services/orders/cancelListingService"
 import { AssetWithTradeData } from "@cometh/marketplace-sdk"
 
 import { Button } from "@/components/ui/Button"

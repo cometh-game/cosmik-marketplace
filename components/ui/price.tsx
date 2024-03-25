@@ -1,6 +1,6 @@
 import { forwardRef } from "react"
 import Image from "next/image"
-import { cva, cx, VariantProps } from "class-variance-authority"
+import { cva, VariantProps } from "class-variance-authority"
 import { BigNumberish } from "ethers"
 import { formatUnits } from "ethers/lib/utils"
 
@@ -8,6 +8,8 @@ import { env } from "@/config/env"
 import globalConfig from "@/config/globalConfig"
 import { smartRounding } from "@/lib/utils/priceUtils"
 import { cn } from "@/lib/utils/utils"
+
+import { FiatPrice } from "./FiatPrice"
 
 const priceTriggerVariants = cva("", {
   variants: {
@@ -53,8 +55,10 @@ export type PriceTriggerProps = {
   formattedAmount: string
   hideIcon?: boolean
   hideSymbol?: boolean
-  className?: string
   isNativeToken?: boolean
+  shouldDisplayFiatPrice?: boolean
+  fiatPriceNewLine?: boolean
+  className?: string
 } & PriceTriggerVariants
 
 const PriceTrigger = forwardRef<HTMLSpanElement, PriceTriggerProps>(
@@ -66,8 +70,10 @@ const PriceTrigger = forwardRef<HTMLSpanElement, PriceTriggerProps>(
       fontWeight,
       hideIcon = false,
       hideSymbol = true,
-      className,
       isNativeToken,
+      shouldDisplayFiatPrice = false,
+      fiatPriceNewLine = false,
+      className,
     },
     ref
   ) => {
@@ -78,6 +84,7 @@ const PriceTrigger = forwardRef<HTMLSpanElement, PriceTriggerProps>(
     const currency = isNativeToken
       ? globalConfig.network.nativeToken
       : globalConfig.ordersErc20
+
     return (
       <span
         ref={ref}
@@ -98,6 +105,13 @@ const PriceTrigger = forwardRef<HTMLSpanElement, PriceTriggerProps>(
         {`${roundedAmount}${
           !hideSymbol || !currency.thumb ? ` ${currency.symbol}` : ""
         }`}
+        {fiatPriceNewLine && <br className="hidden sm:inline"></br>}
+        {shouldDisplayFiatPrice && (
+          <FiatPrice
+            className={cn(!fiatPriceNewLine && "ml-1")}
+            amount={roundedAmount}
+          />
+        )}
       </span>
     )
   }
@@ -109,18 +123,20 @@ export type PriceProps = {
   amount?: BigNumberish | null | undefined
   hideIcon?: boolean
   hideSymbol?: boolean
-  className?: string
   isNativeToken?: boolean
+  shouldDisplayFiatPrice?: boolean
+  fiatPriceNewLine?: boolean
+  className?: string
 } & PriceTriggerVariants
 
 export const Price = ({ amount, isNativeToken, ...rest }: PriceProps) => {
   if (!amount) return "-"
-  const formattedAmount = (+formatUnits(
+  const formattedAmount = formatUnits(
     amount.toString(),
     isNativeToken
       ? globalConfig.decimals.nativeTokenDecimals
       : globalConfig.ordersErc20.decimals
-  )).toString()
+  )
 
   return (
     <PriceTrigger

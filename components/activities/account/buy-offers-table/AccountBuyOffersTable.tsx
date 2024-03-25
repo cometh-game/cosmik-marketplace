@@ -2,10 +2,10 @@
 
 import { useMemo } from "react"
 import { useUsernames } from "@/services/user/userNameService"
-import { isAddressEqual } from "viem"
+import { Address, isAddressEqual } from "viem"
+import { useAccount } from "wagmi"
 
 import { BuyOffer } from "@/types/buy-offers"
-import { useCurrentViewerAddress } from "@/lib/web3/auth"
 import { DataTable } from "@/components/DataTable"
 
 import { columns } from "./columns"
@@ -15,7 +15,8 @@ export type AccountBuyOffersTableProps = {
 }
 
 export function AccountBuyOffersTable({ offers }: AccountBuyOffersTableProps) {
-  const viewer = useCurrentViewerAddress()
+  const account = useAccount()
+  const viewerAddress = account.address
 
   const addresses = useMemo(() => {
     return Array.from(
@@ -25,15 +26,15 @@ export function AccountBuyOffersTable({ offers }: AccountBuyOffersTableProps) {
     )
   }, [offers])
 
-  const { usernames, isFetchingUsernames } = useUsernames(addresses);
+  const { usernames, isFetchingUsernames } = useUsernames(addresses)
 
   const data = useMemo(() => {
     return offers
       .filter((offer) => {
-        if (!viewer) return true
+        if (!viewerAddress) return true
         if (
-          isAddressEqual(offer.emitter.address, viewer) &&
-          isAddressEqual(offer.owner.address, viewer)
+          isAddressEqual(offer.emitter.address, viewerAddress) &&
+          isAddressEqual(offer.owner.address, viewerAddress)
         )
           return false
         return true
@@ -61,7 +62,7 @@ export function AccountBuyOffersTable({ offers }: AccountBuyOffersTableProps) {
           },
         }
       })
-  }, [offers, viewer, usernames])
+  }, [offers, viewerAddress, usernames])
 
   return <DataTable columns={columns} data={data} />
 }

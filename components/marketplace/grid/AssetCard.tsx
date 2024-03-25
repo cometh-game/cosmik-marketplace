@@ -2,6 +2,7 @@
 
 import { useMemo } from "react"
 import Link from "next/link"
+import { manifest } from "@/manifests/manifests"
 import {
   AssetAttribute,
   AssetWithTradeData,
@@ -9,22 +10,23 @@ import {
 } from "@cometh/marketplace-sdk"
 import { animated, config, useSpring } from "react-spring"
 import { useBoolean } from "usehooks-ts"
+import { Address } from "viem"
+import { useAccount } from "wagmi"
 
+import globalConfig from "@/config/globalConfig"
 import { getRandomArrayElement } from "@/lib/utils/arrays"
-import { getAssetColor } from "@/lib/utils/colors-attributes"
-import { shortenTokenId } from "@/lib/utils/token"
+import { getAssetColor } from "@/lib/utils/colorsAttributes"
 import { cn } from "@/lib/utils/utils"
-import { useCurrentViewerAddress } from "@/lib/web3/auth"
 import { Appear } from "@/components/ui/Appear"
 import { AssetImage } from "@/components/ui/AssetImage"
 import { Card } from "@/components/ui/Card"
+import { Price } from "@/components/ui/Price"
 import { BuyAssetButton } from "@/components/asset-actions/buttons/BuyAssetButton"
+import { CancelListingButton } from "@/components/asset-actions/buttons/CancelListingButton"
 import { MakeBuyOfferButton } from "@/components/asset-actions/buttons/MakeBuyOfferPriceDialog"
 import { SellAssetButton } from "@/components/asset-actions/buttons/SellAssetButton"
 import { SwitchNetwork } from "@/components/asset-actions/buttons/SwitchNetwork"
-import { AuthenticationButton }  from "@/components/AuthentificationButton"
-
-import { Price } from "../../ui/Price"
+import { AuthenticationButton } from "@/components/AuthenticationButton"
 
 export type AssetCardProps = {
   asset: SearchAssetWithTradeData & {
@@ -37,7 +39,7 @@ export type AssetCardProps = {
 
 export type AssetCardBaseProps = {
   src?: string | null
-  owner?: boolean
+  isOwnerAsset: boolean
   children?: React.ReactNode | React.ReactNode[]
   fallback?: string | null
   asset: SearchAssetWithTradeData
@@ -47,36 +49,28 @@ export type AssetImageContainerProps = {
   children?: React.ReactNode | React.ReactNode[]
   color?: string | null
   className?: string
+  isHovered?: boolean
+  imageAspectRatio?: number
 }
 
 export function AssetImageContainer({
   children,
   color,
   className,
+  isHovered,
+  imageAspectRatio: imageAspectRatio,
 }: AssetImageContainerProps) {
-  const active = useBoolean(false)
-  const hover = useBoolean(false)
-
   const style = useSpring({
     to: {
-      transform: hover.value
-        ? `rotateX(2deg) rotateY(0deg) rotateZ(0deg) translateY(-8px) scale(${
-            active.value ? 1 : 1.01
-          })`
+      transform: isHovered
+        ? `rotateX(2deg) rotateY(0deg) rotateZ(0deg) translateY(-8px) scale(${1.01})`
         : "rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateY(0px) scale(1)",
     },
     config: config.gentle,
   })
 
   return (
-    <animated.div
-      className="z-10"
-      onMouseEnter={hover.setTrue}
-      onMouseLeave={hover.setFalse}
-      onMouseDown={active.setTrue}
-      onMouseUp={active.setFalse}
-      style={style}
-    >
+    <animated.div className="z-10" style={style}>
       <div
         className={cn(
           "relative h-auto w-[84px] overflow-hidden rounded-md max-sm:rounded-md sm:h-[380px] sm:w-full",
@@ -94,9 +88,15 @@ export function AssetCardBase({
   src,
   fallback,
   children,
-  owner,
+  isOwnerAsset,
   asset,
 }: AssetCardBaseProps) {
+  const isHovered = useBoolean(false)
+
+  const cardTextHeightsClass = manifest.fiatCurrency.enable
+    ? "sm:h-[110px]"
+    : "sm:h-[100px]"
+
   return (
     <Appear
       enabled={false}
@@ -105,16 +105,18 @@ export function AssetCardBase({
       className="relative w-full justify-self-center"
     >
       <Card
+        onMouseEnter={isHovered.setTrue}
+        onMouseLeave={isHovered.setFalse}
         className={cn(
-          "card-ghost flex size-full flex-1 flex-row items-center border-transparent p-2 pr-4 sm:p-0 shadow-none transition-all duration-200 ease-in-out sm:inline-flex sm:flex-col sm:items-start sm:border-2",
-          owner && "bg-[#f4f2e8]/[.02]"
+          "card-ghost flex size-full flex-1 flex-row items-center border-transparent p-2 pr-4 shadow-none transition-all duration-200 ease-in-out sm:inline-flex sm:flex-col sm:items-start sm:border-2 sm:p-0",
+          isOwnerAsset && "bg-[#f4f2e8]/[.02]"
         )}
       >
         <Link
-          href={`/marketplace/${asset.tokenId}`}
+          href={`/nfts/${asset.contractAddress}/${asset.tokenId}`}
           className="sm:w-full sm:flex-1"
         >
-          <AssetImageContainer color={getAssetColor(asset)}>
+          <AssetImageContainer color={getAssetColor(asset)} isHovered={isHovered.value}>
             <AssetImage
               src={src}
               fallback={fallback}
@@ -137,40 +139,44 @@ function renderAssetActions(
       attributes?: AssetAttribute[]
     }
   },
-  owner: boolean
+  isOwnerAsset: boolean
 ) {
-  if (asset.orderbookStats.lowestListingPrice && !owner) {
-    return (
-      <ConnectButton isLinkVariant customText="Login to buy">
-        <SwitchNetwork>
-          <BuyAssetButton isSmall asset={asset} isLinkVariant />
-        </SwitchNetwork>
-      </ConnectButton>
+  let button = undefined
+  let buttonText = ""
+  if (asset.orderbookStats.lowestListingPrice && !isOwnerAsset) {
+    button = <BuyAssetButton asset={asset} />
+    buttonText = "Buy now "
+  } else if (!isOwnerAsset) {
+    button = (
+      <MakeBuyOfferButton asset={asset as unknown as AssetWithTradeData} />
     )
-  } else if (asset.orderbookStats.highestOfferPrice) {
-    return (
-      <Price variant="accent" amount={asset.orderbookStats.highestOfferPrice} isNativeToken={true} />
-    )
-  } else if (!owner) {
-    return (
-      <ConnectButton customText="Buy">
-        <SwitchNetwork>
-          <MakeBuyOfferButton
-            asset={asset as unknown as AssetWithTradeData}
-            isVariantLink
-          />
-        </SwitchNetwork>
-      </ConnectButton>
-    )
+    buttonText = "Make an offer"
+  } else if (!asset.orderbookStats.lowestListingPrice) {
+    button = <SellAssetButton asset={asset as unknown as AssetWithTradeData} />
+    buttonText = "Sell now"
   } else {
-    return "No offer yet"
+    button = (
+      <CancelListingButton asset={asset as unknown as AssetWithTradeData} />
+    )
+    buttonText = "Cancel listing"
+  }
+
+  if (button) {
+    return (
+      <div className="hidden sm:block">
+        <AuthenticationButton customText={buttonText}>
+          <SwitchNetwork>{button}</SwitchNetwork>
+        </AuthenticationButton>
+      </div>
+    )
   }
 }
 
 export function AssetCard({ asset, children }: AssetCardProps) {
-  const viewerAddress = useCurrentViewerAddress()
+  const account = useAccount()
+  const viewerAddress = account.address
 
-  const owner = useMemo(() => {
+  const isOwnerAsset = useMemo(() => {
     return asset.owner === viewerAddress?.toLowerCase()
   }, [viewerAddress, asset.owner])
 
@@ -178,12 +184,12 @@ export function AssetCard({ asset, children }: AssetCardProps) {
     <AssetCardBase
       src={asset.cachedImageUrl}
       fallback={asset.metadata.image}
-      owner={owner}
+      isOwnerAsset={isOwnerAsset}
       asset={asset}
     >
       <>
         <Link
-          href={`/marketplace/${asset.tokenId}`}
+          href={`/nfts/${asset.contractAddress}/${asset.tokenId}`}
           className={cn(
             "mb-4 flex flex-nowrap items-center text-xl font-semibold text-white"
           )}
@@ -191,18 +197,19 @@ export function AssetCard({ asset, children }: AssetCardProps) {
           <span className="inline-block max-w-[100%_-_80px] truncate">
             {asset.metadata.name ? asset.metadata.name : "Unknown NFT"}
           </span>
-          <span>&nbsp;#{shortenTokenId(asset.tokenId, 5)}</span>
         </Link>
         <div className="flex items-center justify-between">
           <div>
-            {!owner && <div className="mb-1 text-sm font-medium">Price</div>}
+            {!isOwnerAsset && <div className="mb-1 text-sm font-medium">Price</div>}
             {asset.orderbookStats.lowestListingPrice ? (
               <Price
                 variant="accent"
                 amount={asset.orderbookStats.lowestListingPrice}
+                shouldDisplayFiatPrice={true}
+                fiatPriceNewLine={true}
                 isNativeToken={true}
               />
-            ) : owner ? (
+            ) : isOwnerAsset ? (
               <SellAssetButton
                 asset={asset as unknown as AssetWithTradeData}
                 isVariantLink
@@ -213,9 +220,17 @@ export function AssetCard({ asset, children }: AssetCardProps) {
           </div>
           <div>
             {asset.orderbookStats.highestOfferPrice && (
-              <div className="text-sm font-medium">Best offer</div>
+              <>
+                <div className="text-sm font-medium">Best offer</div>
+                {/* <div className="text-end">{renderAssetActions(asset, isOwnerAsset)}</div> */}
+                <Price
+                  size="sm"
+                  amount={asset.orderbookStats.highestOfferPrice}
+                  shouldDisplayFiatPrice={true}
+                  fiatPriceNewLine={true}
+                />
+              </>
             )}
-            <div className="text-end">{renderAssetActions(asset, owner)}</div>
           </div>
         </div>
         {children}

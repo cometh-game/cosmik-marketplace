@@ -7,7 +7,7 @@ import { PopoverProps } from "@radix-ui/react-popover"
 import { Check, ChevronDown, ListFilter } from "lucide-react"
 import { useWindowSize } from "usehooks-ts"
 
-import { useNFTFilters } from "@/lib/utils/nft-filters"
+import { useNFTFilters } from "@/lib/utils/nftFilters"
 import { cn } from "@/lib/utils/utils"
 import { Button } from "@/components/ui/Button"
 import {
@@ -36,7 +36,7 @@ export function MarketplaceSortDropdown({
   const { get } = useSearchParams()
 
   const { width } = useWindowSize()
-  const isSmallScreen = width && width < 768
+  const isSmallScreen = width && width < 540
 
   const orderBy = get("orderBy")
   const direction = get("direction")
