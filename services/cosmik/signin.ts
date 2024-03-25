@@ -1,5 +1,6 @@
 import { cosmikClient } from "@/services/clients"
 import { useMutation } from "@tanstack/react-query"
+import { isAddress } from "ethers/lib/utils"
 
 import { toast } from "@/components/ui/toast/use-toast"
 
@@ -26,22 +27,13 @@ export const useCosmikSignin = () => {
       return data
     },
     onSuccess: async (data) => {
-      // if (data.user) {
-      //   localStorage.setItem("user", JSON.stringify(data.user))
-      // }
-      const hasRetrieveWalletAddressInStorage = localStorage.getItem("hasRetrieveWalletAddress")
-
-      // if (typeof walletAddress === "undefined" || !walletAddress) {
-      //   return push(APP_ROUTES.WALLET_REGISTER.PATH);
-      // } else {
-      //   if (isConnectKeyStore) {
-      //     localStorage.setItem(
-      //       "selectedWallet",
-      //       JSON.stringify(COMETH_CONNECT_LABEL)
-      //     );
-      //   }
-      //   push(callbackUrl || APP_ROUTES.HOME.PATH);
-      // }
+      if (!isAddress(data.user.walletAddress)) {
+        throw new Error("Wallet address is not defined. Please, contact support.")
+      }
+      
+      const hasRetrieveWalletAddressInStorage = localStorage.getItem(
+        "hasRetrieveWalletAddress"
+      )
 
       if (hasRetrieveWalletAddressInStorage) {
         toast({
