@@ -7,6 +7,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react"
 import { manifest } from "@/manifests"
@@ -21,25 +22,33 @@ import {
 
 import "@web3-onboard/common"
 
-import { useStorageWallet } from "@/services/web3/use-storage-wallet"
+import {
+  useStorageWallet,
+  useWalletAddressFromStorage,
+} from "@/services/web3/use-storage-wallet"
+import bitgetWalletModule from "@web3-onboard/bitget"
+import bloctoModule from "@web3-onboard/blocto"
 import Onboard, { OnboardAPI } from "@web3-onboard/core"
-import torusModule from '@web3-onboard/torus'
-import mewWallet from '@web3-onboard/mew-wallet'
-import bitgetWalletModule from '@web3-onboard/bitget'
+import dcentModule from "@web3-onboard/dcent"
+import enrkypt from "@web3-onboard/enkrypt"
+import frameModule from "@web3-onboard/frame"
+import frontierModule from "@web3-onboard/frontier"
+import infinityWalletWalletModule from "@web3-onboard/infinity-wallet"
 import injectedModule from "@web3-onboard/injected-wallets"
-import bloctoModule from '@web3-onboard/blocto'
-import dcentModule from '@web3-onboard/dcent'
-import enrkypt from '@web3-onboard/enkrypt'
-import frameModule from '@web3-onboard/frame'
-import frontierModule from '@web3-onboard/frontier'
-import infinityWalletWalletModule from '@web3-onboard/infinity-wallet'
-import zealWalletModule from '@web3-onboard/zeal'
-import xdefiWalletModule from '@web3-onboard/xdefi'
-import phantomModule from '@web3-onboard/phantom'
+import mewWallet from "@web3-onboard/mew-wallet"
+import phantomModule from "@web3-onboard/phantom"
+import torusModule from "@web3-onboard/torus"
+import xdefiWalletModule from "@web3-onboard/xdefi"
+import zealWalletModule from "@web3-onboard/zeal"
+import { isAddress } from "ethers/lib/utils"
+
 import { env } from "@/config/env"
 import networks from "@/config/networks"
 import { COMETH_CONNECT_STORAGE_LABEL } from "@/config/site"
-import { isAddress } from "ethers/lib/utils"
+import { toast } from "@/components/ui/toast/use-toast"
+
+import { useAuthContext } from "./auth"
+import { useDisconnect } from "@/lib/web3/auth"
 
 const web3OnboardNetworks = Object.values(networks).map((network) => {
   return {
@@ -106,26 +115,15 @@ export function Web3OnboardProvider({
   const [onboard, setOnboard] = useState<OnboardAPI | null>(null)
   const [isConnected, setIsconnected] = useState<boolean>(false)
   const [reconnecting, setReconnecting] = useState<boolean>(false)
-  const { comethWalletAddressInStorage } = useStorageWallet()
+  const { walletAddressFromStorage } = useWalletAddressFromStorage()
+  const { getUser, isUserLoggedFetched } =
+    useAuthContext()
+  const walletLogout = useDisconnect()
 
   const chainId = getSupportedNetworkId(env.NEXT_PUBLIC_NETWORK_ID)
 
   if (!chainId) {
     throw new Error("Network not supported by Cometh Connect.")
-  }
-
-  const initNewSignerRequest = async (walletAddress: string) => {
-    if (!isAddress(walletAddress)) {
-      throw new Error("Invalid wallet address.")
-    }
-
-    const connectAuthAdaptor = new ConnectAdaptor({
-      chainId: chainId,
-      apiKey: process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
-      baseUrl: process.env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL!,
-    })
-    
-    return await connectAuthAdaptor.initNewSignerRequest(walletAddress)
   }
 
   const retrieveWalletAddressFromSigner = async (walletAddress: string) => {
@@ -145,6 +143,20 @@ export function Web3OnboardProvider({
     })
 
     await wallet.connect(walletAddress)
+  }
+
+  const initNewSignerRequest = async (walletAddress: string) => {
+    if (!isAddress(walletAddress)) {
+      throw new Error("Invalid wallet address.")
+    }
+
+    const connectAuthAdaptor = new ConnectAdaptor({
+      chainId: chainId,
+      apiKey: process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
+      baseUrl: process.env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL!,
+    })
+
+    return await connectAuthAdaptor.initNewSignerRequest(walletAddress)
   }
 
   const initOnboard = useCallback((options: SetOnboardOptions) => {
@@ -225,35 +237,56 @@ export function Web3OnboardProvider({
     const currentWalletInStorage = localStorage.getItem("selectedWallet")
     const isComethWallet =
       currentWalletInStorage === COMETH_CONNECT_STORAGE_LABEL
+    // const walletAddressIsValid =
+    //   isUserLoggedFetched && getUser()?.address === walletAddressFromStorage
     if (isComethWallet) {
       initOnboard({
         isComethWallet,
-        walletAddress: comethWalletAddressInStorage!,
+        walletAddress: walletAddressFromStorage!,
       })
     }
 
     const startReconnecting = async () => {
-      if (currentWalletInStorage) {
-        setReconnecting(true)
-        try {
-          const connectionResult = await onboard?.connectWallet({
-            autoSelect: {
-              label: currentWalletInStorage,
-              disableModals: true,
-            },
+      setReconnecting(true)
+      try {
+        const connectionResult = await onboard?.connectWallet({
+          autoSelect: {
+            label: currentWalletInStorage!,
+            disableModals: true,
+          },
+        })
+        const walletAddress = connectionResult?.[0].accounts[0]?.address
+        if (walletAddress !== getUser()?.address) {
+          walletLogout({
+            label: connectionResult?.[0]?.label!,
           })
-          if (connectionResult?.length) {
-            setIsconnected(true)
-            setReconnecting(false)
-          }
-        } catch (error) {
-          console.error("Error reconnecting wallet", error)
+          throw new Error(
+            "Your Cosmik wallet address doesn't match the one stored in your browser. Please contact support. #2"
+          )
+        }
+        if (connectionResult?.length) {
+          setIsconnected(true)
           setReconnecting(false)
         }
+      } catch (error: any) {
+        console.error("Error reconnecting wallet", error)
+        toast({
+          title: "Error reconnecting wallet",
+          description: error.message,
+          variant: "destructive",
+          duration: 5000,
+        })
+        setIsconnected(false)
+        setReconnecting(false)
       }
     }
-    startReconnecting()
-  }, [initOnboard, onboard, comethWalletAddressInStorage])
+
+    /* if user exist, start reconnecting */
+    if (isUserLoggedFetched && currentWalletInStorage) {
+      console.log("userLoaded", getUser())
+      startReconnecting()
+    }
+  }, [initOnboard, onboard, walletAddressFromStorage, isUserLoggedFetched])
 
   return (
     <Web3OnboardContext.Provider

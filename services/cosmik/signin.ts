@@ -28,19 +28,12 @@ export const useCosmikSignin = () => {
       const { data } = await cosmikClient.post("/login", credentials)
       return data
     },
-    onSuccess: async (data) => {
-      if (!isAddress(data.user.walletAddress)) {
-        throw new Error("Wallet address is not defined. Please, contact support.")
-      }
+    onSuccess: (data) => {
       client.invalidateQueries({
         queryKey: ["cosmik", "logged"],
       })
-      const hasRetrieveWalletAddressInStorage = localStorage.getItem("hasRetrieveWalletAddress")
-      if (hasRetrieveWalletAddressInStorage) {
-        toast({
-          title: "Login successful",
-          duration: 3000,
-        })
+      if (!isAddress(data.user.walletAddress)) {
+        throw new Error("Wallet address is not defined. Please, contact support.")
       }
     },
     onError: (error: any) => {

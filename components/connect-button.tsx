@@ -1,13 +1,9 @@
-import { useEffect, useState } from "react"
 import { useWeb3OnboardContext } from "@/providers/web3-onboard"
-import { useWalletConnect } from "@/services/web3/use-wallet-connect"
-import { WalletIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
 import { CurrentAccountDropdown } from "./account-dropdown/current-account-dropdown"
 import { SigninDropdown } from "./account-dropdown/signin-dropdown"
-import { useRetrieveWalletAddress, useStorageWallet } from "@/services/web3/use-storage-wallet"
 
 export function ConnectButton({
   children,
@@ -20,29 +16,7 @@ export function ConnectButton({
   customText?: string
   isLinkVariant?: boolean
 }) {
-  const { initOnboard, isConnected, setIsconnected, reconnecting } = useWeb3OnboardContext()
-  const { connect: connectWallet, connecting } = useWalletConnect()
-  const [isLoading, setIsLoading] = useState(false)
-  const { comethWalletAddressInStorage } = useStorageWallet()
-  const { hasRetrieveWalletAddressInStorage } = useRetrieveWalletAddress()
-
-  async function handleConnect(isComethWallet = false) {
-    setIsLoading(true)
-    try {
-      initOnboard({
-        isComethWallet,
-        ...(comethWalletAddressInStorage && {
-          walletAddress: comethWalletAddressInStorage,
-        }),
-      })
-      await connectWallet({ isComethWallet })
-      setIsconnected(true)
-    } catch (error) {
-      console.error("Error connecting wallet", error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const { isConnected, reconnecting } = useWeb3OnboardContext()
 
   if (isConnected && !children) return <CurrentAccountDropdown />
 
@@ -53,33 +27,16 @@ export function ConnectButton({
         isLoading={reconnecting}
         disabled={reconnecting}
       >
-       <span className="max-sm:hidden">Reconnecting</span>
-       <span className="sm:hidden">Login</span>
+        <span className="max-sm:hidden">Reconnecting</span>
+        <span className="sm:hidden">Login</span>
       </Button>
     )
   }
 
-  if (
-    hasRetrieveWalletAddressInStorage && !isConnected
-  ) {
-    return (
-      <Button
-        variant="default"
-        size={fullVariant ? "lg" : "default"}
-        isLoading={isLoading || connecting || reconnecting}
-        disabled={isLoading || connecting || reconnecting}
-        onClick={() => handleConnect(true)}
-      >
-        <WalletIcon size="16" className="mr-2" />
-        Login
-      </Button>
-    )
-  }
-
-  if (!isConnected || isLoading || connecting) {
+  if (!isConnected || reconnecting) {
     return (
       <SigninDropdown
-        disabled={isLoading || connecting || reconnecting}
+        disabled={reconnecting}
         fullVariant={fullVariant}
         customText={customText}
         isLinkVariant={isLinkVariant}

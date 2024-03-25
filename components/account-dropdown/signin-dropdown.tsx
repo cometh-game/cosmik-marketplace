@@ -6,8 +6,10 @@ import { useCosmikSignin, User } from "@/services/cosmik/signin"
 import { useStorageWallet } from "@/services/web3/use-storage-wallet"
 import { useWalletConnect } from "@/services/web3/use-wallet-connect"
 import { cx } from "class-variance-authority"
+import { ethers } from "ethers"
 import { WalletIcon } from "lucide-react"
 
+import { useDisconnect } from "@/lib/web3/auth"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
@@ -18,13 +20,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { AuthorizationProcess } from "@/components/connect-actions/buttons/authorization-process"
 import { SignInForm } from "@/components/signin/signin-form"
+
+import { toast } from "../ui/toast/use-toast"
 
 export type SigninDropdownProps = {
   disabled: boolean
@@ -48,6 +47,7 @@ export function SigninDropdown({
   const { isSuccess, isPending, data } = useCosmikSignin()
   const { connect: connectWallet } = useWalletConnect()
   const [isLoading, setIsLoading] = useState(false)
+  const walletLogout = useDisconnect()
 
   const handleSigninDialogChange = useCallback(
     (open: boolean) => {
@@ -64,14 +64,32 @@ export function SigninDropdown({
         setIsLoading(true)
         setUser(user)
         // Attempt to retrieve the wallet address to determine if it is the first connection
-        await retrieveWalletAddressFromSigner(user.address)
-        localStorage.setItem("hasRetrieveWalletAddress", "true")
+        const test = await retrieveWalletAddressFromSigner(user.address)
+        console.log("test", test)
         initOnboard({
           isComethWallet: true,
           walletAddress: user.address,
         })
-        await connectWallet({ isComethWallet: true })
+        const wallet = await connectWallet({ isComethWallet: true })
+        const walletAddress = ethers.utils.getAddress(
+          wallet.accounts[0].address
+        )
+        if (walletAddress !== user.address) {
+          walletLogout({
+            label: wallet.label,
+          })
+          throw new Error(
+            "Your Cosmik wallet address doesn't match the one stored in your browser. Please contact support. #1"
+          )
+        }
+        // console.log("connectionResult", connectionResult)
+        localStorage.setItem("currentWalletAddress", user.address)
         setIsconnected(true)
+
+        toast({
+          title: "Login successful",
+          duration: 3000,
+        })
       } catch (error) {
         // If an error occurs, likely due to a first-time connection, display the authorization modal
         setDisplaySigninDialog(false)
