@@ -32,7 +32,7 @@ export const useCosmikSignin = () => {
       client.invalidateQueries({
         queryKey: ["cosmik", "logged"],
       })
-      if (data.user.address && !isAddress(data.user.address)) {
+      if (!data.user.address && !isAddress(data.user.address)) {
         throw new Error("Wallet address is not defined. Please, contact support.")
       }
     },
