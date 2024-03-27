@@ -1,4 +1,4 @@
-import { cosmikClient } from "@/services/clients"
+import { cosmikClient } from "@/lib/clients"
 import { useMutation } from "@tanstack/react-query"
 
 export const useNewSignerRequest = () => {

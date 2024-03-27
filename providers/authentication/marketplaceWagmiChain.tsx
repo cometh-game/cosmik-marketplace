@@ -12,10 +12,9 @@ import {
   optimism,
   polygon,
   polygonMumbai,
-  
 } from "@wagmi/chains"
 
-export const muster = {
+const muster = {
   id: 4078,
   name: 'Muster',
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
@@ -27,7 +26,7 @@ export const muster = {
   },
   testnet: false
 }
-export const musterTestnet = {
+const musterTestnet = {
   id: 2121337,
   name: 'Muster Anytrust Sepolia',
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },

@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react"
-import { useWeb3OnboardContext } from "@/providers/web3-onboardOLD"
-import { useStorageWallet } from "@/services/web3/use-storage-wallet"
-import { useWalletConnect } from "@/services/web3/use-wallet-connect"
+import { useState } from "react"
+import { useConnectComethWallet } from "@/providers/authentication/comethConnectHooks"
+import { useUserAuthContext } from "@/providers/userAuth"
 
 import { Button } from "@/components/ui/Button"
 import { toast } from "@/components/ui/toast/hooks/useToast"
@@ -15,49 +14,40 @@ export const RefreshStep: React.FC<RefreshStepProps> = ({
   userAddress,
   onValid,
 }) => {
-  const { initOnboard, retrieveWalletAddressFromSigner, setIsconnected } =
-    useWeb3OnboardContext()
+  const { connectComethWallet, retrieveWalletAddress } =
+    useConnectComethWallet()
+  const { setUserIsFullyConnected } = useUserAuthContext()
   const [isLoading, setIsLoading] = useState(false)
-  const { connect: connectWallet } = useWalletConnect()
-  const { comethWalletAddressInStorage } = useStorageWallet()
-  const [canRefresh, setCanRefresh] = useState(false)
-
-  useEffect(() => {
-    const retrieveWalletAddress = async () => {
-      await retrieveWalletAddressFromSigner(userAddress)
-      setCanRefresh(true)
-    }
-
-    // polling to check if the user has authorized the device
-    const interval = setInterval(retrieveWalletAddress, 2000)
-    return () => clearInterval(interval)
-  }, [])
 
   const handleRefresh = async () => {
     setIsLoading(true)
     try {
-      await retrieveWalletAddressFromSigner(userAddress)
-      
-      try {
-        initOnboard({
-          isComethWallet: true,
-          walletAddress: comethWalletAddressInStorage!,
-        })
-        await connectWallet({ isComethWallet: true })
-        setIsconnected(true)
-        onValid()
-      } catch (error) {
-        console.error("Error connecting wallet", error)
-      }
+      await retrieveWalletAddress(userAddress)
 
+      try {
+        await connectComethWallet(userAddress)
+        setUserIsFullyConnected(true)
+        onValid()
+      } catch (error: any) {
+        toast({
+          title: "Error",
+          description:
+            error?.message || "There was an error connecting your wallet.",
+          variant: "destructive",
+        })
+      }
       toast({
         title: "Device succesfully Authorized!",
         description:
           "Your Cosmik Battle account has been successfully linked to the marketplace.",
         variant: "default",
       })
-    } catch (error) {
-      console.error("Error in handleRefresh", error)
+    } catch (error: any) {
+      toast({
+        title: "Something went wrong.",
+        description: error?.message || "Please try again",
+        variant: "destructive",
+      })
     } finally {
       setIsLoading(false)
     }
@@ -74,7 +64,7 @@ export const RefreshStep: React.FC<RefreshStepProps> = ({
         size="lg"
         onClick={handleRefresh}
         isLoading={isLoading}
-        disabled={isLoading || !canRefresh}
+        disabled={isLoading}
       >
         Refresh
       </Button>

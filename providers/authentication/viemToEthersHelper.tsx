@@ -42,7 +42,8 @@ function clientToSigner(
   const signer = provider.getSigner(accountAddress)
   return signer
 }
-function useComethWallet(address?: Address) {
+
+export function useComethWallet(address?: Address) {
   const { connector } = useAccount()
   const isComethWallet = useIsComethConnectWallet()
   const queryResult = useQuery({
@@ -55,6 +56,7 @@ function useComethWallet(address?: Address) {
   })
   return queryResult.data
 }
+
 export function useEthersSigner() {
   const { data: client } = useConnectorClient()
   const { address, connector } = useAccount()

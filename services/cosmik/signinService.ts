@@ -1,6 +1,6 @@
-import { cosmikClient } from "@/services/clients"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
+import { cosmikClient } from "@/lib/clients"
 import { toast } from "@/components/ui/toast/hooks/useToast"
 
 interface SignInBody {
@@ -19,42 +19,34 @@ export type User = {
 }
 
 export const useCosmikSignin = () => {
+  const client = useQueryClient()
+
   return useMutation({
     mutationKey: ["cosmik, signin"],
     mutationFn: async (credentials: SignInBody) => {
       const { data } = await cosmikClient.post("/login", credentials)
+      if (typeof data.user.address === "undefined" || !data.user.address) {
+        throw new Error("Wallet address is not defined. Please contact support")
+      }
       return data
     },
-    onSuccess: async (data) => {
-      // if (data.user) {
-      //   localStorage.setItem("user", JSON.stringify(data.user))
-      // }
-      const hasRetrieveWalletAddressInStorage = localStorage.getItem("hasRetrieveWalletAddress")
-
-      // if (typeof walletAddress === "undefined" || !walletAddress) {
-      //   return push(APP_ROUTES.WALLET_REGISTER.PATH);
-      // } else {
-      //   if (isConnectKeyStore) {
-      //     localStorage.setItem(
-      //       "selectedWallet",
-      //       JSON.stringify(COMETH_CONNECT_LABEL)
-      //     );
-      //   }
-      //   push(callbackUrl || APP_ROUTES.HOME.PATH);
-      // }
-
-      if (hasRetrieveWalletAddressInStorage) {
-        toast({
-          title: "Login successful",
-          duration: 3000,
-        })
-      }
+    onSuccess: () => {
+      client.invalidateQueries({
+        queryKey: ["cosmik", "logged"],
+      })
     },
     onError: (error: any) => {
       if (error.response?.status === 400) {
         toast({
           title: "Login failed",
           description: "Please check your username and password",
+          variant: "destructive",
+          duration: 5000,
+        })
+      } else {
+        toast({
+          title: "Error",
+          description: error?.message || "An error occurred",
           variant: "destructive",
           duration: 5000,
         })

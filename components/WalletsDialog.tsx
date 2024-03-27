@@ -1,6 +1,6 @@
 // import { useCallback, useEffect, useRef, useState } from "react"
 // import { useWeb3OnboardContext } from "@/providers/web3-onboard"
-// import { comethMarketplaceClient } from "@/services/clients"
+// import { comethMarketplaceClient } from "@/lib/clients"
 // import { useAddExternalWallet } from "@/services/cosmik/addExternalWalletService"
 // import { User } from "@/services/cosmik/signinService"
 // import { useGetUserNonce } from "@/services/cosmik/userNonceService"

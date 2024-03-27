@@ -22,12 +22,11 @@ export const useOpenLoginModal = () => {
   return open
 }
 
-
 createWeb3Modal({
   wagmiConfig,
   projectId: manifest.walletConnectProjectId,
   connectorImages: {
-    "cometh":
+    cometh:
       "https://pbs.twimg.com/profile_images/1679433363818442753/E2kNVLBe_400x400.jpg",
   },
 })
@@ -37,5 +36,9 @@ export function MarketplaceWagmiProvider({
 }: {
   children: React.ReactNode
 }) {
-  return <WagmiProvider config={wagmiConfig}>{children}</WagmiProvider>
+  return (
+    <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
+      {children}
+    </WagmiProvider>
+  )
 }

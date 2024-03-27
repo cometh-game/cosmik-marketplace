@@ -4,6 +4,7 @@ import { connectorsForWallets, getDefaultWallets } from "@rainbow-me/rainbowkit"
 import { env } from "@/config/env"
 
 const wallets = getDefaultWallets().wallets
+
 if (env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY && typeof window !== "undefined") {
   const comethConnectWallet = getComethConnectWallet({
     apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY,

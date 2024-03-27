@@ -1,6 +1,8 @@
 "use client"
 
 import { useCallback } from "react"
+import { useConnectComethWallet } from "@/providers/authentication/comethConnectHooks"
+import { useCosmikLogout } from "@/services/cosmik/logoutService"
 import { LogOut } from "lucide-react"
 import { useDisconnect } from "wagmi"
 
@@ -13,10 +15,10 @@ import {
 } from "@/components/ui/Tooltip"
 
 export function AccountLogoutAction() {
-  const { disconnect } = useDisconnect()
+  const { disconnect } = useConnectComethWallet()
+
   const handleLogout = useCallback(async () => {
-    localStorage.removeItem("selectedWallet")
-    disconnect()
+    await disconnect()
   }, [disconnect])
 
   return (
@@ -24,11 +26,7 @@ export function AccountLogoutAction() {
       <TooltipProvider delayDuration={200}>
         <Tooltip defaultOpen={false}>
           <TooltipTrigger asChild>
-            <Button
-              variant="muted"
-              size="icon"
-              onClick={handleLogout}
-            >
+            <Button variant="muted" size="icon" onClick={handleLogout}>
               <LogOut size="14" />
             </Button>
           </TooltipTrigger>

@@ -1,53 +1,46 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
-import { useWeb3OnboardContext } from "@/providers/web3-onboardOLD"
+import { useConnectComethWallet } from "@/providers/authentication/comethConnectHooks"
+import { useUserAuthContext } from "@/providers/userAuth"
 import { useCosmikSignin, User } from "@/services/cosmik/signinService"
-import { useStorageWallet } from "@/services/web3/use-storage-wallet"
-import { useWalletConnect } from "@/services/web3/use-wallet-connect"
 import { cx } from "class-variance-authority"
 import { WalletIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/Button"
-import { Card, CardContent } from "@/components/ui/Card"
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/DropdownMenu"
+import { toast } from "@/components/ui/toast/hooks/useToast"
 import { AuthorizationProcess } from "@/components/connect-actions/buttons/AuthorizationProcess"
 import { SignInForm } from "@/components/signin/SignInForm"
 
 export type SigninDropdownProps = {
-  disabled: boolean
+  isReconnecting: boolean
   fullVariant?: boolean
   customText?: string
   isLinkVariant?: boolean
 }
 
 export function SigninDropdown({
-  disabled,
+  isReconnecting,
   fullVariant,
   customText,
   isLinkVariant,
 }: SigninDropdownProps) {
-  const { initOnboard, setIsconnected, retrieveWalletAddressFromSigner } =
-    useWeb3OnboardContext()
   const [user, setUser] = useState<User | null>(null)
+  const { getUser, userIsReconnecting, userIsFullyConnected, setUserIsFullyConnected } =
+    useUserAuthContext()
   const [displayAutorizationProcess, setDisplayAutorizationProcess] =
     useState(false)
   const [displaySigninDialog, setDisplaySigninDialog] = useState(false)
   const { isSuccess, isPending, data } = useCosmikSignin()
-  const { connect: connectWallet } = useWalletConnect()
   const [isLoading, setIsLoading] = useState(false)
+  const { connectComethWallet } = useConnectComethWallet()
 
   const handleSigninDialogChange = useCallback(
     (open: boolean) => {
@@ -63,16 +56,13 @@ export function SigninDropdown({
       try {
         setIsLoading(true)
         setUser(user)
-        // Attempt to retrieve the wallet address to determine if it is the first connection
-        await retrieveWalletAddressFromSigner(user.address)
-        localStorage.setItem("hasRetrieveWalletAddress", "true")
-        initOnboard({
-          isComethWallet: true,
-          walletAddress: user.address,
+        await connectComethWallet(user.address)
+        toast({
+          title: "Login successful",
+          duration: 3000,
         })
-        await connectWallet({ isComethWallet: true })
-        setIsconnected(true)
       } catch (error) {
+        console.error("Error connecting wallet", error)
         // If an error occurs, likely due to a first-time connection, display the authorization modal
         setDisplaySigninDialog(false)
         setDisplayAutorizationProcess(true)
@@ -80,12 +70,7 @@ export function SigninDropdown({
         setIsLoading(false)
       }
     },
-    [
-      connectWallet,
-      initOnboard,
-      retrieveWalletAddressFromSigner,
-      setIsconnected,
-    ]
+    [connectComethWallet]
   )
 
   useEffect(() => {
@@ -105,8 +90,8 @@ export function SigninDropdown({
             className={cx({
               "h-12 w-full": fullVariant,
             })}
-            disabled={disabled || isPending}
-            isLoading={disabled || isPending}
+            disabled={isReconnecting || isPending}
+            isLoading={isReconnecting || isPending}
           >
             {!isLinkVariant && <WalletIcon size="16" className="mr-2" />}
             {customText ? customText : "Login"}
@@ -131,8 +116,8 @@ export function SigninDropdown({
           </p>
           <SignInForm
             onLoginSuccess={handleLoginSuccess}
-            isDisabled={disabled}
-            isLoading={disabled || isLoading}
+            isDisabled={isReconnecting}
+            isLoading={isReconnecting || isLoading}
           />
         </DialogContent>
       </Dialog>

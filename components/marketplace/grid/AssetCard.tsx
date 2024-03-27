@@ -63,8 +63,8 @@ export function AssetImageContainer({
   const style = useSpring({
     to: {
       transform: isHovered
-        ? `rotateX(2deg) rotateY(0deg) rotateZ(0deg) translateY(-8px) scale(${1.01})`
-        : "rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateY(0px) scale(1)",
+        ? `rotateX(2deg) translateY(-8px) scale(${1.01})`
+        : "rotateX(0deg) translateY(0px) scale(1)",
     },
     config: config.gentle,
   })

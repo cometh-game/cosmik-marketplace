@@ -47,7 +47,7 @@ export function MainNav({ items, onLinkClick }: MainNavProps) {
         href={href}
         className={cn(
           `text-xl font-semibold md:text-lg ${
-            isActiveLink(href) && "opacity-100 max-md:text-accent-foreground"
+            isActiveLink(href) && "max-md:text-accent-foreground opacity-100"
           }`
         )}
         onClick={onLinkClick}
@@ -68,7 +68,7 @@ export function MainNav({ items, onLinkClick }: MainNavProps) {
               className={cn(
                 `text-xl font-semibold md:text-lg ${
                   isActiveLink(item.href) &&
-                  "opacity-100 max-md:text-accent-foreground"
+                  "max-md:text-accent-foreground opacity-100"
                 }`
               )}
               onClick={onLinkClick}
