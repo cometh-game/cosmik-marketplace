@@ -153,7 +153,7 @@ export function TransferAssetButton({
           validated.
         </div>
         <div className="">
-          <Label htmlFor="transfer-address">Transfer asset to address:</Label>
+          <Label htmlFor="transfer-address" className="mb-0.5">Transfer asset to address:</Label>
           <Input
             id="transfer-address"
             placeholder="0x1a..."
