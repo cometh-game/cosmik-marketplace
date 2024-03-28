@@ -11,6 +11,7 @@ import { WrapButton } from "@/components/asset-actions/buttons/WrapButton"
 export function AccountBalance() {
   const balance = useBalance()
   const [isUnwrap, setIsUnwrap] = useState(false)
+  
   return (
     <>
       <div className="border-accent/10 mb-3 space-y-3 rounded-md border p-3">
@@ -72,6 +73,7 @@ export function AccountBalanceLine({
       <span className="text-[15px] font-semibold">
         {balance} {currency}
       </span>
+      <FiatPrice amount={balance} />
     </div>
   )
 }
