@@ -76,8 +76,8 @@ import { manifest } from "@/manifests"
 export type SiteConfig = typeof siteConfig
 
 export const siteConfig = {
-  name: `${manifest.collectionName} | Marketplace`,
-  description: `Discover ${manifest.collectionName}, the ultimate Web3 marketplace platform.`,
+  name: `${manifest.marketplaceName} | Marketplace`,
+  description: `Discover ${manifest.marketplaceName}, the ultimate Web3 marketplace platform.`,
   mainNav: [
     {
       title: "Marketplace",

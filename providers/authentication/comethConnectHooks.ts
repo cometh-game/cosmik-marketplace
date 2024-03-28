@@ -55,6 +55,33 @@ export const useConnectComethWallet = () => {
     [connect]
   )
 
+  const initNewSignerRequest = useCallback(async (walletAddress: string) => {
+    const adaptor = new ConnectAdaptor({
+      chainId: numberToHex(env.NEXT_PUBLIC_NETWORK_ID) as SupportedNetworks,
+      apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
+    })
+
+    try {
+      const addSignerRequest = await adaptor.initNewSignerRequest(walletAddress)
+      return addSignerRequest
+    } catch (error) {
+      console.error("Error initializing new signer request", error)
+    }
+  }, [])
+
+  const retrieveWalletAddress = useCallback(async (walletAddress: string) => {
+    const adaptor = new ConnectAdaptor({
+      chainId: numberToHex(env.NEXT_PUBLIC_NETWORK_ID) as SupportedNetworks,
+      apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
+    })
+    const wallet = new ComethWallet({
+      authAdapter: adaptor,
+      apiKey: process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
+    })
+
+    await wallet.connect(walletAddress)
+  }, [])
+
   const disconnect = useCallback(async () => {
     if (account.status === "connected" && getUser()) {
       try {
@@ -78,6 +105,8 @@ export const useConnectComethWallet = () => {
 
   return {
     connectComethWallet,
+    retrieveWalletAddress,
+    initNewSignerRequest,
     disconnect,
   }
 }

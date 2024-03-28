@@ -60,8 +60,8 @@ export function BuyAssetButton({
       steps={requiredSteps}
       onClose={reset}
       isLoading={isLoading}
-      isDisabled={isLoading}
-      isVariantLink={isLinkVariant}
+      // isDisabled={isLoading}
+      // isVariantLink={isLinkVariant}
     >
       <Switch value={currentStep.value}>
         <Case value="add-gas">

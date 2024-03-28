@@ -46,7 +46,7 @@ type MakeBuyOfferPriceDialogProps = {
 } & React.ComponentProps<typeof Button>
 
 export function MakeBuyOfferPriceDialog({
-  onSubmit,
+  submitCallback,
   asset,
   size = "lg",
 }: MakeBuyOfferPriceDialogProps) {
@@ -110,7 +110,7 @@ export function MakeBuyOfferPriceDialog({
         <Button
           size="lg"
           disabled={!orderParams || !orderParams.price}
-          onClick={() => onSubmit(orderParams!.price, orderParams!.validity)}
+          onClick={() => submitCallback(orderParams!.price, orderParams!.validity)}
         >
           Make offer for&nbsp;
           <Price amount={orderParams?.price} isNativeToken={true} />
@@ -122,8 +122,7 @@ export function MakeBuyOfferPriceDialog({
 
 export function MakeBuyOfferButton({
   asset,
-  isVariantLink,
-  variant,
+  size = "lg",
 }: MakeBuyOfferProps) {
   const [open, setOpen] = useState(false)
   const {
@@ -147,24 +146,17 @@ export function MakeBuyOfferButton({
   if (!price) {
     return (
       <MakeBuyOfferPriceDialog
-        isVariantLink={isVariantLink}
+        size={size}
         asset={asset}
-        onSubmit={(newPrice, newValidity) => {
+        submitCallback={(newPrice, newValidity) => {
           setPrice(newPrice), setValidity(newValidity)
         }}
-        variant={variant}
       />
     )
   }
 
   if (isLoading) {
-    return (
-      <ButtonLoading
-        size={isVariantLink ? "default" : "lg"}
-        variant={isVariantLink ? "link" : "default"}
-        className={cn(isVariantLink && "h-auto p-0")}
-      />
-    )
+    return <ButtonLoading size={size} />
   }
 
   if (!requiredSteps?.length || !currentStep) return null
@@ -187,9 +179,9 @@ export function MakeBuyOfferButton({
       currentStep={currentStep}
       steps={requiredSteps}
       onClose={onClose}
-      isVariantLink={isVariantLink}
+      // isVariantLink={isVariantLink}
       isLoading={isLoading}
-      isDisabled={isLoading}
+      // isDisabled={isLoading}
     >
       <Switch value={currentStep.value}>
         <Case value="add-gas">
