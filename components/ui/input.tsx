@@ -1,29 +1,35 @@
+import React from "react"
 import { XIcon } from "lucide-react"
 
+import globalConfig from "@/config/globalConfig"
+import { trimDecimals } from "@/lib/utils/priceUtils"
 import { cn } from "@/lib/utils/utils"
+
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   icon?: React.ReactNode
-  onInputUpdate?: (value: string) => void
+  inputUpdateCallback?: (value: string) => void
 }
 
-import React from 'react';
-import { trimDecimals } from "@/lib/utils/priceUtil";
-import globalConfig from "@/config/globalConfig";
-
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, icon, ...props }, ref) => {
+  ({ className, type, icon, inputUpdateCallback, ...props }, ref) => {
     const [value, setValue] = React.useState("")
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       let value = event.target.value
-      if(type == 'number') {
-        value = trimDecimals(event.target.value, globalConfig.decimals.inputMaxDecimals)
+      if (type == "number") {
+        value = trimDecimals(
+          event.target.value,
+          globalConfig.decimals.inputMaxDecimals
+        )
+        if(props.min !== undefined && value < props.min) {
+          value = props.min.toString()
+        }
       }
 
       setValue(value)
-      if (props.onInputUpdate) {
-        props.onInputUpdate(value)
+      if (inputUpdateCallback) {
+        inputUpdateCallback(value)
       }
     }
 
@@ -39,19 +45,19 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         // Dispatch the event from the input element
         ref.current.dispatchEvent(event)
       }
-      if (props.onInputUpdate) {
-        props.onInputUpdate("")
+      if (inputUpdateCallback) {
+        inputUpdateCallback("")
       }
     }
 
     return (
       <div
         className={cn(
-          "relative flex h-12 items-center rounded-md border border-input px-3 py-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          "border-input relative flex h-12 items-center rounded-md border px-3 py-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
           className
         )}
       >
-        <span className="mr-3">{icon}</span>
+        {icon && <span className="mr-3">{icon}</span>}
         <input
           type={type}
           value={value}
