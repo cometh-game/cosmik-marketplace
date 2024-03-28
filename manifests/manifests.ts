@@ -28,7 +28,7 @@ const manifest: Manifest = {
     address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     decimals: 18,
     // put your logo in the '/public/tokens' folder and update the following line (example: "mytoken.png")
-    thumb: "", 
+    thumb: "",
   },
   // Optional for development but strongly recommended for production use
   rpcUrl: env.NEXT_PUBLIC_RPC_URL,
@@ -39,10 +39,11 @@ const manifest: Manifest = {
 
   fiatCurrency: {
     enable: true, // set to false to disable fiat currency
-    currencyId: "usd", // all currencies can be found in the currencies.ts file
+    currencyId: ["usd", "eur"], // all currencies can be found in the currencies.ts file
     currencySymbol: "$", // symbol to display after the amount
   },
   authenticationUiType: AuthenticationUiLibrary.RAINBOW_KIT,
+  collectionSettingsByAddress: {},
 }
 
 export { manifest }

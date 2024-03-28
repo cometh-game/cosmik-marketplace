@@ -47,7 +47,7 @@ export function MainNav({ items, onLinkClick }: MainNavProps) {
         href={href}
         className={cn(
           `text-xl font-semibold md:text-lg ${
-            isActiveLink(href) && "max-md:text-accent-foreground opacity-100"
+            isActiveLink(href) && "text-accent-foreground opacity-100"
           }`
         )}
         onClick={onLinkClick}

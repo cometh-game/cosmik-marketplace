@@ -1,6 +1,5 @@
 import { manifest } from "@/manifests/manifests"
 import { useConvertPriceToFiat } from "@/services/price/priceService"
-import { BigNumber } from "ethers"
 
 import { cn } from "@/lib/utils/utils"
 
@@ -23,4 +22,3 @@ export const FiatPrice = ({ amount, className }: FiatPriceProps) => {
     )
   )
 }
-

@@ -4,7 +4,7 @@ import { useMemo } from "react"
 import {
   useAssetReceivedOffers,
   useAssetSentOffers,
-} from "@/services/orders/asset-buy-offers"
+} from "@/services/orders/assetOffersService"
 import { Address } from "viem"
 
 import { useAccount } from "wagmi"

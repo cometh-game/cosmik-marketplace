@@ -38,7 +38,6 @@ export const useConnectComethWallet = () => {
       })
 
       try {
-        console.log("walletAddress in connectComethWallet", walletAddress)
         // console.log("getUser() in connectComethWallet", getUser())
         // if (!isAddress(walletAddress)) {
         //   throw new Error("Invalid wallet address. Please contact support")

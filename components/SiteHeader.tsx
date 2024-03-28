@@ -3,21 +3,32 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { cx } from "class-variance-authority"
 import { X } from "lucide-react"
 
 import { env } from "@/config/env"
 import { siteConfig } from "@/config/site"
 
-import { AuthenticationButton }  from "./AuthenticationButton"
+import { AuthenticationButton } from "./AuthenticationButton"
 import { MainNav } from "./MainNav"
+import { Button } from "./ui/Button"
 
 export function SiteHeader() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const { push } = useRouter()
 
   const toggleMenu = () => setIsOpen(!isOpen)
+
+  const isActiveLink = (href: string) => {
+    if (pathname === href) return true
+
+    const nextChar = pathname[href.length]
+    return (
+      pathname.startsWith(href) && (nextChar === "/" || nextChar === undefined)
+    )
+  }
 
   if (pathname === "/wallets") {
     return null
@@ -86,7 +97,23 @@ export function SiteHeader() {
           />
         </Link>
 
-        <div className="">
+        <div className="flex items-center gap-x-6">
+          {/* <Button
+            variant="default"
+            // className="hover:text-accent-foreground"
+            className="bg-accent-foreground text-accent-foreground after:content-none"
+            onClick={() => {
+              push("/onramp")
+            }}
+          >
+            Fill your wallet
+          </Button> */}
+          <Link
+            href="/topup"
+            className={cx("text-xl font-semibold md:text-lg", isActiveLink("/topup") && "text-accent-foreground")}
+          >
+            Fill your wallet
+          </Link>
           <AuthenticationButton />
         </div>
       </header>

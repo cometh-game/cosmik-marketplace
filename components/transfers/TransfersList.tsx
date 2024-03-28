@@ -20,9 +20,9 @@ import {
   ShoppingCartIcon,
 } from "lucide-react"
 import { Address, isAddressEqual } from "viem"
+import { useAccount } from "wagmi"
 
 import globalConfig from "@/config/globalConfig"
-import { useAccount } from "wagmi"
 import {
   Table,
   TableBody,
@@ -317,7 +317,8 @@ export function TransfersList({
   maxTransfersToShow,
   assetOrders,
 }: TransfersListProps) {
-  const viewerAddress = useCurrentViewerAddress()
+  const account = useAccount()
+  const viewerAddress = account.address
 
   const assetActivities = useMemo(() => {
     return getAssetActivities(assetTransfers, assetOrders, maxTransfersToShow)

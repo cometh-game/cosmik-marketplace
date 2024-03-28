@@ -2,7 +2,6 @@ import "@/styles/globals.css"
 
 import { Metadata } from "next"
 import { AppProviders } from "@/providers/appProviders"
-import { useCosmikAuth } from "@/services/cosmik/authService"
 
 import { siteConfig } from "@/config/site"
 import { ChakraFont } from "@/lib/utils/fonts"
@@ -34,8 +33,6 @@ interface RootLayoutProps {
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
-  // const { status, authentificate } = useCosmikAuth()
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head />

@@ -13,8 +13,19 @@ export const comethMarketplaceClient = new MarketplaceSdk({
 
 export const cosmikClient = axios.create({
   baseURL: env.NEXT_PUBLIC_COSMIK_BASE_URL,
-  withCredentials: true
+  withCredentials: true,
 })
+
+export const transakClient = setupCache(
+  axios.create({
+    baseURL: env.NEXT_PUBLIC_COMETH_ONRAMP_URI,
+    headers: {
+      "Content-Type": "application/json",
+      apikey: env.NEXT_PUBLIC_COMETH_ONRAMP_API_KEY,
+    },
+  }),
+  { debug: console.log }
+)
 
 export const coingeckoClient = setupCache(
   axios.create({

@@ -73,7 +73,7 @@ const NETWORKS: Record<number, NetworkConfig> = {
       standard: "EIP3091",
       blockUrl: "https://muster-explorer.alt.technology/tx",
     },
-    nativeToken: { name: "Ether", symbol: "ETH", decimals: 18 },
+    nativeToken: { id: "ethereum", name: "Ether", symbol: "ETH", decimals: 18 },
     wrappedNativeToken: {
       name: "Wrapped ETH",
       symbol: "WETH",
@@ -95,7 +95,7 @@ const NETWORKS: Record<number, NetworkConfig> = {
       standard: "EIP3091",
       blockUrl: "https://muster-anytrust-explorer.alt.technology/tx",
     },
-    nativeToken: { id: "must", name: "Ether", symbol: "ETH", decimals: 18 },
+    nativeToken: { id: "ethereum", name: "Ether", symbol: "ETH", decimals: 18 },
     wrappedNativeToken: {
       name: "Wrapped ETH",
       symbol: "WETH",
