@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useIsComethConnectWallet } from "@/providers/authentication/comethConnectHooks"
 import {
   fetchHasEnoughGas,
@@ -19,6 +20,7 @@ export function AddGasStep({ onValid }: AddGasStepProps) {
   const viewer = account.address
   const [isRefreshingBalance, setIsRefreshingBalance] = useState(false)
   const isComethWallet = useIsComethConnectWallet()
+  const { push } = useRouter()
 
   const { data } = useHasEnoughGas(viewer)
 
@@ -52,16 +54,26 @@ export function AddGasStep({ onValid }: AddGasStepProps) {
         <Price
           amount={globalConfig.minimumBalanceForGas}
           isNativeToken={true}
-        />{" "} to your wallet,
-        and then refresh your balance. Your transactions will not cost as much
-        but we need an minimum amount to be sure you can pay for gas.
+        />{" "}
+        to your wallet, and then refresh your balance. Your transactions will
+        not cost as much but we need an minimum amount to be sure you can pay
+        for gas.
       </p>
       <p>
         Wallet address: <strong>{viewer}</strong>
       </p>
-      <Button isLoading={isRefreshingBalance} onClick={checkBalance}>
-        Refresh balance
-      </Button>
+      <div className="flex gap-2">
+        <Button isLoading={isRefreshingBalance} onClick={checkBalance}>
+          Refresh balance
+        </Button>
+        <Button
+          variant="third"
+          isLoading={isRefreshingBalance}
+          onClick={() => push("/topup")}
+        >
+          Fill your wallet
+        </Button>
+      </div>
     </div>
   )
 }
