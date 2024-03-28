@@ -33,7 +33,7 @@ export default function AssetDetails({ asset }: AssetDetailsProps) {
     return attributes?.map((attribute, index) => {
       const property = attribute.trait_type
       const value = `${attribute.value}`
-      const href = `/marketplace?${qs.stringify({
+      const href = `/nfts?${qs.stringify({
         [property as string]: `${value}`,
       })}`
 
@@ -51,7 +51,7 @@ export default function AssetDetails({ asset }: AssetDetailsProps) {
     <div className="flex-1 lg:sticky lg:left-0 lg:top-[5%] lg:w-[35%] lg:pt-[100px]">
       <div className="mb-2 flex items-center justify-between">
         <BreadcrumbContainer>
-          <BreadcrumbElement href="/marketplace">Marketplace</BreadcrumbElement>
+          <BreadcrumbElement href="/nfts">Marketplace</BreadcrumbElement>
           /
           <BreadcrumbElement
             href={`/nfts/${asset.contractAddress}/${asset.tokenId}`}
