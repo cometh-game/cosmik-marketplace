@@ -1,8 +1,8 @@
-import { cosmikClient } from "@/lib/clients"
 import { useMutation } from "@tanstack/react-query"
 import { SiweMessage } from "siwe"
 import { Address } from "viem"
 
+import { cosmikClient } from "@/lib/clients"
 import { toast } from "@/components/ui/toast/hooks/useToast"
 
 export type AddExternalWalletMutationOptions = {
@@ -35,15 +35,13 @@ export const useAddExternalWallet = () => {
         description: "Your wallet has been added to your account",
       })
     },
-    onError: (error: any) => {
-      if (error.response?.status === 400) {
-        toast({
-          title: "Failed to add wallet",
-          description: "Please retry or contact support",
-          variant: "destructive",
-          duration: 5000,
-        })
-      }
+    onError: (error: Error) => {
+      toast({
+        title: "Failed to add wallet",
+        description: error?.message || "Please retry or contact support",
+        variant: "destructive",
+        duration: 5000,
+      })
     },
   })
 }

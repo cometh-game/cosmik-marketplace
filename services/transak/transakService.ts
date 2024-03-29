@@ -2,7 +2,7 @@ import { useCallback, useState } from "react"
 import { useUserAuthContext } from "@/providers/userAuth"
 import { useMutation } from "@tanstack/react-query"
 import { Transak } from "@transak/transak-sdk"
-import { ethers } from "ethers"
+import { formatEther } from "viem"
 
 import { env } from "@/config/env"
 import { transakClient } from "@/lib/clients"
@@ -30,14 +30,21 @@ export const usePrepareTransakOrder = () => {
   })
 }
 
-export const useTransak = ({
-  fiatCurrency = "EUR",
-}: { fiatCurrency?: string } = {}) => {
+export const useTransak = () => {
   const { getUser } = useUserAuthContext()
-  const [iframeSrc, setIframeSrc] = useState("")
 
   const openTransakDialog = useCallback(
-    (transakData: any) => {
+    ({
+      transakData,
+      fiatCurrency,
+      defaultFiatAmount,
+      onSuccess,
+    }: {
+      transakData: any
+      fiatCurrency: string
+      defaultFiatAmount: number
+      onSuccess?: () => void
+    }) => {
       if (!transakData) {
         console.error("Transak data is not available.")
         return
@@ -46,13 +53,9 @@ export const useTransak = ({
       const sourceTokenData = [
         {
           sourceTokenCode: "ETH",
-          sourceTokenAmount: Number.parseFloat(
-            ethers.utils.formatEther(transakData.value)
-          ),
+          sourceTokenAmount: Number.parseFloat(formatEther(transakData.value)),
         },
       ]
-
-      console.log({ transakData })
 
       const transak = new Transak({
         apiKey: env.NEXT_PUBLIC_TRANSAK_API_KEY,
@@ -71,23 +74,24 @@ export const useTransak = ({
         exchangeScreenTitle: "Buy ETH on Muster",
         cryptoAmount: transakData.value,
         fiatCurrency,
+        defaultFiatAmount: defaultFiatAmount,
+        defaultPaymentMethod: "credit_debit_card",
       })
 
       transak.init()
 
-      Transak.on(Transak.EVENTS.TRANSAK_WIDGET_CLOSE, () => {
-        console.log("Widget closed")
+      Transak.on("*", (data) => {
+        console.log(data)
       })
 
       Transak.on(Transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData) => {
         console.log("Success:", orderData)
-        // transak.close()
+        transak.close()
+        if (onSuccess) onSuccess()
       })
-
-      // return transak
     },
-    [fiatCurrency, getUser]
+    [getUser]
   )
 
-  return { openTransakDialog, iframeSrc }
+  return { openTransakDialog }
 }

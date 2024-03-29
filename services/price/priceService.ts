@@ -39,24 +39,10 @@ const useTokenFiatPrice = ({
   })
 }
 
-export const useConvertPriceToFiat = (amount?: number | null) => {
-  const { data: price } = useTokenFiatPrice()
-
-  return useMemo(() => {
-    if (!manifest.fiatCurrency.enable) {
-      return null
-    }
-    if (!amount || isNaN(amount) || !price || price === 0) {
-      return null
-    }
-    const fiatPrice = amount / price
-    return Math.round(fiatPrice * 100) / 100
-  }, [amount, price])
-}
-
-export const useConvertFiatToEth = (
-  amount: number,
-  locale: string | undefined
+export const useConvertPriceToFiat = (
+  amount: number | null,
+  locale?: string,
+  decimals: number = 2
 ) => {
   const currency = locale === "en" ? "usd" : "eur"
   const { data: price } = useTokenFiatPrice({ currency })
@@ -68,7 +54,10 @@ export const useConvertFiatToEth = (
     if (!amount || isNaN(amount) || !price || price === 0) {
       return null
     }
-    const ethPrice = amount / price
-    return Math.round(ethPrice * 100) / 100
-  }, [amount, price])
+    const fiatPrice = amount / price
+    if (!decimals) {
+      return Math.round(fiatPrice * 100) / 100
+    }
+    return Number(fiatPrice.toFixed(decimals))
+  }, [amount, price, decimals])
 }

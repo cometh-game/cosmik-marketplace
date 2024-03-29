@@ -17,11 +17,10 @@ import { Input } from "../ui/Input"
 
 interface SignInFormProps {
   onLoginSuccess: (user: User) => void
-  isDisabled?: boolean
   isLoading?: boolean
 }
 
-export function SignInForm({ onLoginSuccess, isDisabled, isLoading }: SignInFormProps) {
+export function SignInForm({ onLoginSuccess, isLoading }: SignInFormProps) {
   const {
     mutate: signin,
     isSuccess,
@@ -86,7 +85,7 @@ export function SignInForm({ onLoginSuccess, isDisabled, isLoading }: SignInForm
           size="lg"
           type="submit"
           isLoading={isPending || isLoading}
-          disabled={isPending || isDisabled}
+          disabled={isPending || isLoading}
         >
           Connect my account
         </Button>

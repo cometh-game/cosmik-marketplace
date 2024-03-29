@@ -1,56 +1,71 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import i18nConfig from "@/i18nConfig"
 import { useUserAuthContext } from "@/providers/userAuth"
-import {
-  useConvertFiatToEth,
-  useConvertPriceToFiat,
-} from "@/services/price/priceService"
+import { useConvertPriceToFiat } from "@/services/price/priceService"
 import {
   usePrepareTransakOrder,
   useTransak,
 } from "@/services/transak/transakService"
-import { ethers } from "ethers"
 import { useCurrentLocale } from "next-i18n-router/client"
+import { parseEther } from "viem"
 
 import { generateRandomUint256 } from "@/lib/utils/generateUint256"
-import { FiatPrice } from "@/components/ui/FiatPrice"
+import { Loading } from "@/components/ui/Loading"
 import { TopupCard } from "@/components/topup/TopupCard"
+import { TransakSuccessDialog } from "@/components/TransakSucessDialog"
 
 export default function TopupPage() {
   const locale = useCurrentLocale(i18nConfig)
+  const { push } = useRouter()
   const { mutateAsync: prepareTransakOrder } = usePrepareTransakOrder()
-  const { getUser } = useUserAuthContext()
+  const { userIsReconnecting, userIsFullyConnected, getUser } =
+    useUserAuthContext()
   const [isLoading, setIsLoading] = useState(false)
-  const { openTransakDialog } = useTransak({
-    fiatCurrency: locale === "en" ? "USD" : "EUR",
-  })
+  const [showTransakSuccessDialog, setShowTransakSuccessDialog] =
+    useState(false)
+  const { openTransakDialog } = useTransak()
 
-  const price10InEth = useConvertFiatToEth(10, locale)
-  const price25InEth = useConvertFiatToEth(25, locale)
-  const price50InEth = useConvertFiatToEth(50, locale)
+  const price10InEth = useConvertPriceToFiat(20, locale, 4)
+  const price25InEth = useConvertPriceToFiat(30, locale, 4)
+  const price50InEth = useConvertPriceToFiat(50, locale, 4)
 
-  console.log("price10InEth", price10InEth)
   console.log("price25InEth", price25InEth)
-  console.log("price50InEth", price50InEth)
 
-  const initTransakOrder = (amount: number | null) => {
-    if (!amount) return
+  const initTransakOrder = (price: number, amount: number | null) => {
+    if (!price || !amount) return
     const user = getUser()
     setIsLoading(true)
 
     if (user) {
       prepareTransakOrder({
         userWallet: user.address,
-        amount: ethers.utils.parseEther(amount.toString()).toString(),
+        amount: parseEther(amount.toString()).toString(),
         nonce: generateRandomUint256(),
-      }).then((data) => {
-        openTransakDialog(data)
+      }).then((transakData) => {
+        openTransakDialog({
+          transakData,
+          fiatCurrency: locale === "en" ? "USD" : "EUR",
+          defaultFiatAmount: price,
+          onSuccess: () => {
+            setShowTransakSuccessDialog(true)
+          },
+        })
         setIsLoading(false)
       })
     }
   }
+
+  if (userIsReconnecting) {
+    return <Loading />
+  }
+
+  // if (!userIsReconnecting && !userIsFullyConnected) {
+  //   push("/")
+  //   return
+  // }
 
   return (
     <div className="container mx-auto flex w-full max-w-[880px] flex-col items-center gap-4 py-4 max-sm:pt-4">
@@ -61,27 +76,32 @@ export default function TopupPage() {
       </div>
       <div className="grid w-full grid-cols-3 gap-x-5">
         <TopupCard
-          price={10}
+          price={20}
           currency={locale === "en" ? "$" : "€"}
           nativeCurrencyPrice={price10InEth}
-          onClick={() => initTransakOrder(price10InEth)}
+          onClick={() => initTransakOrder(20, price10InEth)}
           isLoading={isLoading}
         />
         <TopupCard
-          price={25}
+          price={30}
           currency={locale === "en" ? "$" : "€"}
           nativeCurrencyPrice={price25InEth}
-          onClick={() => initTransakOrder(price25InEth)}
+          onClick={() => initTransakOrder(30, price25InEth)}
           isLoading={isLoading}
         />
         <TopupCard
           price={50}
           currency={locale === "en" ? "$" : "€"}
           nativeCurrencyPrice={price50InEth}
-          onClick={() => initTransakOrder(price50InEth)}
+          onClick={() => initTransakOrder(50, price50InEth)}
           isLoading={isLoading}
         />
       </div>
+      {showTransakSuccessDialog && (
+        <TransakSuccessDialog
+          onClose={() => setShowTransakSuccessDialog(false)}
+        />
+      )}
     </div>
   )
 }

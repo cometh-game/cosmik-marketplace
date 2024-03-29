@@ -3,7 +3,8 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
+import { useUserAuthContext } from "@/providers/userAuth"
 import { cx } from "class-variance-authority"
 import { X } from "lucide-react"
 
@@ -12,12 +13,11 @@ import { siteConfig } from "@/config/site"
 
 import { AuthenticationButton } from "./AuthenticationButton"
 import { MainNav } from "./MainNav"
-import { Button } from "./ui/Button"
 
 export function SiteHeader() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const { push } = useRouter()
+  const { userIsFullyConnected } = useUserAuthContext()
 
   const toggleMenu = () => setIsOpen(!isOpen)
 
@@ -108,12 +108,17 @@ export function SiteHeader() {
           >
             Fill your wallet
           </Button> */}
-          <Link
-            href="/topup"
-            className={cx("text-xl font-semibold md:text-lg", isActiveLink("/topup") && "text-accent-foreground")}
-          >
-            Fill your wallet
-          </Link>
+          {userIsFullyConnected && (
+            <Link
+              href="/topup"
+              className={cx(
+                "text-xl font-semibold md:text-lg",
+                isActiveLink("/topup") && "text-accent-foreground"
+              )}
+            >
+              Fill your wallet
+            </Link>
+          )}
           <AuthenticationButton />
         </div>
       </header>

@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from "react"
-// import { useWeb3OnboardContext } from "@/providers/web3-onboard"
-import { comethMarketplaceClient } from "@/lib/clients"
 import { useAddExternalWallet } from "@/services/cosmik/addExternalWalletService"
 import { User } from "@/services/cosmik/signinService"
 import { useGetUserNonce } from "@/services/cosmik/userNonceService"
 import { SupportedNetworks } from "@cometh/connect-sdk"
 import { AssetSearchFilters } from "@cometh/marketplace-sdk"
-import { DialogOverlay, DialogPortal } from "@radix-ui/react-dialog"
 import { ethers } from "ethers"
 import { SiweMessage } from "siwe"
+import { getAddress, numberToHex } from "viem"
 
 import { env } from "@/config/env"
 import globalConfig from "@/config/globalConfig"
+// import { useWeb3OnboardContext } from "@/providers/web3-onboard"
+import { comethMarketplaceClient } from "@/lib/clients"
 import {
   Dialog,
   DialogContent,
@@ -21,17 +21,23 @@ import {
 
 import { Button } from "./ui/Button"
 import WalletList from "./wallets/WalletList"
-
-function numberToHex(value: number): string {
-  return `0x${value.toString(16)}`
-}
-
+import { useAccount } from "wagmi"
+import { useOpenLoginModal } from "@/providers/authentication/authenticationUiSwitch"
+import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit"
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 type WalletsDialogProps = {
   user: User
 }
 
 export function WalletsDialog({ user }: WalletsDialogProps) {
   // const { onboard } = useWeb3OnboardContext()
+  const openLoginModal = useOpenLoginModal()
+  const { openAccountModal } = useAccountModal();
+
+  console.log("openAccountModal", openAccountModal)
+
+  // const account = useAccount()
+  // const viewerAddress = account.address
 
   // const { mutateAsync: getUserNonceAsync } = useGetUserNonce()
   // const { mutateAsync: addExternalWallet } = useAddExternalWallet()
@@ -42,6 +48,7 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
   // const [wallets, setWallets] = useState<{ address: string; items: number }[]>(
   //   []
   // )
+
 
   // const walletAddressesRef = useRef<string[]>([])
 
@@ -150,16 +157,14 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
 
   // async function handleAddExternalWallet() {
   //   try {
-  //     const wallet = await onboard?.connectWallet()
+  //     const wallet = viewerAddress
   //     walletState.current = wallet
 
   //     if (!wallet) {
   //       throw new Error("No wallet")
   //     }
 
-  //     const walletAddr = ethers.utils.getAddress(
-  //       wallet?.[0].accounts[0]?.address
-  //     )
+  //     const walletAddr = viewerAddress
   //     walletAddress.current = walletAddr
 
   //     const nonce = await getUserNonce()
@@ -197,28 +202,38 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
   // }
 
   return (
-    <div>WIP</div>
-    // <Dialog modal open={true}>
-    //   <DialogContent
-    //     className="sm:max-w-[400px]"
-    //     shouldDisplayOverlay={false}
-    //     shouldDisplayCloseBtn={false}
-    //   >
-    //     <DialogHeader className="flex-row items-center justify-between space-y-0">
-    //       <DialogTitle className="normal-case">@{user?.userName}</DialogTitle>
-    //     </DialogHeader>
-    //     <ul className="space-y-3">
-    //       <WalletList wallets={wallets} mainAddress={user.address} />
-    //     </ul>
-    //     <div className="text-muted-foreground">
-    //       Add an external wallet to link existing assets to your cosmik Battle
-    //       Account
-    //     </div>
-    //     {/* <button onClick={() => fetchItemsCount("0x710dE92cf3a6459933f709D1D2664aA7036c57e8")}>Test address</button> */}
-    //     <Button size="lg" onClick={() => handleAddExternalWallet()}>
-    //       Add external wallet
-    //     </Button>
-    //   </DialogContent>
-    // </Dialog>
+    <Dialog modal open={true}>
+      <DialogContent
+        className="sm:max-w-[400px]"
+        shouldDisplayOverlay={false}
+        shouldDisplayCloseBtn={false}
+      >
+        <DialogHeader className="flex-row items-center justify-between space-y-0">
+          <DialogTitle className="normal-case">@{user?.userName}</DialogTitle>
+        </DialogHeader>
+        <ul className="space-y-3">
+          {/* <WalletList wallets={wallets} mainAddress={user.address} /> */}
+        </ul>
+        <div className="text-muted-foreground">
+          Add an external wallet to link existing assets to your cosmik Battle
+          Account
+        </div>
+        {/* <button onClick={() => fetchItemsCount("0x710dE92cf3a6459933f709D1D2664aA7036c57e8")}>Test address</button> */}
+        {/* <Button
+          size="lg"
+          // onClick={() => handleAddExternalWallet()}
+          onClick={() => openLoginModal && openLoginModal()}
+        >
+          Add external wallet
+        </Button> */}
+        <Button
+          size="lg"
+          // onClick={() => handleAddExternalWallet()}
+          onClick={openAccountModal}
+        >
+          openConnectModal
+        </Button>
+      </DialogContent>
+    </Dialog>
   )
 }
