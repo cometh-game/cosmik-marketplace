@@ -10,6 +10,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        "cosmik-price":
+          "!h-[50px] !rounded-none bg-[#1A3146] hover:bg-[#1A3146]/50 uppercase text-2xl tracking-wide font-bold italic border-b-[3px] border-[#316E82] transition-colors",
         neutral: "",
         default: "btn-default",
         destructive:
