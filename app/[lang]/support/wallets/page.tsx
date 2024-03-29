@@ -68,12 +68,19 @@ const WalletAssetTransfer = () => {
   if (!account?.isConnected) return null
 
   return (
-    <div className="mt-5 border-2 border-black p-5">
-      <div className="text-xl font-bold">Connected wallet</div>
-      <div>Connected to {account.address}</div>
-      <div>Current collection address: {currentCollectionAddress}</div>
+    <div className="card-primary p-5">
+      <div className="mb-3 text-xl font-bold">Connected wallet</div>
+      <div className="text-base">Connected to {account.address}</div>
+      <div className="text-base">Current collection address: {currentCollectionAddress}</div>
       <div>
-        <div className="mt-3 text-xl font-bold">Assets</div>
+        <div className="flex items-center justify-between gap-2">
+          <div className="text-xl font-bold">
+          Assets
+          </div>
+          <Button size="sm" variant="third" onClick={refreshAssets}>
+            <RotateCcw size={16} />
+          </Button>
+        </div>
         <ul>
           {assets?.map((asset) => (
             <li className="mt-2" key={asset.tokenId}>
@@ -82,7 +89,6 @@ const WalletAssetTransfer = () => {
             </li>
           ))}
         </ul>
-        <Button onClick={refreshAssets}>Refresh assets</Button>
       </div>
     </div>
   )
