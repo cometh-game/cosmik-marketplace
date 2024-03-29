@@ -12,12 +12,11 @@ import { SellStep } from "../transaction-steps/SellStep"
 
 export type SellAssetButtonProps = {
   asset: AssetWithTradeData
-  isVariantLink?: boolean
-}
+} & React.ComponentProps<typeof ButtonLoading>
 
 export function SellAssetButton({
   asset,
-  isVariantLink,
+  size = "lg"
 }: SellAssetButtonProps) {
   const [open, setOpen] = useState(false)
   const { requiredSteps, isLoading, currentStep, nextStep, reset } =
@@ -26,7 +25,7 @@ export function SellAssetButton({
   if (isLoading) {
     return (
       <ButtonLoading
-        size={isVariantLink ? "default" : "lg"}
+        size={size}
         variant="default"
       />
     )
@@ -46,8 +45,7 @@ export function SellAssetButton({
       steps={requiredSteps}
       onOpenChange={setOpen}
       onClose={reset}
-      variant="third"
-      // isVariantLink={isVariantLink}
+      size={size}
       isLoading={isLoading}
     >
       <Switch value={currentStep.value}>

@@ -37,7 +37,8 @@ export function SigninDropdown({
   const [displaySigninDialog, setDisplaySigninDialog] = useState(false)
   const { isSuccess, isPending, data } = useCosmikSignin()
   const [isLoading, setIsLoading] = useState(false)
-  const { connectComethWallet } = useConnectComethWallet()
+  const { connectComethWallet, retrieveWalletAddress } =
+    useConnectComethWallet()
 
   const handleSigninDialogChange = useCallback(
     (open: boolean) => {
@@ -53,13 +54,16 @@ export function SigninDropdown({
       try {
         setIsLoading(true)
         setUser(user)
+        // Attempt to retrieve the wallet address to determine if it is the first connection
+        await retrieveWalletAddress(user.address)
+        // If passkey signer is found for this address, connect the wallet
         await connectComethWallet(user.address)
         toast({
           title: "Login successful",
           duration: 3000,
         })
       } catch (error) {
-        console.error("Error connecting wallet", error)
+        console.error("Error connecting wallet in SigninDropdown", error)
         // If an error occurs, likely due to a first-time connection, display the authorization modal
         setDisplaySigninDialog(false)
         setDisplayAutorizationProcess(true)
@@ -67,7 +71,7 @@ export function SigninDropdown({
         setIsLoading(false)
       }
     },
-    [connectComethWallet]
+    [connectComethWallet, retrieveWalletAddress]
   )
 
   useEffect(() => {
@@ -118,11 +122,11 @@ export function SigninDropdown({
         </DialogContent>
       </Dialog>
 
-      {displayAutorizationProcess && user && (
+      {displayAutorizationProcess && (
         <AuthorizationProcess
           isOpen={displayAutorizationProcess}
           onClose={() => setDisplayAutorizationProcess(false)}
-          user={user}
+          user={user!}
         />
       )}
     </>

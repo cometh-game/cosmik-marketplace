@@ -7,6 +7,7 @@ import { useCurrentCollectionContext } from "@/providers/currentCollection/curre
 import { useSearchAssets } from "@/services/cometh-marketplace/searchAssetsService"
 import { comethConnectConnector } from "@cometh/connect-sdk-viem"
 import { useQueryClient } from "@tanstack/react-query"
+import { RotateCcw } from "lucide-react"
 import {
   createConfig,
   http,
@@ -121,38 +122,53 @@ const WalletDebugPanels = () => {
   }, [newWalletAddress, disconnect, connect, account?.isConnected])
 
   return (
-    <div className="p-5">
-      <div className="border-2 border-black p-5">
-        <div className="text-xl font-bold">Cometh Wallets in local storage</div>
-        <Button onClick={refresh}>Load wallets</Button>
+    <div className="container mx-auto flex w-full max-w-[880px] flex-col gap-4 py-4 max-sm:pt-4">
+      <div className="card-primary p-5">
+        <div className="flex items-center justify-between gap-2">
+          <div className="text-xl font-bold">
+            Cometh Wallets stored in your local storage
+          </div>
+          <Button size="sm" variant="third" onClick={refresh}>
+            <RotateCcw size={16} />
+          </Button>
+        </div>
         <div className="mt-5 text-lg font-bold">Passkey Wallets</div>
         <ul>
-          {localStorageWallets.passkeyWallets.map((wallet) => (
-            <li key={wallet}>{wallet}</li>
-          ))}
+          {localStorageWallets.passkeyWallets.length === 0 ? (
+            <div>No passkey wallet</div>
+          ) : (
+            localStorageWallets.passkeyWallets.map((wallet) => (
+              <li key={wallet}>{wallet}</li>
+            ))
+          )}
         </ul>
-        <div className="text-lg font-bold">Burner Wallets</div>
+        <div className="mt-3 text-lg font-bold">Burner Wallets</div>
         <ul>
-          {localStorageWallets.burnerWallets.map((wallet) => (
-            <li key={wallet}>{wallet}</li>
-          ))}
+          {localStorageWallets.burnerWallets.length === 0 ? (
+            <div>No burner wallet</div>
+          ) : (
+            localStorageWallets.burnerWallets.map((wallet) => (
+              <li key={wallet}>{wallet}</li>
+            ))
+          )}
         </ul>
       </div>
-      <div className="mt-5 border-2 border-black p-5">
-        <div className="text-xl font-bold">Change connected wallet</div>
-        <div>
+      <div className="card-primary p-5">
+        <div className="mb-3 text-xl font-bold">Change connected wallet</div>
+        <div className="mb-2">
           Logged wallet on this page is different from the wallet connected on
           the site header and the rest of the site.
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-stretch gap-2">
           <Input
             className="grow"
             inputUpdateCallback={setNewWalletAddress}
           ></Input>
           <Button
-            disabled={isPending}
+            size="lg"
             className="ml-3"
             onClick={logInSpecificWallet}
+            disabled={isPending}
           >
             Cometh connect log into wallet
           </Button>
