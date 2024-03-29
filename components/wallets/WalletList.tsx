@@ -23,7 +23,7 @@ const WalletList = ({ wallets, mainAddress }: WalletListProps) => {
             </>
           ) : (
             <>
-              Associated external wallet ({shortenAddress(address as Address)}):{" "}
+              Associated external wallet ({shortenAddress(address as Address)})
               <br />
               {/* <div className="font-bold">
                 You have <span className="underline">{items ?? "..."}</span>{" "}

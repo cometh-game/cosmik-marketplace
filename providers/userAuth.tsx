@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react"
 import { useUserIsLogged } from "@/services/cosmik/userLoggedService"
-import { useAccount } from "wagmi"
 
 import { useConnectComethWallet } from "./authentication/comethConnectHooks"
 
@@ -29,7 +28,6 @@ export const UserAuthProvider = ({
 }) => {
   const user = useRef<any | null>(null);
   const { userLogged, isFetchingUserLogged } = useUserIsLogged();
-  const account = useAccount();
   const [userIsFullyConnected, setUserIsFullyConnected] = useState(false);
   const { connectComethWallet } = useConnectComethWallet();
   const [userIsReconnecting, setUserIsReconnecting] = useState(false);

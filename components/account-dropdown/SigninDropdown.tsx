@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react"
 import { useConnectComethWallet } from "@/providers/authentication/comethConnectHooks"
-import { useUserAuthContext } from "@/providers/userAuth"
 import { useCosmikSignin, User } from "@/services/cosmik/signinService"
 import { cx } from "class-variance-authority"
 import { WalletIcon } from "lucide-react"
@@ -33,8 +32,6 @@ export function SigninDropdown({
   isLinkVariant,
 }: SigninDropdownProps) {
   const [user, setUser] = useState<User | null>(null)
-  const { getUser, userIsReconnecting, userIsFullyConnected, setUserIsFullyConnected } =
-    useUserAuthContext()
   const [displayAutorizationProcess, setDisplayAutorizationProcess] =
     useState(false)
   const [displaySigninDialog, setDisplaySigninDialog] = useState(false)
@@ -116,7 +113,6 @@ export function SigninDropdown({
           </p>
           <SignInForm
             onLoginSuccess={handleLoginSuccess}
-            isDisabled={isReconnecting}
             isLoading={isReconnecting || isLoading}
           />
         </DialogContent>

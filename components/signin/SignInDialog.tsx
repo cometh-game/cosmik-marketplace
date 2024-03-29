@@ -12,9 +12,10 @@ import { SignInForm } from "./SignInForm"
 
 type SignInFormProps = {
   onLoginSuccess: (user: User) => void
+  isLoading?: boolean
 }
 
-export function SignInDialog({ onLoginSuccess }: SignInFormProps) {
+export function SignInDialog({ onLoginSuccess, isLoading }: SignInFormProps) {
   return (
     <Dialog open={true}>
       <DialogContent className="sm:max-w-[400px]" shouldDisplayCloseBtn={false}>
@@ -30,7 +31,7 @@ export function SignInDialog({ onLoginSuccess }: SignInFormProps) {
         <DialogDescription>
           Enter your Cosmik Battle credentials to view or add external wallets
         </DialogDescription>
-        <SignInForm onLoginSuccess={onLoginSuccess}  />
+        <SignInForm onLoginSuccess={onLoginSuccess} isLoading={isLoading} />
       </DialogContent>
     </Dialog>
   )
