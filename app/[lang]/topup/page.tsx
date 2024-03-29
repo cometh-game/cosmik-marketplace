@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import i18nConfig from "@/i18nConfig"
 import { useUserAuthContext } from "@/providers/userAuth"
 import { useConvertPriceToFiat } from "@/services/price/priceService"
@@ -9,6 +9,7 @@ import {
   useTransak,
 } from "@/services/transak/transakService"
 import { useCurrentLocale } from "next-i18n-router/client"
+import { useDebounceValue } from "usehooks-ts"
 import { parseEther } from "viem"
 
 import { generateRandomUint256 } from "@/lib/utils/generateUint256"
@@ -19,24 +20,25 @@ import { TransakSuccessDialog } from "@/components/TransakSucessDialog"
 export default function TopupPage() {
   const locale = useCurrentLocale(i18nConfig)
   const { mutateAsync: prepareTransakOrder } = usePrepareTransakOrder()
-  const { userIsReconnecting, getUser } =
-    useUserAuthContext()
+  const { userIsReconnecting, getUser } = useUserAuthContext()
   const [isLoading, setIsLoading] = useState(false)
   const [showTransakSuccessDialog, setShowTransakSuccessDialog] =
     useState(false)
   const { openTransakDialog } = useTransak()
-  const [customAmount, setCustomAmount] = useState<number | null>(null)
+  const [customAmount, setCustomAmount] = useState<string>("")
+  const [debouncedValue] = useDebounceValue(customAmount, 250)
 
   const price25InEth = useConvertPriceToFiat(25, locale, 4)
   const price50InEth = useConvertPriceToFiat(50, locale, 4)
-  const priceCustomInEth = useConvertPriceToFiat(customAmount, locale, 4)
-  console.log("price25InEth", price25InEth)
-  console.log("priceCustomInEth", priceCustomInEth)
+  const priceCustomInEth = useConvertPriceToFiat(
+    Number(debouncedValue),
+    locale,
+    4
+  )
 
-  const handleCustomAmountChange = (amount: number) => {
-    setCustomAmount(amount)
-    console.log("customAmount", customAmount)
-  }
+  const handleAmountChange = useCallback((value: string) => {
+    setCustomAmount(value)
+  }, [])
 
   const initTransakOrder = (price: number, amount: number | null) => {
     if (!price || !amount) return
@@ -73,25 +75,27 @@ export default function TopupPage() {
       </h1>
       <div className="grid w-full grid-cols-3 gap-x-8">
         <TopupCard
-          price={25}
+          price="25"
           currency={locale === "en" ? "$" : "€"}
           nativeCurrencyPrice={price25InEth}
           onInit={() => initTransakOrder(20, price25InEth)}
           isLoading={isLoading}
         />
         <TopupCard
-          price={50}
+          price="50"
           currency={locale === "en" ? "$" : "€"}
           nativeCurrencyPrice={price50InEth}
           onInit={() => initTransakOrder(50, price50InEth)}
           isLoading={isLoading}
         />
         <TopupCard
-          price={customAmount ?? 0}
+          price={customAmount}
           currency={locale === "en" ? "$" : "€"}
           nativeCurrencyPrice={priceCustomInEth}
-          onInputChange={(amount) => handleCustomAmountChange(Number(amount))}
-          onInit={() => initTransakOrder(customAmount ?? 0, priceCustomInEth)}
+          onInputChange={(amount) => handleAmountChange(amount)}
+          onInit={() =>
+            initTransakOrder(Number(customAmount), priceCustomInEth)
+          }
           isLoading={isLoading}
           isCustom
         />
