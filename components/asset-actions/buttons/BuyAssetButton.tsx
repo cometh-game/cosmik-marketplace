@@ -6,6 +6,7 @@ import {
 import { BigNumber } from "ethers"
 
 import { useBuyAssetButton } from "@/lib/web3/flows/buy"
+import { Button } from "@/components/ui/Button"
 import { Price } from "@/components/ui/Price"
 import { TransactionDialogButton } from "@/components/TransactionDialogButton"
 import { Case, Switch } from "@/components/utils/Switch"
@@ -15,19 +16,12 @@ import { AllowanceStep } from "../transaction-steps/AllowanceStep"
 import { BuyStep } from "../transaction-steps/BuyStep"
 import { FundsStep } from "../transaction-steps/FundsStep"
 import { UnwrapStep } from "../transaction-steps/UnwrapStep"
-import { Button } from "@/components/ui/Button"
 
 export type BuyAssetButtonProps = {
   asset: SearchAssetWithTradeData | AssetWithTradeData
-  isSmall?: boolean
-  isLinkVariant?: boolean
-}
+} & React.ComponentProps<typeof Button>
 
-export function BuyAssetButton({
-  asset,
-  isSmall = false,
-  isLinkVariant = false,
-}: BuyAssetButtonProps) {
+export function BuyAssetButton({ asset, size = "lg" }: BuyAssetButtonProps) {
   const { requiredSteps, isLoading, currentStep, nextStep, reset } =
     useBuyAssetButton({ asset })
   const [open, setOpen] = useState(false)
@@ -44,12 +38,15 @@ export function BuyAssetButton({
     <TransactionDialogButton
       label={
         <>
-          {isSmall ? (
+          {size === "sm" ? (
             "Buy now"
           ) : (
             <span>
               Buy now for&nbsp;
-              <Price amount={asset.orderbookStats.lowestListingPrice} isNativeToken={true} />
+              <Price
+                amount={asset.orderbookStats.lowestListingPrice}
+                isNativeToken={true}
+              />
             </span>
           )}
         </>
@@ -59,9 +56,8 @@ export function BuyAssetButton({
       currentStep={currentStep}
       steps={requiredSteps}
       onClose={reset}
+      size={size}
       isLoading={isLoading}
-      // isDisabled={isLoading}
-      // isVariantLink={isLinkVariant}
     >
       <Switch value={currentStep.value}>
         <Case value="add-gas">

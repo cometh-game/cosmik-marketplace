@@ -1,13 +1,8 @@
 import { useCallback, useMemo } from "react"
 import { useCosmikLogout } from "@/services/cosmik/logoutService"
 import {
-  ComethProvider,
   ComethWallet,
   ConnectAdaptor,
-  ConnectOnboardConnector,
-  NewSignerRequestBody,
-  NewSignerRequestType,
-  SendTransactionResponse,
   SupportedNetworks,
 } from "@cometh/connect-sdk"
 import { comethConnectConnector } from "@cometh/connect-sdk-viem"
@@ -37,17 +32,21 @@ export const useConnectComethWallet = () => {
         walletAddress,
       })
 
+      console.log("Connecting to wallet", walletAddress)
+
       try {
-        // console.log("getUser() in connectComethWallet", getUser())
-        // if (!isAddress(walletAddress)) {
-        //   throw new Error("Invalid wallet address. Please contact support")
-        // } else if (walletAddress !== getUser().address) {
+        if (!isAddress(walletAddress)) {
+          throw new Error("Invalid wallet address. Please contact support")
+        }
+        await connect({ connector })
+        // console.log("Connected to wallet")
+        // console.log("Account", account)
+        // if (account.isConnected && account.address !== walletAddress) {
+        //   // disconnect()
         //   throw new Error(
         //     "Your Cosmik wallet address doesn't match the one stored in your browser. Please contact support"
         //   )
         // }
-
-        await connect({ connector })
       } catch (error) {
         console.error("Error connecting wallet", error)
       }
@@ -73,20 +72,22 @@ export const useConnectComethWallet = () => {
     const adaptor = new ConnectAdaptor({
       chainId: numberToHex(env.NEXT_PUBLIC_NETWORK_ID) as SupportedNetworks,
       apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
+      baseUrl: process.env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL!,
     })
     const wallet = new ComethWallet({
       authAdapter: adaptor,
       apiKey: process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
     })
-
     await wallet.connect(walletAddress)
   }, [])
 
   const disconnect = useCallback(async () => {
-    if (account.status === "connected" && getUser()) {
+    if (account.isConnected && getUser()) {
+      console.log("Disconnecting wallet", account)
       try {
         await walletDisconnect({ connector: account.connector })
         await cosmikDisconnect()
+        // window.localStorage.removeItem("walletAddress")
         setUser(null)
         setUserIsFullyConnected(false)
       } catch (e) {

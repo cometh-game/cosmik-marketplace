@@ -6,6 +6,7 @@ import { useAccount } from "wagmi"
 import { useNFTFilters } from "@/lib/utils/nftFilters"
 import { Button } from "@/components/ui/Button"
 import { cx } from "class-variance-authority"
+import { useUserAuthContext } from "@/providers/userAuth"
 
 export type NFTStateFilterItemProps = {
   label: string
@@ -41,6 +42,7 @@ type NFTStateFiltersProps = {
 export function NFTStateFilters({ results }: NFTStateFiltersProps) {
   const { get } = useSearchParams()
   const pathname = usePathname()
+  const { userIsFullyConnected } = useUserAuthContext()
   const account = useAccount()
   const viewerAddress = account.address
 
@@ -59,7 +61,7 @@ export function NFTStateFilters({ results }: NFTStateFiltersProps) {
         isSelected={Boolean(get("isOnSale"))}
         iconComponent={<TagIcon size="16" className="mr-2" />}
       />
-      {viewerAddress && !isOnProfilePage && (
+      {userIsFullyConnected && !isOnProfilePage && (
         <Link href={`/profile/${viewerAddress}`}>
           <NFTStateFilterItem
             label="My collectibles"

@@ -203,6 +203,7 @@ export function AssetCard({ asset, children }: AssetCardProps) {
             {!isOwnerAsset && <div className="mb-1 text-sm font-medium">Price</div>}
             {asset.orderbookStats.lowestListingPrice ? (
               <Price
+                size="sm"
                 variant="accent"
                 amount={asset.orderbookStats.lowestListingPrice}
                 shouldDisplayFiatPrice={true}
@@ -211,8 +212,8 @@ export function AssetCard({ asset, children }: AssetCardProps) {
               />
             ) : isOwnerAsset ? (
               <SellAssetButton
+                size="sm"
                 asset={asset as unknown as AssetWithTradeData}
-                isVariantLink
               />
             ) : (
               "No listed yet"

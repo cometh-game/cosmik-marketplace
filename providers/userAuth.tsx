@@ -26,11 +26,11 @@ export const UserAuthProvider = ({
 }: {
   children: React.ReactNode
 }) => {
-  const user = useRef<any | null>(null);
-  const { userLogged, isFetchingUserLogged } = useUserIsLogged();
-  const [userIsFullyConnected, setUserIsFullyConnected] = useState(false);
-  const { connectComethWallet } = useConnectComethWallet();
-  const [userIsReconnecting, setUserIsReconnecting] = useState(false);
+  const user = useRef<any | null>(null)
+  const { userLogged, isFetchingUserLogged } = useUserIsLogged()
+  const [userIsFullyConnected, setUserIsFullyConnected] = useState(false)
+  const { connectComethWallet } = useConnectComethWallet()
+  const [userIsReconnecting, setUserIsReconnecting] = useState(false)
 
   function setUser(newValue: any) {
     user.current = newValue
@@ -43,28 +43,30 @@ export const UserAuthProvider = ({
 
   useEffect(() => {
     // Initiate reconnection as soon as you start checking the connection status
-    setUserIsReconnecting(true);
+    setUserIsReconnecting(true)
+    // If the user has logged in, Wagmi has set the wallet address in local storage
+    // const getWalletInStorage = window.localStorage.getItem("walletAddress")
 
     const reconnectingWallet = async () => {
       // If the user is logged in and has an address, attempt to connect the wallet
       if (userLogged && userLogged.address) {
-        setUser(userLogged);
+        setUser(userLogged)
         try {
-          await connectComethWallet(userLogged.address);
-          setUserIsFullyConnected(true);
+          await connectComethWallet(userLogged.address)
+          setUserIsFullyConnected(true)
         } catch (error) {
-          console.error("Erreur lors de la connexion au wallet", error);
-          setUserIsFullyConnected(false);
+          console.error("Erreur lors de la connexion au wallet", error)
+          setUserIsFullyConnected(false)
         }
       }
       // Make sure to update the reconnection status to false after verification
-      setUserIsReconnecting(false);
-    };
+      setUserIsReconnecting(false)
+    }
 
     if (!isFetchingUserLogged) {
-      reconnectingWallet();
+      reconnectingWallet()
     }
-  }, [userLogged, isFetchingUserLogged, connectComethWallet]);
+  }, [userLogged, isFetchingUserLogged, connectComethWallet])
 
   return (
     <UserAuthContext.Provider
