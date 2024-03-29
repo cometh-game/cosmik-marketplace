@@ -116,7 +116,10 @@ export function AssetCardBase({
           href={`/nfts/${asset.contractAddress}/${asset.tokenId}`}
           className="sm:w-full sm:flex-1"
         >
-          <AssetImageContainer color={getAssetColor(asset)} isHovered={isHovered.value}>
+          <AssetImageContainer
+            color={getAssetColor(asset)}
+            isHovered={isHovered.value}
+          >
             <AssetImage
               src={src}
               fallback={fallback}
@@ -200,7 +203,9 @@ export function AssetCard({ asset, children }: AssetCardProps) {
         </Link>
         <div className="flex items-center justify-between">
           <div>
-            {!isOwnerAsset && <div className="mb-1 text-sm font-medium">Price</div>}
+            {!isOwnerAsset && (
+              <div className="mb-1 text-sm font-medium">Price</div>
+            )}
             {asset.orderbookStats.lowestListingPrice ? (
               <Price
                 size="sm"

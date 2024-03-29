@@ -28,7 +28,7 @@ export function ReactQueryProvider({
           onError: (error, query) => {
             if (query.state.data !== undefined) {
               toast({
-                title: "Something went wrong. 1",
+                title: "Something went wrong.",
                 variant: "destructive",
                 description: error.message,
               })
@@ -39,7 +39,7 @@ export function ReactQueryProvider({
           onError: (error, _variables, _context, mutation) => {
             if (mutation.options.onError) return
             toast({
-              title: "Something went wrong. 2",
+              title: "Something went wrong.",
               variant: "destructive",
               description: error.message,
             })

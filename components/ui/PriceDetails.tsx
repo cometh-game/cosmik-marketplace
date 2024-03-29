@@ -53,17 +53,26 @@ export function PriceDetails({
   }, [price, sumOfFeesPercentages])
 
   return (
-    <div className="rounded border border-input p-4 shadow">
+    <div className="border-input rounded border p-4 shadow">
       <div className="flex  flex-col justify-between sm:flex-row">
         <span>You will receive:</span>
         <span>
-          <Price fontWeight="normal" amount={amountWithoutFees} isNativeToken={true} />
+          <Price
+            fontWeight="normal"
+            amount={amountWithoutFees}
+            isNativeToken={true}
+            shouldDisplayFiatPrice={true}
+          />
         </span>
       </div>
       <div className="flex flex-col justify-between sm:flex-row">
         <span>Fees ({sumOfFeesPercentages}%):</span>
         <span>
-          <Price fontWeight="normal" amount={feesAmount} />
+          <Price
+            fontWeight="normal"
+            amount={feesAmount}
+            shouldDisplayFiatPrice={true}
+          />
         </span>
       </div>
       {contractIsSponsored && (
@@ -72,11 +81,16 @@ export function PriceDetails({
           <span className="font-medium">Offered</span>
         </div>
       )}
-      <hr className="my-2 border-input" />
+      <hr className="border-input my-2" />
       <div className="flex flex-col justify-between sm:flex-row">
         <span>Total price:</span>
         <span>
-          <Price fontWeight="normal" amount={price || 0} isNativeToken={true} />
+          <Price
+            fontWeight="normal"
+            amount={price || 0}
+            isNativeToken={true}
+            shouldDisplayFiatPrice={true}
+          />
         </span>
       </div>
     </div>
