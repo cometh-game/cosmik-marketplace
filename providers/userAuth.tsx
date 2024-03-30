@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useRef, useState } from "react"
 import { useUserIsLogged } from "@/services/cosmik/userLoggedService"
 
 import { useConnectComethWallet } from "./authentication/comethConnectHooks"
+import { usePathname } from "next/navigation"
 
 const UserAuthContext = createContext<{
   getUser: () => any | null
@@ -31,6 +32,8 @@ export const UserAuthProvider = ({
   const [userIsFullyConnected, setUserIsFullyConnected] = useState(false)
   const { connectComethWallet } = useConnectComethWallet()
   const [userIsReconnecting, setUserIsReconnecting] = useState(false)
+  const pathname = usePathname()
+  const isWalletsPage = pathname === "/wallets"
 
   function setUser(newValue: any) {
     user.current = newValue
@@ -51,6 +54,13 @@ export const UserAuthProvider = ({
       // If the user is logged in and has an address, attempt to connect the wallet
       if (userLogged && userLogged.address) {
         setUser(userLogged)
+        
+        if (isWalletsPage) {
+          setUserIsReconnecting(false)
+          setUserIsFullyConnected(true)
+          return
+        }
+
         try {
           await connectComethWallet(userLogged.address)
           setUserIsFullyConnected(true)

@@ -1,15 +1,13 @@
 import "@/styles/globals.css"
 
 import { Metadata } from "next"
-import { AppProviders } from "@/providers/appProviders"
+import { ReactQueryProvider } from "@/providers/react-query"
+import { AppThemeProvider } from "@/providers/theme"
 
 import { siteConfig } from "@/config/site"
 import { ChakraFont } from "@/lib/utils/fonts"
 import { cn } from "@/lib/utils/utils"
 import { Toaster } from "@/components/ui/toast/Toaster"
-import { AppContent } from "@/components/AppContent"
-import { SiteHeader } from "@/components/SiteHeader"
-import { TailwindIndicator } from "@/components/TailwindIndicator"
 
 export const metadata: Metadata = {
   title: {
@@ -42,14 +40,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
           `min-h-screen bg-[url('/main-bg.jpg')] bg-cover bg-fixed bg-center bg-no-repeat font-sans antialiased`
         )}
       >
-        <AppProviders>
-          <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden">
-            <SiteHeader />
-            <AppContent>{children}</AppContent>
-          </div>
-
-          <TailwindIndicator />
-        </AppProviders>
+        <ReactQueryProvider>
+          <AppThemeProvider>{children}</AppThemeProvider>
+        </ReactQueryProvider>
         <Toaster />
       </body>
     </html>

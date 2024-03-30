@@ -8,6 +8,7 @@ import networks, { NetworkConfig } from "@/config/networks"
 type GlobalConfig = {
   contractAddresses: Address[]
   defaultContractAddress: Address
+  shipsContractAddress: Address
   useNativeForOrders: boolean
   ordersErc20: {
     name: string
@@ -108,6 +109,7 @@ contractAddress.forEach((address) => {
 const globalConfig: GlobalConfig = {
   contractAddresses: globalConfigContractAddresses as Address[],
   defaultContractAddress: globalConfigContractAddresses[0] as Address,
+  shipsContractAddress: manifest.shipsContractAddress as Address,
   useNativeForOrders: useNativeTokenForOrders,
   ordersErc20: {
     name: ordersErc20.name,

@@ -1,5 +1,6 @@
-import { cosmikClient } from "@/lib/clients"
 import { useQuery } from "@tanstack/react-query"
+
+import { cosmikClient } from "@/lib/clients"
 
 export type GetCosmikLoggedResponse = {
   data: any | undefined

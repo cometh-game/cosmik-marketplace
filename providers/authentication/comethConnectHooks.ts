@@ -32,8 +32,6 @@ export const useConnectComethWallet = () => {
         walletAddress,
       })
 
-      console.log("Connecting to wallet", walletAddress)
-
       try {
         if (!isAddress(walletAddress)) {
           throw new Error("Invalid wallet address. Please contact support")
@@ -82,7 +80,7 @@ export const useConnectComethWallet = () => {
   }, [])
 
   const disconnect = useCallback(async () => {
-    if (account.isConnected && getUser()) {
+    if (account.isConnected || getUser() !== null) {
       console.log("Disconnecting wallet", account)
       try {
         await walletDisconnect({ connector: account.connector })

@@ -11,6 +11,13 @@ export const comethMarketplaceClient = new MarketplaceSdk({
   },
 })
 
+export const comethMarketplaceSpaceshipsClient = new MarketplaceSdk({
+  BASE: "https://api.marketplace.prod.core.cometh.tech/v1",
+  HEADERS: {
+    apikey: "i4S3Y8y3C7AL0L5GZplpW8N8OTTBWVEA",
+  },
+})
+
 export const cosmikClient = axios.create({
   baseURL: env.NEXT_PUBLIC_COSMIK_BASE_URL,
   withCredentials: true,

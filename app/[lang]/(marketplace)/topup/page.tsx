@@ -42,26 +42,23 @@ export default function TopupPage() {
 
   const initTransakOrder = (price: number, amount: number | null) => {
     if (!price || !amount) return
-    const user = getUser()
     setIsLoading(true)
 
-    if (user) {
-      prepareTransakOrder({
-        userWallet: user.address,
-        amount: parseEther(amount.toString()).toString(),
-        nonce: generateRandomUint256(),
-      }).then((transakData) => {
-        openTransakDialog({
-          transakData,
-          fiatCurrency: locale === "en" ? "USD" : "EUR",
-          defaultFiatAmount: price,
-          onSuccess: () => {
-            setShowTransakSuccessDialog(true)
-          },
-        })
-        setIsLoading(false)
+    prepareTransakOrder({
+      userWallet: getUser().address,
+      amount: parseEther(amount.toString()).toString(),
+      nonce: generateRandomUint256(),
+    }).then((transakData) => {
+      openTransakDialog({
+        transakData,
+        fiatCurrency: locale === "en" ? "USD" : "EUR",
+        defaultFiatAmount: price,
+        onSuccess: () => {
+          setShowTransakSuccessDialog(true)
+        },
       })
-    }
+      setIsLoading(false)
+    })
   }
 
   if (userIsReconnecting) {

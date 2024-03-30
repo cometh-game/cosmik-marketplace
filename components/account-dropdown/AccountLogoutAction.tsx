@@ -2,9 +2,7 @@
 
 import { useCallback } from "react"
 import { useConnectComethWallet } from "@/providers/authentication/comethConnectHooks"
-import { useCosmikLogout } from "@/services/cosmik/logoutService"
 import { LogOut } from "lucide-react"
-import { useDisconnect } from "wagmi"
 
 import { Button } from "@/components/ui/Button"
 import {
@@ -13,13 +11,18 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
+import { useRouter } from "next/navigation"
+import { useUserAuthContext } from "@/providers/userAuth"
 
 export function AccountLogoutAction() {
   const { disconnect } = useConnectComethWallet()
+  const { push } = useRouter()
+  const { getUser } = useUserAuthContext()
 
   const handleLogout = useCallback(async () => {
     await disconnect()
-  }, [disconnect])
+    push("/nfts")
+  }, [disconnect, push])
 
   return (
     <div className="absolute right-4 top-4">

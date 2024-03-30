@@ -15,21 +15,19 @@ export type AddExternalWalletMutationOptions = {
 export const useAddExternalWallet = () => {
   return useMutation({
     mutationKey: ["cosmik, external-addresses"],
-    mutationFn: async ({
+    mutationFn: ({
       walletAddress,
       nonce,
       signature,
       message,
-    }: AddExternalWalletMutationOptions) => {
-      const { data } = await cosmikClient.patch("/me/external-addresses", {
+    }: AddExternalWalletMutationOptions) =>
+      cosmikClient.patch("/me/external-addresses", {
         walletAddress,
         nonce,
         signature,
         message,
-      })
-      return data
-    },
-    onSuccess: async () => {
+      }),
+    onSuccess: () => {
       toast({
         title: "Wallet added",
         description: "Your wallet has been added to your account",

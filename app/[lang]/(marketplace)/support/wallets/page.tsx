@@ -62,6 +62,7 @@ const WalletAssetTransfer = () => {
     limit: 9999,
   })
   const assets = searchResult?.assets
+
   const refreshAssets = useCallback(() => {
     client.invalidateQueries({ queryKey: ["assets", "search"] })
   }, [client])
@@ -71,20 +72,20 @@ const WalletAssetTransfer = () => {
     <div className="card-primary p-5">
       <div className="mb-3 text-xl font-bold">Connected wallet</div>
       <div className="text-base">Connected to {account.address}</div>
-      <div className="text-base">Current collection address: {currentCollectionAddress}</div>
+      <div className="text-base">
+        Current collection address: {currentCollectionAddress}
+      </div>
       <div>
         <div className="flex items-center justify-between gap-2">
-          <div className="text-xl font-bold">
-          Assets
-          </div>
+          <div className="text-xl font-bold">Assets</div>
           <Button size="sm" variant="third" onClick={refreshAssets}>
             <RotateCcw size={16} />
           </Button>
         </div>
         <ul>
-          {assets?.map((asset) => (
-            <li className="mt-2" key={asset.tokenId}>
-              {asset.tokenId} {asset.metadata.name}
+          {assets?.map((asset: any) => (
+            <li className="flex items-center" key={asset.tokenId}>
+              {asset.tokenId} <b>{asset.metadata.name}</b>
               <TransferAssetButton asset={asset} />
             </li>
           ))}
@@ -179,7 +180,7 @@ const WalletDebugPanels = () => {
             Cometh connect log into wallet
           </Button>
         </div>
-        <div>
+        <div className="mt-2">
           {isPending ? "Connecting..." : ""}
           {error ? error.message : ""}
         </div>

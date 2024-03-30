@@ -135,8 +135,4 @@ All supported `currencyId` can be found in `types/currencies.ts`.
 
 #### What is an RPC and why would I need one?
 
-An RPC node is the entry point of calls made to the blockchain. By default our tools will use public free RPC urls. However, to avoid throttling and performance issues in production, it is strongly recommended to find a better private RPC dedicated to your app. 
-
-#### Can I use Web 3 modal instead of Rainbow Kit? 
-
-Yes there is a variable in the manifest dedicated to choosing between those two. If you want to use a third different solution you can have a look at the `authenticationUiSwitch.ts` file. 
+An RPC node is the entry point of calls made to the blockchain. By default our tools will use public free RPC urls. However, to avoid throttling and performance issues in production, it is strongly recommended to find a better private RPC dedicated to your app.

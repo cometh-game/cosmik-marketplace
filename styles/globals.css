@@ -62,11 +62,6 @@
   --ring: 215 20.2% 65.1%;
 
   --radius: 4px;
-
-  /* Onboard custom styles */
-
-  /* --account-select-modal-font-family-normal: 'font-chakra-petch'; */
-  --onboard-modal-z-index: 100;
 }
 
 @layer base {

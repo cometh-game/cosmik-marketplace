@@ -1,4 +1,4 @@
-import { wagmiConfig } from "@/providers/authentication/authenticationUiSwitch"
+import { wagmiConfig } from "@/providers/authentication/wagmi/wagmiProvider"
 import { useMutation } from "@tanstack/react-query"
 import { readContract } from "@wagmi/core"
 import { BigNumber, BigNumberish } from "ethers"

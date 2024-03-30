@@ -30,9 +30,9 @@ export function SiteHeader() {
     )
   }
 
-  if (pathname === "/wallets") {
-    return null
-  }
+  // if (pathname === "/wallets") {
+  //   return null
+  // }
 
   return (
     <div className="container mx-auto py-5 sm:py-10">

@@ -6,6 +6,7 @@ import { env } from "@/config/env"
 const manifest: Manifest = {
   marketplaceName: "Cosmik Marketplace",
   contractAddress: env.NEXT_PUBLIC_CONTRACT_ADDRESS.split(",") as Address[],
+  shipsContractAddress: env.NEXT_PUBLIC_CONTRACT_ADDRESS_SHIPS as Address,
   themeClass: "theme-base",
 
   pages: {
@@ -42,7 +43,7 @@ const manifest: Manifest = {
     currencyId: ["usd", "eur"], // all currencies can be found in the currencies.ts file
     currencySymbol: "$", // symbol to display after the amount
   },
-  authenticationUiType: AuthenticationUiLibrary.RAINBOW_KIT,
+  authenticationUiType: AuthenticationUiLibrary.WEB3_MODAL,
   collectionSettingsByAddress: {},
 }
 

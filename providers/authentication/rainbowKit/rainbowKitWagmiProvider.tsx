@@ -1,13 +1,14 @@
 "use client"
 
 import { manifest } from "@/manifests/manifests"
-import { ConnectButton, useConnectModal } from "@rainbow-me/rainbowkit"
+import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { Chain } from "@wagmi/chains"
 import { createConfig, http, WagmiProvider } from "wagmi"
 
 import { marketplaceChain } from "../marketplaceWagmiChain"
 import { MarketplaceRainbowKitProvider } from "./marketplaceRainbowKitProvider"
 import { wagmiConnectors } from "./rainbowKitWagmiConnectors"
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 export const wagmiConfig = createConfig({
   connectors: wagmiConnectors,
@@ -19,9 +20,9 @@ export const wagmiConfig = createConfig({
 })
 
 export const useOpenLoginModal = () => {
-  const { openConnectModal } = useConnectModal()
+  const { openConnectModal } = useConnectModal();
   return openConnectModal
-}
+} 
 
 export function MarketplaceWagmiProvider({
   children,

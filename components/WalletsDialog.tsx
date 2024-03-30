@@ -1,17 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
+import Link from "next/link"
 import { useAddExternalWallet } from "@/services/cosmik/addExternalWalletService"
 import { User } from "@/services/cosmik/signinService"
 import { useGetUserNonce } from "@/services/cosmik/userNonceService"
 import { SupportedNetworks } from "@cometh/connect-sdk"
 import { AssetSearchFilters } from "@cometh/marketplace-sdk"
-import { ethers } from "ethers"
+import { useWeb3Modal } from "@web3modal/wagmi/react"
 import { SiweMessage } from "siwe"
-import { getAddress, numberToHex } from "viem"
+import { numberToHex } from "viem"
+import { useAccount, useDisconnect, useSignMessage } from "wagmi"
 
 import { env } from "@/config/env"
 import globalConfig from "@/config/globalConfig"
-// import { useWeb3OnboardContext } from "@/providers/web3-onboard"
-import { comethMarketplaceClient } from "@/lib/clients"
+import { comethMarketplaceSpaceshipsClient } from "@/lib/clients"
 import {
   Dialog,
   DialogContent,
@@ -19,221 +20,161 @@ import {
   DialogTitle,
 } from "@/components/ui/Dialog"
 
+import { AccountLogoutAction } from "./account-dropdown/AccountLogoutAction"
 import { Button } from "./ui/Button"
+import { Loading } from "./ui/Loading"
 import WalletList from "./wallets/WalletList"
-import { useAccount } from "wagmi"
-import { useOpenLoginModal } from "@/providers/authentication/authenticationUiSwitch"
-import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit"
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+
 type WalletsDialogProps = {
   user: User
 }
 
 export function WalletsDialog({ user }: WalletsDialogProps) {
-  // const { onboard } = useWeb3OnboardContext()
-  const openLoginModal = useOpenLoginModal()
-  const { openAccountModal } = useAccountModal();
+  const { open } = useWeb3Modal()
+  const { disconnectAsync } = useDisconnect()
+  const { address: walletAddress } = useAccount()
+  const { mutateAsync: getUserNonceAsync } = useGetUserNonce()
+  const { mutateAsync: addExternalWallet } = useAddExternalWallet()
+  const { signMessageAsync: signMessage } = useSignMessage()
+  const [wallets, setWallets] = useState<
+    { address: string; spaceships: number }[]
+  >([])
+  const [loading, setLoading] = useState(false)
 
-  console.log("openAccountModal", openAccountModal)
+  useEffect(() => {
+    const updateWallets = async () => {
+      setLoading(true)
+      const walletAddresses = [user.address, ...user.externalAddresses]
+      const promises = walletAddresses.map(async (address) => {
+        try {
+          const filters: AssetSearchFilters = {
+            contractAddress: globalConfig.shipsContractAddress,
+            owner: address,
+            limit: 9999,
+          }
+          const spaceships =
+            await comethMarketplaceSpaceshipsClient.asset.searchAssets(filters)
+          return { address, spaceships: spaceships.total }
+        } catch (error) {
+          console.error(
+            "Error fetching assets count for address",
+            address,
+            error
+          )
+          return { address, spaceships: 0 }
+        }
+      })
 
-  // const account = useAccount()
-  // const viewerAddress = account.address
+      try {
+        const results = await Promise.all(promises)
+        setWallets(results)
+      } finally {
+        setLoading(false)
+      }
+    }
 
-  // const { mutateAsync: getUserNonceAsync } = useGetUserNonce()
-  // const { mutateAsync: addExternalWallet } = useAddExternalWallet()
+    updateWallets()
+  }, [user.address, user.externalAddresses])
 
-  // const walletAddress = useRef<string | null>(null)
-  // const walletState = useRef<any | null>(null)
+  useEffect(() => {
+    if (walletAddress) {
+      handleAddExternalWallet()
+    }
+  }, [walletAddress])
 
-  // const [wallets, setWallets] = useState<{ address: string; items: number }[]>(
-  //   []
-  // )
+  async function createMessage({
+    nonce,
+    statement,
+  }: {
+    nonce: string
+    statement: string
+  }) {
+    if (!window || !walletAddress) {
+      throw new Error("No window or wallet")
+    }
 
+    const message = new SiweMessage({
+      domain: window.location.host,
+      address: walletAddress,
+      statement,
+      uri: window.location.origin,
+      version: "1",
+      chainId: Number(
+        numberToHex(env.NEXT_PUBLIC_NETWORK_ID) as SupportedNetworks
+      ),
+      nonce,
+    })
 
-  // const walletAddressesRef = useRef<string[]>([])
+    return message
+  }
 
-  // async function fetchItemsCount(address: string) {
-  //   const filters: AssetSearchFilters = {
-  //     contractAddress: globalConfig.defaultContractAddress,
-  //     owner: address,
-  //     limit: 1,
-  //   }
-  //   const response = await comethMarketplaceClient.asset.searchAssets(filters)
-  //   return { address, items: response.total }
-  // }
-
-  // useEffect(() => {
-  //   const initialWallets = [
-  //     { address: user.address, items: 0 },
-  //     ...user.externalAddresses.map((address) => ({ address, items: 0 })),
-  //   ]
-  //   setWallets(initialWallets)
-  // }, [user])
-
-  // const updateItemsCounts = useCallback(async () => {
-  //   const promises = walletAddressesRef.current.map(async (address) => {
-  //     try {
-  //       const filters: AssetSearchFilters = {
-  //         contractAddress: globalConfig.defaultContractAddress,
-  //         owner: address,
-  //         limit: 1,
-  //       }
-  //       const response =
-  //         await comethMarketplaceClient.asset.searchAssets(filters)
-  //       return { address, items: response.total }
-  //     } catch (error) {
-  //       console.error("Error fetching assets count", error)
-  //       return { address, items: 0 }
-  //     }
-  //   })
-
-  //   const results = await Promise.all(promises)
-  //   setWallets(results)
-  // }, [])
-
-  // useEffect(() => {
-  //   walletAddressesRef.current = [user.address, ...user.externalAddresses]
-  //   updateItemsCounts()
-  // }, [user.address, user.externalAddresses, updateItemsCounts])
-
-  // function getRefsValues() {
-  //   return {
-  //     walletAddress: walletAddress.current,
-  //     wallet: walletState.current,
-  //   }
-  // }
-
-  // function getSigner() {
-  //   const { wallet } = getRefsValues()
-  //   const provider = new ethers.providers.Web3Provider(wallet[0].provider)
-  //   const signer = provider?.getSigner()
-  //   if (!signer) {
-  //     throw new Error("No signer")
-  //   }
-
-  //   return signer
-  // }
-
-  // async function getUserNonce() {
-  //   const { walletAddress } = getRefsValues()
-  //   if (!walletAddress) {
-  //     throw new Error("No wallet address")
-  //   }
-  //   const { nonce } = await getUserNonceAsync({ walletAddress })
-
-  //   return nonce
-  // }
-
-  // async function createMessage({
-  //   nonce,
-  //   statement,
-  // }: {
-  //   nonce: string
-  //   statement: string
-  // }) {
-  //   const { wallet, walletAddress } = getRefsValues()
-
-  //   if (!window || !wallet || !walletAddress) {
-  //     throw new Error("No window or wallet")
-  //   }
-
-  //   const domain = window.location.host
-  //   const uri = window.location.origin
-
-  //   const message = new SiweMessage({
-  //     domain,
-  //     address: walletAddress,
-  //     statement,
-  //     uri,
-  //     version: "1",
-  //     chainId: Number(
-  //       numberToHex(env.NEXT_PUBLIC_NETWORK_ID) as SupportedNetworks
-  //     ),
-  //     nonce,
-  //   })
-
-  //   return message
-  // }
-
-  // async function handleAddExternalWallet() {
-  //   try {
-  //     const wallet = viewerAddress
-  //     walletState.current = wallet
-
-  //     if (!wallet) {
-  //       throw new Error("No wallet")
-  //     }
-
-  //     const walletAddr = viewerAddress
-  //     walletAddress.current = walletAddr
-
-  //     const nonce = await getUserNonce()
-  //     const message = await createMessage({
-  //       nonce,
-  //       statement: "Connect to Cosmik Battle to link your wallet.",
-  //     })
-
-  //     if (!message) {
-  //       throw new Error("No message")
-  //     }
-
-  //     const signer = getSigner()
-  //     const messageToSign = message.prepareMessage()
-  //     const signature = await signer.signMessage(messageToSign)
-
-  //     if (!signature) {
-  //       throw new Error("No signature")
-  //     }
-
-  //     addExternalWallet(
-  //       { walletAddress: walletAddr, nonce, signature, message },
-  //       {
-  //         onSuccess: () => {
-  //           setWallets((prevWallets) => [
-  //             ...prevWallets,
-  //             { address: walletAddr, items: 0 },
-  //           ])
-  //         },
-  //       }
-  //     )
-  //   } catch (error) {
-  //     console.error("Error connecting wallet", error)
-  //   }
-  // }
+  async function handleAddExternalWallet() {
+    try {
+      if (!walletAddress) {
+        throw new Error("No wallet")
+      }
+      const { nonce } = await getUserNonceAsync({ walletAddress })
+      const message = await createMessage({
+        nonce,
+        statement: "Connect to Cosmik Battle to link your wallet.",
+      })
+      const signature = await signMessage({
+        message: message.prepareMessage(),
+      })
+      await addExternalWallet(
+        { walletAddress, nonce, signature, message },
+        {
+          onSuccess: () => {
+            setWallets((prevWallets) => [
+              ...prevWallets,
+              { address: walletAddress, spaceships: 0 },
+            ])
+          },
+        }
+      )
+      // disconnect after added wallet
+      await disconnectAsync()
+    } catch (error) {
+      console.error("Error connecting wallet", error)
+    }
+  }
 
   return (
-    <Dialog modal open={true}>
-      <DialogContent
-        className="sm:max-w-[400px]"
-        shouldDisplayOverlay={false}
-        shouldDisplayCloseBtn={false}
-      >
-        <DialogHeader className="flex-row items-center justify-between space-y-0">
-          <DialogTitle className="normal-case">@{user?.userName}</DialogTitle>
-        </DialogHeader>
-        <ul className="space-y-3">
-          {/* <WalletList wallets={wallets} mainAddress={user.address} /> */}
-        </ul>
-        <div className="text-muted-foreground">
-          Add an external wallet to link existing assets to your cosmik Battle
-          Account
-        </div>
-        {/* <button onClick={() => fetchItemsCount("0x710dE92cf3a6459933f709D1D2664aA7036c57e8")}>Test address</button> */}
-        {/* <Button
-          size="lg"
-          // onClick={() => handleAddExternalWallet()}
-          onClick={() => openLoginModal && openLoginModal()}
+    <div className="dialog max-w-[400px]">
+      <Dialog modal open={true}>
+        <DialogContent
+          className="sm:max-w-[400px]"
+          shouldDisplayOverlay={false}
+          shouldDisplayCloseBtn={false}
         >
-          Add external wallet
-        </Button> */}
-        <Button
-          size="lg"
-          // onClick={() => handleAddExternalWallet()}
-          onClick={openAccountModal}
-        >
-          openConnectModal
-        </Button>
-      </DialogContent>
-    </Dialog>
+          <DialogHeader className="flex-row items-center justify-between space-y-0">
+            <DialogTitle className="normal-case">@{user?.userName}</DialogTitle>
+            {(user || walletAddress) && <AccountLogoutAction />}
+          </DialogHeader>
+          <ul className="space-y-3">
+            {loading ? (
+              <Loading />
+            ) : (
+              <WalletList wallets={wallets} mainAddress={user.address} />
+            )}
+          </ul>
+          <div className="text-muted-foreground">
+            Add an external wallet to link existing assets to your cosmik Battle
+            account
+          </div>
+          <Button
+            size="lg"
+            onClick={() => {
+              open({ view: "Connect" })
+            }}
+          >
+            Add external wallet
+          </Button>
+          <div className="text-center">
+            <Link href="/nfts">Back to marketplace</Link>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
   )
 }
