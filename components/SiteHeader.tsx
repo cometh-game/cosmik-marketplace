@@ -86,7 +86,7 @@ export function SiteHeader() {
         <Link
           href="/nfts"
           className={cx(
-            "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center space-x-2 text-2xl max-md:w-[100px] w-[136px] max-md:h-[40px] h-[56px] hover:transform hover:scale-105 transition-transform duration-300 ease-in-out",
+            "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center space-x-2 text-2xl max-md:w-[104px] w-[136px] max-md:h-[40px] h-[56px] hover:transform hover:scale-105 transition-transform duration-300 ease-in-out",
             isOpen && "text-primary-foreground"
           )}
         >
@@ -98,21 +98,11 @@ export function SiteHeader() {
         </Link>
 
         <div className="flex items-center gap-x-6">
-          {/* <Button
-            variant="default"
-            // className="hover:text-accent-foreground"
-            className="bg-accent-foreground text-accent-foreground after:content-none"
-            onClick={() => {
-              push("/onramp")
-            }}
-          >
-            Fill your wallet
-          </Button> */}
           {userIsFullyConnected && (
             <Link
               href="/topup"
               className={cx(
-                "text-xl font-semibold md:text-lg",
+                "text-xl font-semibold md:text-lg max-md:hidden",
                 isActiveLink("/topup") && "text-accent-foreground"
               )}
             >

@@ -17,6 +17,10 @@ export const AssetHeaderImage = ({
   const viewerAddress = account.address
   const owner = asset.owner === viewerAddress
 
+  const isCardbacks =
+    asset.metadata.image?.includes("/cardbacks/") ||
+    asset.metadata.image_data?.includes("/cardbacks/")
+
   if (
     !asset.cachedImageUrl &&
     !asset.metadata.image &&
@@ -40,7 +44,9 @@ export const AssetHeaderImage = ({
             imageData={asset.metadata.image_data}
             height={879}
             width={560}
-            className="size-full rounded-xl object-contain p-[3.5%]"
+            className={cn("size-full rounded-xl object-contain p-[3.5%]", {
+              "p-[10%]": isCardbacks,
+            })}
           />
         </div>
       </AspectRatio>

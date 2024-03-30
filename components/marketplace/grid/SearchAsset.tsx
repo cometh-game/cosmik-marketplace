@@ -23,7 +23,7 @@ export function SearchAsset({ onChange }: SearchAssetProps) {
       ref={SearchRef}
       type="text"
       placeholder="Search name"
-      className="btn-default bg-primary/60 before:bg-primary/20 hover:bg-primary/40 h-[40px] border-0 text-white after:content-none max-md:w-[calc(100%-180px)]"
+      className="btn-default bg-primary/60 before:bg-primary/20 hover:bg-primary/40 h-[40px] border-0 text-white after:content-none"
       icon={<Search size="16" className={"min-w-[17px]"} />}
       inputUpdateCallback={handleChange}
     />

@@ -10,10 +10,8 @@ import {
 } from "@cometh/marketplace-sdk"
 import { animated, config, useSpring } from "react-spring"
 import { useBoolean } from "usehooks-ts"
-import { Address } from "viem"
 import { useAccount } from "wagmi"
 
-import globalConfig from "@/config/globalConfig"
 import { getRandomArrayElement } from "@/lib/utils/arrays"
 import { getAssetColor } from "@/lib/utils/colorsAttributes"
 import { cn } from "@/lib/utils/utils"
@@ -97,6 +95,10 @@ export function AssetCardBase({
     ? "sm:h-[110px]"
     : "sm:h-[100px]"
 
+  const isCardbacks =
+    asset.metadata.image?.includes("/cardbacks/") ||
+    asset.metadata.image_data?.includes("/cardbacks/")
+
   return (
     <Appear
       enabled={false}
@@ -126,7 +128,9 @@ export function AssetCardBase({
               imageData={asset.metadata.image_data}
               height={380}
               width={320}
-              className="z-20 size-full rounded-lg object-contain"
+              className={cn("z-20 size-full rounded-lg object-contain", {
+                "p-8": isCardbacks,
+              })}
             />
           </AssetImageContainer>
         </Link>
@@ -134,45 +138,6 @@ export function AssetCardBase({
       </Card>
     </Appear>
   )
-}
-
-function renderAssetActions(
-  asset: SearchAssetWithTradeData & {
-    metadata: {
-      attributes?: AssetAttribute[]
-    }
-  },
-  isOwnerAsset: boolean
-) {
-  let button = undefined
-  let buttonText = ""
-  if (asset.orderbookStats.lowestListingPrice && !isOwnerAsset) {
-    button = <BuyAssetButton asset={asset} />
-    buttonText = "Buy now "
-  } else if (!isOwnerAsset) {
-    button = (
-      <MakeBuyOfferButton asset={asset as unknown as AssetWithTradeData} />
-    )
-    buttonText = "Make an offer"
-  } else if (!asset.orderbookStats.lowestListingPrice) {
-    button = <SellAssetButton asset={asset as unknown as AssetWithTradeData} />
-    buttonText = "Sell now"
-  } else {
-    button = (
-      <CancelListingButton asset={asset as unknown as AssetWithTradeData} />
-    )
-    buttonText = "Cancel listing"
-  }
-
-  if (button) {
-    return (
-      <div className="hidden sm:block">
-        <AuthenticationButton customText={buttonText}>
-          <SwitchNetwork>{button}</SwitchNetwork>
-        </AuthenticationButton>
-      </div>
-    )
-  }
 }
 
 export function AssetCard({ asset, children }: AssetCardProps) {

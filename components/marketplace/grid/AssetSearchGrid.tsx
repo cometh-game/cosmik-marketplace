@@ -45,7 +45,6 @@ export const AssetsSearchGrid = ({
 
   const {
     data: nfts,
-    refetch,
     isLoading,
     fetchNextPage,
     isFetchingNextPage,

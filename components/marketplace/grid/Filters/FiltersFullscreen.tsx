@@ -36,8 +36,8 @@ export const FiltersFullscreen = ({
   return (
     <>
       <Button
+        variant="secondary"
         onClick={toggleFilters}
-        // variant="outline"
         className="relative max-md:px-3"
       >
         <FilterIcon size="16" className="md:mr-2" />
@@ -45,7 +45,7 @@ export const FiltersFullscreen = ({
         <FiltersBadgeCounter counter={filtersCounter} />
       </Button>
       {isOpen && (
-        <div className="fixed inset-0 z-50 bg-white p-4">
+        <div className="bg-primary fixed inset-0 z-50 p-4">
           <div className="flex h-full flex-col overflow-y-auto">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold">
@@ -58,7 +58,7 @@ export const FiltersFullscreen = ({
             </div>
             <div className="mt-2 flex flex-col">
               {[...filters.entries()].map(([label, values]) => (
-                <Collapsible className="border-b border-gray-200 py-2">
+                <Collapsible className="border-b border-white/5 py-2">
                   <CollapsibleTrigger asChild>
                     <button className="flex w-full items-center pb-2 pr-2 text-base font-semibold">
                       {label}
