@@ -12,9 +12,9 @@ export const comethMarketplaceClient = new MarketplaceSdk({
 })
 
 export const comethMarketplaceSpaceshipsClient = new MarketplaceSdk({
-  BASE: "https://api.marketplace.prod.core.cometh.tech/v1",
+  BASE: env.NEXT_PUBLIC_COMETH_MARKETPLACE_SHIPS_API_URL,
   HEADERS: {
-    apikey: "i4S3Y8y3C7AL0L5GZplpW8N8OTTBWVEA",
+    apikey: env.NEXT_PUBLIC_MARKETPLACE_SHIPS_API_KEY,
   },
 })
 
