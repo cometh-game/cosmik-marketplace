@@ -2,6 +2,7 @@ import { useUserAuthContext } from "@/providers/userAuth"
 
 import { CurrentAccountDropdown } from "./account-dropdown/CurrentAccountDropdown"
 import { SigninDropdown } from "./account-dropdown/SigninDropdown"
+import { Button } from "./ui/Button"
 
 export function AuthenticationButton({
   children,
@@ -11,7 +12,7 @@ export function AuthenticationButton({
   children?: React.ReactNode
   fullVariant?: boolean
   customText?: string
-}) {
+} & React.ComponentProps<typeof Button>) {
   const { userIsReconnecting, userIsFullyConnected } = useUserAuthContext()
   if (userIsFullyConnected && !children) return <CurrentAccountDropdown />
 

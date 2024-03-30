@@ -23,7 +23,6 @@ import { BuyAssetButton } from "@/components/asset-actions/buttons/BuyAssetButto
 import { CancelListingButton } from "@/components/asset-actions/buttons/CancelListingButton"
 import { MakeBuyOfferButton } from "@/components/asset-actions/buttons/MakeBuyOfferPriceDialog"
 import { SellAssetButton } from "@/components/asset-actions/buttons/SellAssetButton"
-import { SwitchNetwork } from "@/components/asset-actions/buttons/SwitchNetwork"
 import { AuthenticationButton } from "@/components/AuthenticationButton"
 
 export type AssetCardProps = {
@@ -193,7 +192,6 @@ export function AssetCard({ asset, children }: AssetCardProps) {
             {asset.orderbookStats.highestOfferPrice && (
               <>
                 <div className="text-sm font-medium">Best offer</div>
-                {/* <div className="text-end">{renderAssetActions(asset, isOwnerAsset)}</div> */}
                 <Price
                   size="sm"
                   amount={asset.orderbookStats.highestOfferPrice}
@@ -202,10 +200,63 @@ export function AssetCard({ asset, children }: AssetCardProps) {
                 />
               </>
             )}
+            <div className="text-end">
+              {renderAssetActions(asset, isOwnerAsset)}
+            </div>
           </div>
         </div>
         {children}
       </>
     </AssetCardBase>
   )
+}
+
+function renderAssetActions(
+  asset: SearchAssetWithTradeData & {
+    metadata: {
+      attributes?: AssetAttribute[]
+    }
+  },
+  isOwnerAsset: boolean
+) {
+  let button = undefined
+  let buttonText = ""
+  if (asset.orderbookStats.lowestListingPrice && !isOwnerAsset) {
+    button = <BuyAssetButton size="sm" asset={asset} />
+    buttonText = "Buy now "
+  } else if (!isOwnerAsset) {
+    button = (
+      <MakeBuyOfferButton
+        size="sm"
+        asset={asset as unknown as AssetWithTradeData}
+      />
+    )
+    buttonText = "Make an offer"
+  } else if (!asset.orderbookStats.lowestListingPrice) {
+    button = (
+      <SellAssetButton
+        size="sm"
+        asset={asset as unknown as AssetWithTradeData}
+      />
+    )
+    buttonText = "Sell now"
+  } else {
+    button = (
+      <CancelListingButton
+        size="sm"
+        asset={asset as unknown as AssetWithTradeData}
+      />
+    )
+    buttonText = "Cancel listing"
+  }
+
+  if (button) {
+    return (
+      <div className="hidden sm:block">
+        <AuthenticationButton size="sm" customText={buttonText}>
+          {button}
+        </AuthenticationButton>
+      </div>
+    )
+  }
 }

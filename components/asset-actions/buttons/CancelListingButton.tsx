@@ -7,10 +7,10 @@ import { AssetWithTradeData } from "@cometh/marketplace-sdk"
 import { Button } from "@/components/ui/Button"
 
 export type CancelListingButtonProps = {
-  asset: AssetWithTradeData
-}
+  asset: AssetWithTradeData,
+} & React.ComponentProps<typeof Button>
 
-export function CancelListingButton({ asset }: CancelListingButtonProps) {
+export function CancelListingButton({ asset, size }: CancelListingButtonProps) {
   const { mutateAsync: cancel, isPending } = useCancelListing()
 
   const onConfirm = useCallback(async () => {
@@ -20,7 +20,7 @@ export function CancelListingButton({ asset }: CancelListingButtonProps) {
   return (
     <Button
       className="w-full"
-      size="lg"
+      size={size}
       onClick={onConfirm}
       disabled={isPending}
       isLoading={isPending}
