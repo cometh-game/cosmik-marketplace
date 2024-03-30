@@ -13,10 +13,11 @@ export type AssetCellProps = {
 export const AssetCell = ({ row }: AssetCellProps) => {
   const assetName = row.original.trade.asset?.metadata.name
   const tokenId = row.original.trade.tokenId
+  const tokenAddress = row.original.trade.tokenAddress
 
   return (
     <Link
-      href={`${env.NEXT_PUBLIC_BASE_PATH}/marketplace/${tokenId}`}
+      href={`/nfts/${tokenAddress}/${tokenId}`}
       className="relative z-[1] inline-flex items-center gap-x-2 font-medium transition-colors hover:text-white"
     >
       {`${assetName} #${shortenTokenId(tokenId, 7)}`} <ExternalLink size="16" />
