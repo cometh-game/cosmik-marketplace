@@ -71,6 +71,7 @@ export function SiteHeader() {
               <MainNav
                 items={siteConfig.mainNav}
                 onLinkClick={() => setIsOpen(false)}
+                isActiveLink={isActiveLink}
               />
             </div>
           </div>
@@ -80,6 +81,7 @@ export function SiteHeader() {
           <MainNav
             items={siteConfig.mainNav}
             onLinkClick={() => setIsOpen(false)}
+            isActiveLink={isActiveLink}
           />
         </div>
 

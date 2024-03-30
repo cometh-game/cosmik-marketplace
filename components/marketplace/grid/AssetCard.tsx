@@ -3,6 +3,8 @@
 import { useMemo } from "react"
 import Link from "next/link"
 import { manifest } from "@/manifests/manifests"
+import { useCurrentCollectionContext } from "@/providers/currentCollection/currentCollectionContext"
+import { useGetCollection } from "@/services/cometh-marketplace/collectionService"
 import {
   AssetAttribute,
   AssetWithTradeData,
@@ -37,6 +39,7 @@ export type AssetCardProps = {
 export type AssetCardBaseProps = {
   src?: string | null
   isOwnerAsset: boolean
+  isCardbacksAsset: boolean
   children?: React.ReactNode | React.ReactNode[]
   fallback?: string | null
   asset: SearchAssetWithTradeData
@@ -86,6 +89,7 @@ export function AssetCardBase({
   fallback,
   children,
   isOwnerAsset,
+  isCardbacksAsset,
   asset,
 }: AssetCardBaseProps) {
   const isHovered = useBoolean(false)
@@ -93,10 +97,6 @@ export function AssetCardBase({
   const cardTextHeightsClass = manifest.fiatCurrency.enable
     ? "sm:h-[110px]"
     : "sm:h-[100px]"
-
-  const isCardbacks =
-    asset.metadata.image?.includes("/cardbacks/") ||
-    asset.metadata.image_data?.includes("/cardbacks/")
 
   return (
     <Appear
@@ -128,7 +128,7 @@ export function AssetCardBase({
               height={380}
               width={320}
               className={cn("z-20 size-full rounded-lg object-contain", {
-                "p-8": isCardbacks,
+                "p-8": isCardbacksAsset,
               })}
             />
           </AssetImageContainer>
@@ -142,6 +142,9 @@ export function AssetCardBase({
 export function AssetCard({ asset, children }: AssetCardProps) {
   const account = useAccount()
   const viewerAddress = account.address
+  const { currentCollectionAddress } = useCurrentCollectionContext()
+  const { data: collection } = useGetCollection(currentCollectionAddress)
+  const isCardbacks = collection?.name === "Cardbacks"
 
   const isOwnerAsset = useMemo(() => {
     return asset.owner === viewerAddress?.toLowerCase()
@@ -152,6 +155,7 @@ export function AssetCard({ asset, children }: AssetCardProps) {
       src={asset.cachedImageUrl}
       fallback={asset.metadata.image}
       isOwnerAsset={isOwnerAsset}
+      isCardbacksAsset={isCardbacks}
       asset={asset}
     >
       <>

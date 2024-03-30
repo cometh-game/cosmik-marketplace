@@ -18,20 +18,10 @@ interface MainNavProps {
     external?: boolean
   }[]
   onLinkClick?: () => void
+  isActiveLink: (href: string) => boolean
 }
 
-export function MainNav({ items, onLinkClick }: MainNavProps) {
-  const pathname = usePathname()
-
-  const isActiveLink = (href: string) => {
-    if (pathname === href) return true
-
-    const nextChar = pathname[href.length]
-    return (
-      pathname.startsWith(href) && (nextChar === "/" || nextChar === undefined)
-    )
-  }
-
+export function MainNav({ items, onLinkClick, isActiveLink }: MainNavProps) {
   function CollectionLink({
     collectionAddress,
   }: {

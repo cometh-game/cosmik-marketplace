@@ -1,3 +1,5 @@
+import { useCurrentCollectionContext } from "@/providers/currentCollection/currentCollectionContext"
+import { useGetCollection } from "@/services/cometh-marketplace/collectionService"
 import {
   AssetWithTradeData,
   SearchAssetWithTradeData,
@@ -16,10 +18,9 @@ export const AssetHeaderImage = ({
   const account = useAccount()
   const viewerAddress = account.address
   const owner = asset.owner === viewerAddress
-
-  const isCardbacks =
-    asset.metadata.image?.includes("/cardbacks/") ||
-    asset.metadata.image_data?.includes("/cardbacks/")
+  const { currentCollectionAddress } = useCurrentCollectionContext()
+  const { data: collection } = useGetCollection(currentCollectionAddress)
+  const isCardbacks = collection?.name === "Cardbacks"
 
   if (
     !asset.cachedImageUrl &&
