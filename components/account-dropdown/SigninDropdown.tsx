@@ -22,14 +22,14 @@ export type SigninDropdownProps = {
   isReconnecting: boolean
   fullVariant?: boolean
   customText?: string
-  isLinkVariant?: boolean
+  hideIcon?: boolean
 }
 
 export function SigninDropdown({
   isReconnecting,
   fullVariant,
   customText,
-  isLinkVariant,
+  hideIcon,
 }: SigninDropdownProps) {
   const [user, setUser] = useState<User | null>(null)
   const [displayAutorizationProcess, setDisplayAutorizationProcess] =
@@ -54,8 +54,9 @@ export function SigninDropdown({
       try {
         setIsLoading(true)
         setUser(user)
+        console.log("User address", user.address)
         // Attempt to retrieve the wallet address to determine if it is the first connection
-        // await retrieveWalletAddress(user.address)
+        await retrieveWalletAddress(user.address)
         // If passkey signer is found for this address, connect the wallet
         const wallet = await connectComethWallet(user.address)
         console.log("Wallet", wallet)
@@ -95,7 +96,7 @@ export function SigninDropdown({
             disabled={isReconnecting || isPending}
             isLoading={isReconnecting || isPending}
           >
-            {!isLinkVariant && <WalletIcon size="16" className="mr-2" />}
+            {!hideIcon && <WalletIcon size="16" className="mr-2" />}
             {customText ? customText : "Login"}
           </Button>
         </DialogTrigger>

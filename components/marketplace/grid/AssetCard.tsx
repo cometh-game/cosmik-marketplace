@@ -257,7 +257,7 @@ function renderAssetActions(
   if (button) {
     return (
       <div className="hidden sm:block">
-        <AuthenticationButton size="sm" customText={buttonText}>
+        <AuthenticationButton size="sm" customText={buttonText} hideIcon={true}>
           {button}
         </AuthenticationButton>
       </div>

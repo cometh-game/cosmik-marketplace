@@ -80,12 +80,7 @@ export const useTransak = () => {
 
       transak.init()
 
-      Transak.on("*", (data) => {
-        console.log(data)
-      })
-
       Transak.on(Transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData) => {
-        console.log("Success:", orderData)
         transak.close()
         if (onSuccess) onSuccess()
       })

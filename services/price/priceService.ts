@@ -31,7 +31,6 @@ const useTokenFiatPrice = ({
         `${env.NEXT_PUBLIC_BASE_PATH}/api/fiat-currency-price?id=${coinId}&currency=${currencies}`
       )
       const price = res.data.currentFiatPrice[coinId][currency]
-      console.log("price", price)
       return price
     },
     staleTime: 1000 * 60 * 5,

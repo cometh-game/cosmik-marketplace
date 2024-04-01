@@ -6,7 +6,7 @@ import {
   SupportedNetworks,
 } from "@cometh/connect-sdk"
 import { comethConnectConnector } from "@cometh/connect-sdk-viem"
-import { isAddress, numberToHex } from "viem"
+import { isAddress } from "viem"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
 
 import { env } from "@/config/env"
@@ -18,12 +18,30 @@ export const useIsComethConnectWallet = () => {
   return useMemo(() => connector?.type === "cometh", [connector])
 }
 
+function numberToHex(value: number): string {
+  return `0x${value.toString(16)}`
+}
+
+function getSupportedNetworkId(
+  networkId: number
+): SupportedNetworks | undefined {
+  const networkHex = numberToHex(networkId)
+  const networks = Object.values(SupportedNetworks)
+  return networks.find((network) => network === networkHex)
+}
+
 export const useConnectComethWallet = () => {
   const { connectAsync: connect } = useConnect()
   const { disconnectAsync: walletDisconnect } = useDisconnect()
   const { mutateAsync: cosmikDisconnect } = useCosmikLogout()
   const { getUser, setUser, setUserIsFullyConnected } = useUserAuthContext()
   const account = useAccount()
+
+  const chainId = getSupportedNetworkId(env.NEXT_PUBLIC_NETWORK_ID)
+
+  if (!chainId) {
+    throw new Error("Network not supported by Cometh Connect.")
+  }
 
   const connectComethWallet = useCallback(
     async (walletAddress: string) => {
@@ -68,7 +86,7 @@ export const useConnectComethWallet = () => {
 
   const retrieveWalletAddress = useCallback(async (walletAddress: string) => {
     const adaptor = new ConnectAdaptor({
-      chainId: numberToHex(env.NEXT_PUBLIC_NETWORK_ID) as SupportedNetworks,
+      chainId: chainId,
       apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
       baseUrl: process.env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL!,
     })
@@ -77,7 +95,7 @@ export const useConnectComethWallet = () => {
       apiKey: process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
     })
     await wallet.connect(walletAddress)
-  }, [])
+  }, [chainId])
 
   const disconnect = useCallback(async () => {
     if (account.isConnected || getUser() !== null) {
