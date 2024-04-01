@@ -55,9 +55,10 @@ export function SigninDropdown({
         setIsLoading(true)
         setUser(user)
         // Attempt to retrieve the wallet address to determine if it is the first connection
-        await retrieveWalletAddress(user.address)
+        // await retrieveWalletAddress(user.address)
         // If passkey signer is found for this address, connect the wallet
-        await connectComethWallet(user.address)
+        const wallet = await connectComethWallet(user.address)
+        console.log("Wallet", wallet)
         toast({
           title: "Login successful",
           duration: 3000,
