@@ -1,9 +1,7 @@
 import { useMemo } from "react"
-// import i18nConfig from "@/i18nConfig"
 import { manifest } from "@/manifests/manifests"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
-import { useCurrentLocale } from "next-i18n-router/client"
 
 import { env } from "@/config/env"
 import globalConfig from "@/config/globalConfig"
@@ -11,7 +9,7 @@ import globalConfig from "@/config/globalConfig"
 const coinId = globalConfig.coinGeckoId?.toLowerCase()
 const fiatCurrencyId = manifest.fiatCurrency?.currencyId
 
-const useTokenFiatPrice = ({
+const useCurrencyFiatPrice = ({
   currency = "usd",
 }: { currency?: string } = {}) => {
   return useQuery({
@@ -21,7 +19,7 @@ const useTokenFiatPrice = ({
         throw new Error("erc20.id is not defined in the manifest")
       }
 
-      if (!fiatCurrencyId || !fiatCurrencyId) {
+      if (!fiatCurrencyId) {
         throw new Error("currencySymbol is not defined in the manifest")
       }
 
@@ -31,20 +29,15 @@ const useTokenFiatPrice = ({
         `${env.NEXT_PUBLIC_BASE_PATH}/api/fiat-currency-price?id=${coinId}&currency=${currencies}`
       )
       const price = res.data.currentFiatPrice[coinId][currency]
-      return price
+      return price as number
     },
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 15,
+    staleTime: 1000 * 60 * 15,
+    gcTime: 1000 * 60 * 90,
   })
 }
 
-export const useConvertPriceToFiat = (
-  amount: number | null,
-  locale?: string,
-  decimals: number = 2
-) => {
-  const currency = locale === "en" ? "usd" : "eur"
-  const { data: price } = useTokenFiatPrice({ currency })
+export const useConvertPriceToFiat = (amount?: number | null) => {
+  const { data: price } = useCurrencyFiatPrice()
 
   return useMemo(() => {
     if (!manifest.fiatCurrency.enable) {
@@ -53,10 +46,27 @@ export const useConvertPriceToFiat = (
     if (!amount || isNaN(amount) || !price || price === 0) {
       return null
     }
-    const fiatPrice = amount / price
-    if (!decimals) {
-      return Math.round(fiatPrice * 100) / 100
+    const fiatPrice = amount * price
+    return Math.round(fiatPrice * 100) / 100
+  }, [amount, price])
+}
+
+export const useConvertPriceToCrypto = (
+  amount?: number | null,
+  localeCurrency?: string
+) => {
+  const { data: price } = useCurrencyFiatPrice({
+    currency: localeCurrency,
+  })
+
+  return useMemo(() => {
+    if (!manifest.fiatCurrency.enable) {
+      return null
     }
-    return Number(fiatPrice.toFixed(decimals))
-  }, [amount, price, decimals])
+    if (!amount || isNaN(amount) || !price || price === 0) {
+      return null
+    }
+    const cryptoPrice = amount / price
+    return Math.round(cryptoPrice * 1000) / 1000
+  }, [amount, price])
 }

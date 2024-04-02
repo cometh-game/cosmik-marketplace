@@ -11,7 +11,7 @@ import { toast } from "@/components/ui/toast/hooks/useToast"
 
 const DynamicSigninDialog = dynamic(
   () =>
-    import("../../../../components/signin/SignInDialog").then(
+    import("../../../components/signin/SignInDialog").then(
       (mod) => mod.SignInDialog
     ),
   { ssr: false }
@@ -19,7 +19,7 @@ const DynamicSigninDialog = dynamic(
 
 const DynamicWalletsDialog = dynamic(
   () =>
-    import("../../../../components/WalletsDialog").then(
+    import("../../../components/WalletsDialog").then(
       (mod) => mod.WalletsDialog
     ),
   { ssr: false }

@@ -7,19 +7,19 @@ import { formatEther } from "viem"
 import { env } from "@/config/env"
 import { transakClient } from "@/lib/clients"
 
-export type UsePrepareOnrampOptions = {
+type UseBuildTransakOptions = {
   userWallet: string
   amount: string
   nonce: string
 }
 
-export const usePrepareTransakOrder = () => {
+export const useBuildTransakOrder = () => {
   return useMutation({
     mutationFn: async ({
       userWallet,
       amount,
       nonce,
-    }: UsePrepareOnrampOptions) => {
+    }: UseBuildTransakOptions) => {
       const { data } = await transakClient.post("/transak", {
         userWallet,
         amount,
@@ -30,30 +30,34 @@ export const usePrepareTransakOrder = () => {
   })
 }
 
+type useTransakOptions = {
+  data: any
+  fiatCurrency: string
+  defaultFiatAmount: number
+  onSuccess: () => void
+}
+
 export const useTransak = () => {
   const { getUser } = useUserAuthContext()
 
-  const openTransakDialog = useCallback(
+  const transakProcessing = useCallback(
     ({
-      transakData,
+      data,
       fiatCurrency,
       defaultFiatAmount,
       onSuccess,
-    }: {
-      transakData: any
-      fiatCurrency: string
-      defaultFiatAmount: number
-      onSuccess?: () => void
-    }) => {
-      if (!transakData) {
+    }: useTransakOptions) => {
+      if (!data) {
         console.error("Transak data is not available.")
         return
       }
 
+      const { value, estimatedGasLimit, smartContractAddress } = data
+
       const sourceTokenData = [
         {
           sourceTokenCode: "ETH",
-          sourceTokenAmount: Number.parseFloat(formatEther(transakData.value)),
+          sourceTokenAmount: Number.parseFloat(formatEther(value)),
         },
       ]
 
@@ -64,18 +68,18 @@ export const useTransak = () => {
           process.env.NODE_ENV === "production"
             ? Transak.ENVIRONMENTS.PRODUCTION
             : Transak.ENVIRONMENTS.STAGING,
-        estimatedGasLimit: transakData.estimatedGasLimit,
-        smartContractAddress: transakData.smartContractAddress,
+        estimatedGasLimit,
+        smartContractAddress,
         walletAddress: getUser().address,
         sourceTokenData: sourceTokenData,
         isTransakOne: true,
         disableWalletAddressForm: true,
-        calldata: transakData.calldata,
+        calldata: data.calldata,
         email: getUser().email,
         themeColor: "#222249",
         hideMenu: true,
         exchangeScreenTitle: "Buy ETH on Muster",
-        cryptoAmount: transakData.value,
+        cryptoAmount: data.value,
         fiatCurrency,
         defaultFiatAmount,
         defaultPaymentMethod: "credit_debit_card",
@@ -84,12 +88,13 @@ export const useTransak = () => {
       transak.init()
 
       Transak.on(Transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData) => {
+        console.log("Transak order successful", orderData)
         transak.close()
-        if (onSuccess) onSuccess()
+        onSuccess()
       })
     },
     [getUser]
   )
 
-  return { openTransakDialog }
+  return { transakProcessing }
 }

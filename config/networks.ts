@@ -32,35 +32,6 @@ export type NetworkConfig = {
 }
 
 const NETWORKS: Record<number, NetworkConfig> = {
-  80001: {
-    chainId: 80001,
-    hexaId: "0x13881",
-    name: "Matic(Polygon) Testnet Mumbai",
-    chain: "Matic(Polygon)",
-    network: "testnet",
-    explorer: {
-      name: "polygonscan",
-      url: "https://mumbai.polygonscan.com/",
-      standard: "EIP3091",
-      blockUrl: "https://mumbai.polygonscan.com/tx",
-    },
-    nativeToken: {
-      id: "matic-network",
-      name: "Matic",
-      symbol: "tMATIC",
-      decimals: 18,
-      thumb: "matic.png",
-    },
-    wrappedNativeToken: {
-      name: "Wrapped Matic",
-      symbol: "WtMATIC",
-      decimals: 18,
-      address: "0x9c3c9283d3e44854697cd22d3faa240cfb032889",
-      thumb: "wmatic.png",
-    },
-    zeroExExchange: "0xf471d32cb40837bf24529fcf17418fc1a4807626",
-    minimumBalanceForGas: parseEther("0.1"),
-  },
   4078: {
     chainId: 4078,
     hexaId: "0xfee",

@@ -51,7 +51,7 @@ export function MakeBuyOfferPriceDialog({
   size = "lg",
 }: MakeBuyOfferPriceDialogProps) {
   const [price, setPrice] = useState("")
-  const [validity, setValidity] = useState("10")
+  const [validity, setValidity] = useState("1")
   const orderParams = useMemo(() => {
     try {
       const parsedPrice = parseUnits(price, globalConfig.ordersErc20.decimals)
