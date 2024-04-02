@@ -35,6 +35,7 @@ export const UserAuthProvider = ({
   
   const pathname = usePathname()
   const isWalletsPage = pathname === "/wallets"
+  
   const currentWalletInStorage =
     typeof window !== "undefined" &&
     window.localStorage.getItem("walletAddress")
@@ -50,7 +51,6 @@ export const UserAuthProvider = ({
 
   useEffect(() => {
     const reconnectingWallet = async () => {
-      // Initiate reconnection as soon as you start checking the connection status
       setUserIsReconnecting(true)
       // If the user is logged in and has an address, attempt to connect the wallet
       if (userLogged && userLogged.address) {
@@ -70,7 +70,6 @@ export const UserAuthProvider = ({
           setUserIsFullyConnected(false)
         }
       }
-      // Make sure to update the reconnection status to false after verification
       setUserIsReconnecting(false)
     }
 

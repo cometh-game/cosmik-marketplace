@@ -43,6 +43,7 @@ const client = z.object({
   NEXT_PUBLIC_COMETH_MARKETPLACE_SHIPS_API_URL: z.string().url(),
   NEXT_PUBLIC_MARKETPLACE_SHIPS_API_KEY: z.string().min(1),
   NEXT_PUBLIC_COMETH_CONNECT_API_KEY: z.string().min(1).optional(),
+  NEXT_PUBLIC_COMETH_CONNECT_BASE_URL: z.string().url().optional(),
 
   NEXT_PUBLIC_COINGECKO_API_KEY: z.string().optional(),
   NEXT_PUBLIC_COSMIK_BASE_URL: z.string().url(),
@@ -80,6 +81,8 @@ const processEnv: Record<
     process.env.NEXT_PUBLIC_MARKETPLACE_SHIPS_API_KEY,
   NEXT_PUBLIC_COMETH_CONNECT_API_KEY:
     process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY,
+    NEXT_PUBLIC_COMETH_CONNECT_BASE_URL:
+    process.env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL,
 
   NEXT_PUBLIC_COINGECKO_API_KEY: process.env.NEXT_PUBLIC_COINGECKO_API_KEY,
 

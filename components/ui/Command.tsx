@@ -14,7 +14,7 @@ const Command = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive
     ref={ref}
-    className={cn("md:dropdown flex size-full flex-col", className)}
+    className={cn("dropdown flex size-full flex-col max-md:[clip-path:none]", className)}
     {...props}
   />
 ))

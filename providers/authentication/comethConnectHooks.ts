@@ -87,12 +87,12 @@ export const useConnectComethWallet = () => {
   const retrieveWalletAddress = useCallback(async (walletAddress: string) => {
     const adaptor = new ConnectAdaptor({
       chainId: chainId,
-      apiKey: process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
-      baseUrl: process.env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL!,
+      apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
+      baseUrl: env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL!,
     })
     const wallet = new ComethWallet({
       authAdapter: adaptor,
-      apiKey: process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
+      apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
     })
     await wallet.connect(walletAddress)
   }, [chainId])
