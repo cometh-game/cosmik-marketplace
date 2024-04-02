@@ -57,7 +57,6 @@ export function AccountBalanceLine({
 }: AccountBalanceLineProps) {
   const logoSrc =
     typeof logo === "string" ? logo : logo?.native || logo?.wrapped
-  console.log("balance", balance)
   return (
     <div className="inline-flex items-center gap-1.5">
       {logo && (

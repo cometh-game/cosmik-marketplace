@@ -16,6 +16,7 @@ export function AuthenticationButton({
   hideIcon?: boolean
 } & React.ComponentProps<typeof Button>) {
   const { userIsReconnecting, userIsFullyConnected } = useUserAuthContext()
+
   if (userIsFullyConnected && !children) return <CurrentAccountDropdown />
 
   if (!userIsFullyConnected) {

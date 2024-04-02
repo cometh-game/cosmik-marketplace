@@ -99,7 +99,6 @@ export const useConnectComethWallet = () => {
 
   const disconnect = useCallback(async () => {
     if (account.isConnected || getUser() !== null) {
-      console.log("Disconnecting wallet", account)
       try {
         await walletDisconnect({ connector: account.connector })
         await cosmikDisconnect()

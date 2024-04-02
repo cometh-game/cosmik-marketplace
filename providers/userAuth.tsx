@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react"
+import { usePathname } from "next/navigation"
 import { useUserIsLogged } from "@/services/cosmik/userLoggedService"
 
 import { useConnectComethWallet } from "./authentication/comethConnectHooks"
-import { usePathname } from "next/navigation"
 
 const UserAuthContext = createContext<{
   getUser: () => any | null
@@ -32,8 +32,12 @@ export const UserAuthProvider = ({
   const [userIsFullyConnected, setUserIsFullyConnected] = useState(false)
   const { connectComethWallet } = useConnectComethWallet()
   const [userIsReconnecting, setUserIsReconnecting] = useState(false)
+  
   const pathname = usePathname()
   const isWalletsPage = pathname === "/wallets"
+  const currentWalletInStorage =
+    typeof window !== "undefined" &&
+    window.localStorage.getItem("walletAddress")
 
   function setUser(newValue: any) {
     user.current = newValue
@@ -45,16 +49,13 @@ export const UserAuthProvider = ({
   }
 
   useEffect(() => {
-    // Initiate reconnection as soon as you start checking the connection status
-    setUserIsReconnecting(true)
-    // If the user has logged in, Wagmi has set the wallet address in local storage
-    // const getWalletInStorage = window.localStorage.getItem("walletAddress")
-
     const reconnectingWallet = async () => {
+      // Initiate reconnection as soon as you start checking the connection status
+      setUserIsReconnecting(true)
       // If the user is logged in and has an address, attempt to connect the wallet
       if (userLogged && userLogged.address) {
         setUser(userLogged)
-        
+
         if (isWalletsPage) {
           setUserIsReconnecting(false)
           setUserIsFullyConnected(true)
@@ -73,10 +74,16 @@ export const UserAuthProvider = ({
       setUserIsReconnecting(false)
     }
 
-    if (!isFetchingUserLogged) {
+    if (!isFetchingUserLogged && currentWalletInStorage) {
       reconnectingWallet()
     }
-  }, [userLogged, isFetchingUserLogged, connectComethWallet])
+  }, [
+    userLogged,
+    isFetchingUserLogged,
+    currentWalletInStorage,
+    isWalletsPage,
+    connectComethWallet,
+  ])
 
   return (
     <UserAuthContext.Provider

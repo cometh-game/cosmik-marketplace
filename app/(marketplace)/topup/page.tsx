@@ -18,7 +18,6 @@ import { CurrencySwitcher } from "@/components/CurrencySwitcher"
 import { TopupCard } from "@/components/topup/TopupCard"
 import { TransakSuccessDialog } from "@/components/TransakSucessDialog"
 
-
 export default function TopupPage() {
   const { push } = useRouter()
   const { mutateAsync: buildTransakOrder } = useBuildTransakOrder()
@@ -31,7 +30,8 @@ export default function TopupPage() {
   const [customAmount, setCustomAmount] = useState<string>("")
   const [debouncedValue] = useDebounceValue(customAmount, 250)
   const [currency, setCurrency] = useState(() => {
-    const savedCurrency = localStorage.getItem("currency")
+    const savedCurrency =
+      typeof window !== "undefined" && window.localStorage.getItem("currency")
     return savedCurrency || "USD"
   })
 
@@ -98,10 +98,7 @@ export default function TopupPage() {
         <h1 className="inline-flex items-center text-[26px] font-semibold">
           Fill your wallet to trade & buy items!
         </h1>
-        <CurrencySwitcher
-          currency={currency}
-          onCurrencyChange={setCurrency}
-        />
+        <CurrencySwitcher currency={currency} onCurrencyChange={setCurrency} />
       </div>
       <div className="grid w-full grid-cols-3 gap-x-8">
         <TopupCard

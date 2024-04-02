@@ -54,7 +54,7 @@ export function SigninDropdown({
       try {
         setIsLoading(true)
         setUser(user)
-        console.log("User address", user.address)
+        console.log("User", user)
         // Attempt to retrieve the wallet address to determine if it is the first connection
         await retrieveWalletAddress(user.address)
         // If passkey signer is found for this address, connect the wallet
@@ -123,7 +123,7 @@ export function SigninDropdown({
         </DialogContent>
       </Dialog>
 
-      {displayAutorizationProcess && (
+      {displayAutorizationProcess && user && (
         <AuthorizationProcess
           isOpen={displayAutorizationProcess}
           onClose={() => setDisplayAutorizationProcess(false)}
