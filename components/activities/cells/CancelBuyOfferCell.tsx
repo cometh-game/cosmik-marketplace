@@ -22,6 +22,7 @@ const CancelBuyOfferCell = ({ row }: CTACellProps) => {
       onClick={async () => await cancel({ offer: row.original })}
       isLoading={isPending}
       disabled={isPending}
+      className="z-[1]"
     >
       Cancel
     </Button>
