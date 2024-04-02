@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import {
   fetchHasSufficientFunds,
   useHasSufficientFunds,
@@ -19,6 +20,7 @@ export function FundsStep({ price, onValid }: FundsStepProps) {
   const account = useAccount()
   const viewer = account.address
   const [isRefreshingBalance, setIsRefreshingBalance] = useState(false)
+  const { push } = useRouter()
 
   const { data } = useHasSufficientFunds({
     address: viewer,
@@ -54,17 +56,33 @@ export function FundsStep({ price, onValid }: FundsStepProps) {
       <p className="text-center">
         Looks like you don&rsquo;t have enough funds to complete this
         transaction. <br />
-        You are missing <Price amount={missingBalance} hideSymbol={false} isNativeToken={true} />.
-        Once you have funded your wallet with some{" "}
+        You are missing{" "}
+        <Price
+          amount={missingBalance}
+          hideSymbol={false}
+          isNativeToken={true}
+        />
+        . Once you have funded your wallet with some{" "}
         <strong>{globalConfig.ordersDisplayCurrency.name}</strong>, please
         refresh your balance.
       </p>
       <p>
         Wallet address: <strong>{viewer}</strong>
       </p>
-      <Button isLoading={isRefreshingBalance} onClick={checkBalance}>
-        Refresh balance
-      </Button>
+      <div className="flex items-center gap-3">
+        <Button onClick={() => push("/topup")}>
+          Fill your wallet
+        </Button>
+        and
+        <Button
+          variant="link"
+          isLoading={isRefreshingBalance}
+          onClick={checkBalance}
+          className="px-0"
+        >
+          Refresh balance
+        </Button>
+      </div>
     </div>
   )
 }

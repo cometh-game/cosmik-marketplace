@@ -63,15 +63,16 @@ export function AddGasStep({ onValid }: AddGasStepProps) {
         Wallet address: <strong>{viewer}</strong>
       </p>
       <div className="flex gap-2">
-        <Button isLoading={isRefreshingBalance} onClick={checkBalance}>
-          Refresh balance
+        <Button onClick={() => push("/topup")}>
+          Fill your wallet
         </Button>
         <Button
-          variant="third"
+          variant="link"
           isLoading={isRefreshingBalance}
-          onClick={() => push("/topup")}
+          onClick={checkBalance}
+          className="px-0"
         >
-          Fill your wallet
+          Refresh balance
         </Button>
       </div>
     </div>

@@ -196,6 +196,7 @@ export function AssetCard({ asset, children }: AssetCardProps) {
               <Price
                 variant="accent"
                 amount={asset.orderbookStats.lowestListingPrice}
+                isNativeToken={true}
                 shouldDisplayFiatPrice={true}
                 fiatPriceNewLine={true}
               />
@@ -210,6 +211,7 @@ export function AssetCard({ asset, children }: AssetCardProps) {
                 <Price
                   variant="accent"
                   amount={asset.orderbookStats.highestOfferPrice}
+                  isNativeToken={true}
                   shouldDisplayFiatPrice={true}
                   fiatPriceNewLine={true}
                 />
