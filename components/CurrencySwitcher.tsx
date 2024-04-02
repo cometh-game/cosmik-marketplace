@@ -20,15 +20,21 @@ export function CurrencySwitcher({
 }: CurrencySwitcherProps) {
   return (
     <div className="flex items-center gap-x-2">
-      {/* <p>Choose your currency :</p> */}
       <Label htmlFor="make-buy-offer-price">Choose your currency :</Label>
-      <Select defaultValue={currency} onValueChange={(v) => onCurrencyChange(v)}>
-        <SelectTrigger className="md:w-[120px]">
+      <Select
+        defaultValue={currency}
+        onValueChange={(v) => onCurrencyChange(v)}
+      >
+        <SelectTrigger className="text-accent-foreground border-0 font-semibold md:w-[120px]">
           <SelectValue placeholder="" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="USD">Dollar ($)</SelectItem>
-          <SelectItem value="EUR">Euro (€)</SelectItem>
+          <SelectItem value="USD" className="font-semibold">
+            Dollar ($)
+          </SelectItem>
+          <SelectItem value="EUR" className="font-semibold">
+            Euro (€)
+          </SelectItem>
         </SelectContent>
       </Select>
     </div>

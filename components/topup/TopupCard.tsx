@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useConvertPriceToCrypto } from "@/services/price/priceService"
 
 import globalConfig from "@/config/globalConfig"
 import { Input } from "@/components/ui/Input"
@@ -8,22 +8,22 @@ import { Button } from "../ui/Button"
 type TopupCardProps = {
   price: string
   currency: string
-  nativeCurrencyPrice: number | null
   onInputChange?: (value: string) => void
-  onInit: () => void
+  onInit: (amount: number | null) => void
   isLoading: boolean
   isCustom?: boolean
 }
 
 export function TopupCard({
   price,
-  nativeCurrencyPrice,
   currency,
   onInputChange,
   onInit,
   isLoading,
   isCustom = false,
 }: TopupCardProps) {
+  const amountInETH = useConvertPriceToCrypto(Number(price), currency)
+
   return (
     <div className="card-secondary px-8 pb-8 pt-10 text-center">
       {isCustom ? (
@@ -31,7 +31,6 @@ export function TopupCard({
           placeholder="Your custom amount"
           inputUpdateCallback={onInputChange}
           className="mb-4"
-          min={0}
         />
       ) : (
         <div className="text-6xl font-bold italic tracking-wide text-[#FFD7D9] drop-shadow-[3px_3px_0_rgba(54,14,59,1)]">
@@ -40,9 +39,9 @@ export function TopupCard({
         </div>
       )}
       <div className="text-2xl font-medium tracking-wide text-white/50">
-        {nativeCurrencyPrice !== null ? (
+        {amountInETH !== null ? (
           <>
-            {`≈ ${nativeCurrencyPrice}` ?? "..."}
+            {`≈ ${amountInETH}` ?? "..."}
             <span className="ml-0.5">
               {globalConfig.ordersDisplayCurrency.symbol}
             </span>
@@ -53,7 +52,7 @@ export function TopupCard({
       </div>
       <Button
         variant="cosmik-price"
-        onClick={onInit}
+        onClick={() => amountInETH && onInit(amountInETH)}
         className="mt-3 w-full"
         isLoading={isLoading}
         disabled={isLoading}

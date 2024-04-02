@@ -72,7 +72,9 @@ export function AccountBalanceLine({
       <span className="text-[15px] font-semibold">
         {balance} {currency}
       </span>
-      <FiatPrice amount={balance} />
+      <span>
+        (<FiatPrice amount={balance} />)
+      </span>
     </div>
   )
 }

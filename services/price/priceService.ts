@@ -13,7 +13,7 @@ const useCurrencyFiatPrice = ({
   currency = "usd",
 }: { currency?: string } = {}) => {
   return useQuery({
-    queryKey: ["fiat-price"],
+    queryKey: ["fiat-price", currency],
     queryFn: async () => {
       if (!coinId) {
         throw new Error("erc20.id is not defined in the manifest")
@@ -53,10 +53,10 @@ export const useConvertPriceToFiat = (amount?: number | null) => {
 
 export const useConvertPriceToCrypto = (
   amount?: number | null,
-  localeCurrency?: string
+  currency?: string
 ) => {
   const { data: price } = useCurrencyFiatPrice({
-    currency: localeCurrency,
+    currency: currency?.toLocaleLowerCase(),
   })
 
   return useMemo(() => {
@@ -67,6 +67,6 @@ export const useConvertPriceToCrypto = (
       return null
     }
     const cryptoPrice = amount / price
-    return Math.round(cryptoPrice * 1000) / 1000
+    return Math.round(cryptoPrice * 10000) / 10000
   }, [amount, price])
 }

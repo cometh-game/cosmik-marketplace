@@ -29,25 +29,17 @@ export default function TopupPage() {
     useState(false)
   const [customAmount, setCustomAmount] = useState<string>("")
   const [debouncedValue] = useDebounceValue(customAmount, 250)
-  const [currency, setCurrency] = useState(() => {
-    const savedCurrency =
-      typeof window !== "undefined" && window.localStorage.getItem("currency")
-    return savedCurrency || "USD"
-  })
+  const [currency, setCurrency] = useState<string>("")
+
+  useEffect(() => {
+    const currency =
+      typeof window !== "undefined" && localStorage.getItem("currency")
+    currency ? setCurrency(currency) : setCurrency("USD")
+  }, [])
 
   useEffect(() => {
     localStorage.setItem("currency", currency)
   }, [currency])
-
-  const price25InEth = useConvertPriceToCrypto(25, currency)
-  const price50InEth = useConvertPriceToCrypto(50, currency)
-  const priceCustomInEth = useConvertPriceToCrypto(Number(debouncedValue))
-
-  console.log("price25InEth", price25InEth)
-
-  const handleAmountChange = useCallback((value: string) => {
-    setCustomAmount(value)
-  }, [])
 
   const initTransakOrder = useCallback(
     async (price: number, amount: number | null) => {
@@ -83,7 +75,7 @@ export default function TopupPage() {
     [buildTransakOrder, transakProcessing, getUser, currency]
   )
 
-  if (!userIsFullyConnected) {
+  if (!userIsReconnecting && !userIsFullyConnected) {
     push("/nfts")
     return
   }
@@ -101,31 +93,21 @@ export default function TopupPage() {
         <CurrencySwitcher currency={currency} onCurrencyChange={setCurrency} />
       </div>
       <div className="grid w-full grid-cols-3 gap-x-8">
-        <TopupCard
-          price="25"
-          currency={currency}
-          nativeCurrencyPrice={price25InEth}
-          onInit={() => initTransakOrder(20, price25InEth)}
-          isLoading={isLoading}
-        />
-        <TopupCard
-          price="50"
-          currency={currency}
-          nativeCurrencyPrice={price50InEth}
-          onInit={() => initTransakOrder(50, price50InEth)}
-          isLoading={isLoading}
-        />
-        <TopupCard
-          price={customAmount}
-          currency={currency}
-          nativeCurrencyPrice={priceCustomInEth}
-          onInputChange={(amount) => handleAmountChange(amount)}
-          onInit={() =>
-            initTransakOrder(Number(customAmount), priceCustomInEth)
-          }
-          isLoading={isLoading}
-          isCustom
-        />
+        {["25", "50", debouncedValue].map((fiatPrice, index, array) => {
+          return (
+            <TopupCard
+              key={index}
+              price={fiatPrice}
+              currency={currency}
+              onInputChange={(amount) => setCustomAmount(amount)}
+              onInit={(amountInETH) =>
+                initTransakOrder(Number(fiatPrice), amountInETH)
+              }
+              isLoading={isLoading}
+              isCustom={array.length - 1 === index}
+            />
+          )
+        })}
       </div>
       {showTransakSuccessDialog && (
         <TransakSuccessDialog

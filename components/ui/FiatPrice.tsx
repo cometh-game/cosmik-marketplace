@@ -16,8 +16,8 @@ export const FiatPrice = ({ amount, className }: FiatPriceProps) => {
       <span
         className={cn("font-semibold text-white/80", className)}
       >
-        (≈ {fiatPrice}
-        {manifest.fiatCurrency?.currencySymbol})
+        ≈ {fiatPrice}
+        {manifest.fiatCurrency?.currencySymbol}
       </span>
     )
   )
