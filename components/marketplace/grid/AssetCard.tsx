@@ -152,7 +152,7 @@ export function AssetCardBase({
             {renderAssetActions(asset, isOwnerAsset)}
           </div>
         </div>
-        
+
         <div className={cn("h-full w-2/3 sm:w-full")}>
           <Link
             href={`/nfts/${asset.contractAddress}/${asset.tokenId}`}
@@ -200,11 +200,12 @@ export function AssetCard({ asset, children }: AssetCardProps) {
         </Link>
         <div className="flex items-center justify-between">
           <div>
-            <div className="mb-1 text-sm font-medium">Price</div>
+            <div className="text-sm font-medium">Price</div>
             {asset.orderbookStats.lowestListingPrice ? (
               <Price
                 variant="accent"
                 amount={asset.orderbookStats.lowestListingPrice}
+                isNativeToken={true}
                 shouldDisplayFiatPrice={true}
                 fiatPriceNewLine={true}
               />
