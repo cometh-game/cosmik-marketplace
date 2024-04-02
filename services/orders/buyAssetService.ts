@@ -33,7 +33,6 @@ export const useBuyAsset = () => {
             r: "0x0000000000000000000000000000000000000000000000000000000000000000",
             s: "0x0000000000000000000000000000000000000000000000000000000000000000",
           }
-
       const formattedZeroXOrder = {
         direction: 0,
         maker: order.maker,
@@ -57,7 +56,6 @@ export const useBuyAsset = () => {
 
       const fillTx: ContractTransaction =
         await nftSwapSdk.fillSignedOrder(formattedZeroXOrder)
-
       const fillTxReceipt = await fillTx.wait()
       console.log(
         `🎉 🥳 Order filled (buy-asset). TxHash: ${fillTxReceipt.transactionHash}`

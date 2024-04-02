@@ -35,6 +35,7 @@ export function AddGasStep({ onValid }: AddGasStepProps) {
     setIsRefreshingBalance(false)
   }
 
+
   useEffect(() => {
     if (data?.hasEnoughGas === true) {
       return onValid()

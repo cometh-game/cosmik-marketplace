@@ -12,8 +12,10 @@ import {
 } from "@cometh/marketplace-sdk"
 import { animated, config, useSpring } from "react-spring"
 import { useBoolean } from "usehooks-ts"
+import { Address } from "viem"
 import { useAccount } from "wagmi"
 
+import globalConfig from "@/config/globalConfig"
 import { getRandomArrayElement } from "@/lib/utils/arrays"
 import { getAssetColor } from "@/lib/utils/colorsAttributes"
 import { cn } from "@/lib/utils/utils"
@@ -93,6 +95,10 @@ export function AssetCardBase({
   asset,
 }: AssetCardBaseProps) {
   const isHovered = useBoolean(false)
+  const imageAspectRatio =
+    globalConfig.collectionSettingsByAddress[
+      asset.contractAddress.toLowerCase() as Address
+    ].imageAspectRatio
 
   const cardTextHeightsClass = manifest.fiatCurrency.enable
     ? "sm:h-[110px]"
@@ -110,30 +116,53 @@ export function AssetCardBase({
         onMouseLeave={isHovered.setFalse}
         className={cn(
           "card-ghost flex size-full flex-1 flex-row items-center border-transparent p-2 pr-4 shadow-none transition-all duration-200 ease-in-out sm:inline-flex sm:flex-col sm:items-start sm:border-2 sm:p-0",
+          isHovered.value && "shadow-md",
           isOwnerAsset && "bg-[#f4f2e8]/[.02]"
         )}
       >
-        <Link
-          href={`/nfts/${asset.contractAddress}/${asset.tokenId}`}
-          className="sm:w-full sm:flex-1"
-        >
-          <AssetImageContainer
-            color={getAssetColor(asset)}
-            isHovered={isHovered.value}
+        <div className="relative w-1/3 sm:w-full">
+          <Link
+            href={`/nfts/${asset.contractAddress}/${asset.tokenId}`}
+            className={cn(isHovered.value && "brightness-90", "block h-full")}
           >
-            <AssetImage
-              src={src}
-              fallback={fallback}
-              imageData={asset.metadata.image_data}
-              height={380}
-              width={320}
-              className={cn("z-20 size-full rounded-lg object-contain", {
-                "p-8": isCardbacksAsset,
-              })}
-            />
-          </AssetImageContainer>
-        </Link>
-        <div className="w-full pl-2 sm:p-5">{children}</div>
+            <AssetImageContainer
+              color={getAssetColor(asset)}
+              isHovered={isHovered.value}
+              imageAspectRatio={imageAspectRatio}
+            >
+              <AssetImage
+                src={src}
+                fallback={fallback}
+                imageData={asset.metadata.image_data}
+                height={380}
+                width={320}
+                className={cn("z-20 size-full rounded-lg object-contain", {
+                  "p-8": isCardbacksAsset,
+                })}
+              />
+            </AssetImageContainer>
+          </Link>
+
+          <div
+            className={cn(
+              !isHovered.value && "hidden",
+              "absolute bottom-4 left-1/2 -translate-x-1/2"
+            )}
+          >
+            {renderAssetActions(asset, isOwnerAsset)}
+          </div>
+        </div>
+        
+        <div className={cn("h-full w-2/3 sm:w-full")}>
+          <Link
+            href={`/nfts/${asset.contractAddress}/${asset.tokenId}`}
+            className={cn(
+              "flex h-full flex-nowrap font-medium text-white "
+            )}
+          >
+            <div className="w-full pl-2 sm:p-5">{children}</div>
+          </Link>
+        </div>
       </Card>
     </Appear>
   )
@@ -171,37 +200,16 @@ export function AssetCard({ asset, children }: AssetCardProps) {
         </Link>
         <div className="flex items-center justify-between">
           <div>
-            {/* {!isOwnerAsset && (
-              <div className="mb-1 text-sm font-medium">Price</div>
-            )} */}
-            {/* {asset.orderbookStats.lowestListingPrice ? (
-              <Price
-                size="sm"
-                variant="accent"
-                amount={asset.orderbookStats.lowestListingPrice}
-                shouldDisplayFiatPrice={true}
-                fiatPriceNewLine={true}
-                isNativeToken={true}
-              />
-            ) : isOwnerAsset ? (
-              <SellAssetButton
-                size="sm"
-                asset={asset as unknown as AssetWithTradeData}
-              />
-            ) : (
-              "No listed yet"
-            )} */}
-            <div className="text-sm font-medium">Price</div>
+            <div className="mb-1 text-sm font-medium">Price</div>
             {asset.orderbookStats.lowestListingPrice ? (
               <Price
                 variant="accent"
                 amount={asset.orderbookStats.lowestListingPrice}
-                isNativeToken={true}
                 shouldDisplayFiatPrice={true}
                 fiatPriceNewLine={true}
               />
-            ) : (
-              "Not for sale"
+            ): (
+              "No for sale yet"
             )}
           </div>
           <div>
@@ -217,9 +225,6 @@ export function AssetCard({ asset, children }: AssetCardProps) {
                 />
               </>
             )}
-            <div className="text-end">
-              {renderAssetActions(asset, isOwnerAsset)}
-            </div>
           </div>
         </div>
         {children}
@@ -239,12 +244,11 @@ function renderAssetActions(
   let button = undefined
   let buttonText = ""
   if (asset.orderbookStats.lowestListingPrice && !isOwnerAsset) {
-    button = <BuyAssetButton size="sm" asset={asset} />
+    button = <BuyAssetButton asset={asset} />
     buttonText = "Buy now "
   } else if (!isOwnerAsset) {
     button = (
       <MakeBuyOfferButton
-        size="sm"
         asset={asset as unknown as AssetWithTradeData}
       />
     )
@@ -252,7 +256,6 @@ function renderAssetActions(
   } else if (!asset.orderbookStats.lowestListingPrice) {
     button = (
       <SellAssetButton
-        size="sm"
         asset={asset as unknown as AssetWithTradeData}
       />
     )
@@ -260,7 +263,6 @@ function renderAssetActions(
   } else {
     button = (
       <CancelListingButton
-        size="sm"
         asset={asset as unknown as AssetWithTradeData}
       />
     )
@@ -270,7 +272,7 @@ function renderAssetActions(
   if (button) {
     return (
       <div className="hidden sm:block">
-        <AuthenticationButton size="sm" customText={buttonText} hideIcon={true}>
+        <AuthenticationButton customText={buttonText} hideIcon={true}>
           {button}
         </AuthenticationButton>
       </div>

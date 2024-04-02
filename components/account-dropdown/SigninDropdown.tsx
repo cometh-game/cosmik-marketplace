@@ -54,7 +54,6 @@ export function SigninDropdown({
       try {
         setIsLoading(true)
         setUser(user)
-        console.log("User", user)
         // Attempt to retrieve the wallet address to determine if it is the first connection
         await retrieveWalletAddress(user.address)
         // If passkey signer is found for this address, connect the wallet

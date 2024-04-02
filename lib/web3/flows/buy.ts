@@ -60,7 +60,6 @@ export const fetchRequiredBuyingSteps = async ({
     price,
   })
   const displayAddFundsStep = !missingFundsData?.hasSufficientFunds
-
   const needsToUnwrapData = await fetchNeedsToUnwrap({
     address,
     price,
@@ -84,7 +83,6 @@ export const fetchRequiredBuyingSteps = async ({
     displayAllowanceStep && { value: "allowance", label: "Permissions" },
     ...defaultSteps,
   ].filter(Boolean) as BuyingStep[]
-
   return buyingSteps
 }
 
@@ -106,7 +104,6 @@ export const useRequiredBuyingSteps = ({
         wrappedContractAddress: globalConfig.network.wrappedNativeToken.address,
         isComethWallet,
       })
-
       return steps
     },
 

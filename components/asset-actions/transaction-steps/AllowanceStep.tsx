@@ -24,7 +24,6 @@ export function AllowanceStep({
       refetchSteps?.()
     },
   })
-
   const approve = useCallback(async () => {
     await approveToken()
     onValid()

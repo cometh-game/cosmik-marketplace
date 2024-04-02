@@ -24,16 +24,13 @@ export function WrapStep({ price, onValid }: WrapStepProps) {
     address: viewerAddress,
   })
 
-  console.log("wrapToken", wrapToken)
-  console.log("price", price)
-
   useEffect(() => {
     if (!needsToWrap) onValid()
   }, [needsToWrap, onValid])
 
   const onConfirm = useCallback(async () => {
     if (!price) return
-    await wrapToken({ amount: price })
+    const res = await wrapToken({ amount: price })
     onValid()
   }, [onValid, price, wrapToken])
 

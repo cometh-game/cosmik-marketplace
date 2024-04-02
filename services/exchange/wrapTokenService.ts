@@ -2,7 +2,7 @@ import wethAbi from "@/abis/wethAbi"
 import { useMutation } from "@tanstack/react-query"
 import { BigNumber, Signer } from "ethers"
 import { Address } from "viem"
-import { usePublicClient, useWalletClient } from "wagmi"
+import { useAccount, usePublicClient, useWalletClient } from "wagmi"
 
 import globalConfig from "@/config/globalConfig"
 import { toast } from "@/components/ui/toast/hooks/useToast"
@@ -19,6 +19,8 @@ export type WrapTokenMutationOptions = {
 }
 
 export const useWrapToken = () => {
+  const account = useAccount()
+  const viewerAddress = account?.address
   const viemPublicClient = usePublicClient()
   const { data: viemWalletClient } = useWalletClient()
 
@@ -28,10 +30,12 @@ export const useWrapToken = () => {
       if (
         !viemPublicClient ||
         !viemWalletClient ||
-        !globalConfig.network.wrappedNativeToken.address
+        !globalConfig.network.wrappedNativeToken.address.toLowerCase()
       ) {
         throw new Error("Could not wrap token")
       }
+      console.log("viemWalletClient", viemWalletClient)
+      console.log("account", viemWalletClient.account)
 
       const { request } = await viemPublicClient.simulateContract({
         address: globalConfig.ordersErc20.address,
@@ -39,7 +43,7 @@ export const useWrapToken = () => {
         functionName: "deposit",
         args: [],
         value: amount.toBigInt(),
-        account: viemWalletClient.account,
+        account: viewerAddress,
       })
       const txHash = await viemWalletClient.writeContract(request)
       const transaction = await viemPublicClient.waitForTransactionReceipt({
