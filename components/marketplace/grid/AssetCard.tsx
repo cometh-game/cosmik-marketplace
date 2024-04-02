@@ -171,10 +171,10 @@ export function AssetCard({ asset, children }: AssetCardProps) {
         </Link>
         <div className="flex items-center justify-between">
           <div>
-            {!isOwnerAsset && (
+            {/* {!isOwnerAsset && (
               <div className="mb-1 text-sm font-medium">Price</div>
-            )}
-            {asset.orderbookStats.lowestListingPrice ? (
+            )} */}
+            {/* {asset.orderbookStats.lowestListingPrice ? (
               <Price
                 size="sm"
                 variant="accent"
@@ -190,6 +190,17 @@ export function AssetCard({ asset, children }: AssetCardProps) {
               />
             ) : (
               "No listed yet"
+            )} */}
+            <div className="text-sm font-medium">Price</div>
+            {asset.orderbookStats.lowestListingPrice ? (
+              <Price
+                variant="accent"
+                amount={asset.orderbookStats.lowestListingPrice}
+                shouldDisplayFiatPrice={true}
+                fiatPriceNewLine={true}
+              />
+            ) : (
+              "Not for sale"
             )}
           </div>
           <div>
@@ -197,7 +208,7 @@ export function AssetCard({ asset, children }: AssetCardProps) {
               <>
                 <div className="text-sm font-medium">Best offer</div>
                 <Price
-                  size="sm"
+                  variant="accent"
                   amount={asset.orderbookStats.highestOfferPrice}
                   shouldDisplayFiatPrice={true}
                   fiatPriceNewLine={true}

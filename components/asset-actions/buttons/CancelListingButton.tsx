@@ -10,7 +10,7 @@ export type CancelListingButtonProps = {
   asset: AssetWithTradeData,
 } & React.ComponentProps<typeof Button>
 
-export function CancelListingButton({ asset, size }: CancelListingButtonProps) {
+export function CancelListingButton({ asset, size = "lg" }: CancelListingButtonProps) {
   const { mutateAsync: cancel, isPending } = useCancelListing()
 
   const onConfirm = useCallback(async () => {

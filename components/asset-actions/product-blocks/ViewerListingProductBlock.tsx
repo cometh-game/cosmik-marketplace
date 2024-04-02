@@ -9,8 +9,7 @@ import { Address } from "viem"
 
 import { Price } from "@/components/ui/Price"
 import { UserLink } from "@/components/ui/user/UserLink"
-import { AuthenticationButton }  from "@/components/AuthenticationButton"
-import { AssetStatusBadge } from "@/components/marketplace/asset/AssetStatusBadge"
+import { AuthenticationButton } from "@/components/AuthenticationButton"
 import {
   ProductBlockCenteredColumn,
   ProductBlockContainer,
@@ -32,12 +31,26 @@ export function ViewerListingProductBlock({ asset }: SellProductBlockProps) {
     <ProductBlockContainer>
       <ProductBlockDividedColumn>
         <ProductBlockLabel>Price</ProductBlockLabel>
-        <Price size="lg" amount={asset.orderbookStats.lowestListingPrice} isNativeToken={true} />
+        <Price
+          size="lg"
+          variant="accent"
+          amount={asset.orderbookStats.lowestListingPrice}
+          isNativeToken={true}
+          shouldDisplayFiatPrice={true}
+          fiatPriceNewLine={true}
+        />
       </ProductBlockDividedColumn>
 
       <ProductBlockDividedColumn>
         <ProductBlockLabel>Best Offer</ProductBlockLabel>
-        <Price size="lg" amount={asset.orderbookStats.highestOfferPrice} isNativeToken={true} />
+        <Price
+          size="lg"
+          variant="accent"
+          amount={asset.orderbookStats.highestOfferPrice}
+          isNativeToken={true}
+          shouldDisplayFiatPrice={true}
+          fiatPriceNewLine={true}
+        />
       </ProductBlockDividedColumn>
 
       <ProductBlockDividedColumn>
@@ -45,7 +58,7 @@ export function ViewerListingProductBlock({ asset }: SellProductBlockProps) {
         {!isFetchingUsername && (
           <UserLink
             variant="link"
-            className="mt-1"
+            // className="mt-1"
             user={{ address: asset.owner as Address, username: username }}
           />
         )}

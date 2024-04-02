@@ -4,7 +4,6 @@ import { BigNumber } from "ethers"
 import { parseUnits } from "ethers/lib/utils"
 
 import globalConfig from "@/config/globalConfig"
-import { cn } from "@/lib/utils/utils"
 import { useMakeBuyOfferAssetButton } from "@/lib/web3/flows/makeBuyOffer"
 import { useCorrectNetwork } from "@/lib/web3/network"
 import { Button } from "@/components/ui/Button"

@@ -1,5 +1,14 @@
 "use client"
 
+import { Label } from "@/components/ui/Label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/Select"
+
 type CurrencySwitcherProps = {
   currency: string
   onCurrencyChange: (value: string) => void
@@ -10,21 +19,18 @@ export function CurrencySwitcher({
   onCurrencyChange,
 }: CurrencySwitcherProps) {
   return (
-    <div className="flex h-[40px] w-[80px] rounded-sm border border-white/5">
-      <button
-        type="button"
-        onClick={() => onCurrencyChange("USD")}
-        className={`flex-1 font-semibold ${currency === "USD" ? "text-accent-foreground bg-white/10" : ""}`}
-      >
-        $
-      </button>
-      <button
-        type="button"
-        onClick={() => onCurrencyChange("EUR")}
-        className={`flex-1 font-semibold ${currency === "EUR" ? "text-accent-foreground bg-white/10" : ""}`}
-      >
-        €
-      </button>
+    <div className="flex items-center gap-x-2">
+      {/* <p>Choose your currency :</p> */}
+      <Label htmlFor="make-buy-offer-price">Choose your currency :</Label>
+      <Select defaultValue={currency} onValueChange={(v) => onCurrencyChange(v)}>
+        <SelectTrigger className="md:w-[120px]">
+          <SelectValue placeholder="" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="USD">Dollar ($)</SelectItem>
+          <SelectItem value="EUR">Euro (€)</SelectItem>
+        </SelectContent>
+      </Select>
     </div>
   )
 }
