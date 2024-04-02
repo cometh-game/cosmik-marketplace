@@ -44,7 +44,7 @@ export const RefreshStep: React.FC<RefreshStepProps> = ({
       })
     } catch (error: any) {
       toast({
-        title: "Something went wrong.",
+        title: "Something went wrong",
         description: error?.message || "Please try again",
         variant: "destructive",
       })

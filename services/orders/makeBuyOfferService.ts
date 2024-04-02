@@ -51,6 +51,7 @@ export const useMakeBuyOfferAsset = (asset: AssetWithTradeData) => {
     },
 
     onSuccess: (_, { asset }) => {
+      console.log("onSuccess", asset)
       client.invalidateQueries({ queryKey: ["cometh", "search"] }) // TODO: optimize this, just invalidate current asset
       client.invalidateQueries({
         queryKey: ["cometh", "assets", asset.tokenId],

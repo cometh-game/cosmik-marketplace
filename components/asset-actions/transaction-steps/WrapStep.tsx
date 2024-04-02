@@ -24,6 +24,9 @@ export function WrapStep({ price, onValid }: WrapStepProps) {
     address: viewerAddress,
   })
 
+  console.log("wrapToken", wrapToken)
+  console.log("price", price)
+
   useEffect(() => {
     if (!needsToWrap) onValid()
   }, [needsToWrap, onValid])

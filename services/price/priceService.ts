@@ -28,6 +28,7 @@ const useCurrencyFiatPrice = ({
       const res = await axios.get(
         `${env.NEXT_PUBLIC_BASE_PATH}/api/fiat-currency-price?id=${coinId}&currency=${currencies}`
       )
+      console.log("res", res)
       const price = res.data.currentFiatPrice[coinId][currency]
       return price as number
     },

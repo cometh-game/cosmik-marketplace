@@ -28,6 +28,7 @@ export const fetchNeedsToWrap = async ({
     address,
     price,
   })
+  console.log("hasSufficientFunds", hasSufficientFunds)
   if (!hasSufficientFunds) return false
 
   const wrappedBalance = await getOrdersERC20Balance(address)
