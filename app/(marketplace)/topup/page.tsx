@@ -30,11 +30,11 @@ export default function TopupPage() {
   const [customAmount, setCustomAmount] = useState<string>("")
   const [debouncedValue] = useDebounceValue(customAmount, 250)
   const [currency, setCurrency] = useState<string>("")
+  const currencyInStorage =
+  typeof window !== "undefined" && localStorage.getItem("currency")
 
   useEffect(() => {
-    const currency =
-      typeof window !== "undefined" && localStorage.getItem("currency")
-    currency ? setCurrency(currency) : setCurrency("USD")
+    currencyInStorage ? setCurrency(currencyInStorage) : setCurrency("USD")
   }, [])
 
   useEffect(() => {

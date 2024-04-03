@@ -23,6 +23,7 @@ export function CurrencySwitcher({
       <Label htmlFor="make-buy-offer-price">Choose your currency :</Label>
       <Select
         defaultValue={currency}
+        value={currency}
         onValueChange={(v) => onCurrencyChange(v)}
       >
         <SelectTrigger className="text-accent-foreground border-0 font-semibold md:w-[120px]">

@@ -13,7 +13,7 @@ const useCurrencyFiatPrice = ({
   currency = "usd",
 }: { currency?: string } = {}) => {
   return useQuery({
-    queryKey: ["fiat-price", currency],
+    queryKey: ["fiat-price", currency && currency],
     queryFn: async () => {
       if (!coinId) {
         throw new Error("erc20.id is not defined in the manifest")
