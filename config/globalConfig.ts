@@ -127,7 +127,7 @@ const globalConfig: GlobalConfig = {
   minimumBalanceForGas,
   decimals: {
     displayMaxSmallDecimals: 6,
-    inputMaxDecimals: 18,
+    inputMaxDecimals: 4,
     nativeTokenDecimals: 18,
   },
   coinGeckoId: coinId,
