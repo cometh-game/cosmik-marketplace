@@ -4,7 +4,6 @@ import { manifest } from "@/manifests/manifests"
 import { AssetWithTradeData } from "@cometh/marketplace-sdk"
 import qs from "qs"
 
-import { shortenTokenId } from "@/lib/utils/token"
 import { Badge } from "@/components/ui/Badge"
 import { ShareButton } from "@/components/ui/ShareButton"
 import { TransferAssetButton } from "@/components/asset-actions/buttons/TransferAssetButton"

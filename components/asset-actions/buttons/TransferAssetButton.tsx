@@ -122,7 +122,7 @@ export function TransferAssetButton({
     )
   }, [asset.owner, viewerAddress])
 
-  if (isViewerOwner) return null
+  if (isViewerOwner || !viewerAddress) return null
 
   return (
     <Dialog modal open={open} onOpenChange={setOpen}>
