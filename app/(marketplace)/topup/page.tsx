@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useUserAuthContext } from "@/providers/userAuth"
-import { useConvertPriceToCrypto } from "@/services/price/priceService"
 import {
   useBuildTransakOrder,
   useTransak,
@@ -24,14 +23,13 @@ export default function TopupPage() {
   const { transakProcessing } = useTransak()
   const { userIsReconnecting, getUser, userIsFullyConnected } =
     useUserAuthContext()
-  const [isLoading, setIsLoading] = useState(false)
   const [showTransakSuccessDialog, setShowTransakSuccessDialog] =
     useState(false)
   const [customAmount, setCustomAmount] = useState<string>("")
   const [debouncedValue] = useDebounceValue(customAmount, 250)
   const [currency, setCurrency] = useState<string>("")
   const currencyInStorage =
-  typeof window !== "undefined" && localStorage.getItem("currency")
+    typeof window !== "undefined" && localStorage.getItem("currency")
 
   useEffect(() => {
     currencyInStorage ? setCurrency(currencyInStorage) : setCurrency("USD")
@@ -44,19 +42,18 @@ export default function TopupPage() {
   const initTransakOrder = useCallback(
     async (price: number, amount: number | null) => {
       if (!price || !amount) return
-      setIsLoading(true)
 
       try {
         const orderData = await buildTransakOrder({
           userWallet: getUser().address,
-          amount: parseEther(amount.toString()).toString(),
+          amount: parseEther(price.toString()).toString(),
           nonce: generateRandomUint256(),
         })
 
         transakProcessing({
           data: orderData,
           fiatCurrency: currency,
-          defaultFiatAmount: price,
+          defaultFiatAmount: amount,
           onSuccess: () => {
             setShowTransakSuccessDialog(true)
           },
@@ -68,8 +65,6 @@ export default function TopupPage() {
           variant: "destructive",
           duration: 5000,
         })
-      } finally {
-        setIsLoading(false)
       }
     },
     [buildTransakOrder, transakProcessing, getUser, currency]
@@ -93,17 +88,14 @@ export default function TopupPage() {
         <CurrencySwitcher currency={currency} onCurrencyChange={setCurrency} />
       </div>
       <div className="grid w-full grid-cols-3 gap-x-8">
-        {["25", "50", debouncedValue].map((fiatPrice, index, array) => {
+        {["0.01", "0.02", debouncedValue].map((amount, index, array) => {
           return (
             <TopupCard
               key={index}
-              price={fiatPrice}
+              amount={amount}
               currency={currency}
               onInputChange={(amount) => setCustomAmount(amount)}
-              onInit={(amountInETH) =>
-                initTransakOrder(Number(fiatPrice), amountInETH)
-              }
-              isLoading={isLoading}
+              onInit={(fiat) => initTransakOrder(parseFloat(amount), fiat)}
               isCustom={array.length - 1 === index}
             />
           )

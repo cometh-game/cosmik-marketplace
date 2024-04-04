@@ -1,4 +1,5 @@
-import { useConvertPriceToCrypto } from "@/services/price/priceService"
+import { useState } from "react"
+import { useConvertPriceToFiat } from "@/services/price/priceService"
 
 import globalConfig from "@/config/globalConfig"
 import { Input } from "@/components/ui/Input"
@@ -6,23 +7,33 @@ import { Input } from "@/components/ui/Input"
 import { Button } from "../ui/Button"
 
 type TopupCardProps = {
-  price: string
+  amount: string
   currency: string
   onInputChange?: (value: string) => void
-  onInit: (amount: number | null) => void
-  isLoading: boolean
+  onInit: (price: number | null) => Promise<void>
   isCustom?: boolean
 }
 
 export function TopupCard({
-  price,
+  amount,
   currency,
   onInputChange,
   onInit,
-  isLoading,
   isCustom = false,
 }: TopupCardProps) {
-  const amountInETH = useConvertPriceToCrypto(Number(price), currency)
+  const [isLoading, setIsLoading] = useState(false)
+  const price = useConvertPriceToFiat(parseFloat(amount), currency)
+
+  const handleTopup = async () => {
+    setIsLoading(true)
+    try {
+      await onInit(price)
+    } catch (error) {
+      console.error("Erreur lors de l'initialisation de la commande", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="card-secondary px-8 pb-8 pt-10 text-center">
@@ -34,17 +45,17 @@ export function TopupCard({
         />
       ) : (
         <div className="text-6xl font-bold italic tracking-wide text-[#FFD7D9] drop-shadow-[3px_3px_0_rgba(54,14,59,1)]">
-          {price}
-          <span className="ml-0.5 text-3xl">{currency}</span>
+          {amount}
+          <span className="ml-0.5 text-3xl">
+            {globalConfig.ordersDisplayCurrency.symbol}
+          </span>
         </div>
       )}
       <div className="text-2xl font-medium tracking-wide text-white/50">
-        {amountInETH !== null ? (
+        {price !== null ? (
           <>
-            {`≈ ${amountInETH}` ?? "..."}
-            <span className="ml-0.5">
-              {globalConfig.ordersDisplayCurrency.symbol}
-            </span>
+            {`≈ ${price.toFixed(0)}` ?? "..."}
+            <span className="ml-0.5">{currency}</span>
           </>
         ) : (
           "..."
@@ -52,7 +63,7 @@ export function TopupCard({
       </div>
       <Button
         variant="cosmik-price"
-        onClick={() => amountInETH && onInit(amountInETH)}
+        onClick={handleTopup}
         className="mt-3 w-full"
         isLoading={isLoading}
         disabled={isLoading}

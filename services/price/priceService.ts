@@ -36,22 +36,7 @@ const useCurrencyFiatPrice = ({
   })
 }
 
-export const useConvertPriceToFiat = (amount?: number | null) => {
-  const { data: price } = useCurrencyFiatPrice()
-
-  return useMemo(() => {
-    if (!manifest.fiatCurrency.enable) {
-      return null
-    }
-    if (!amount || isNaN(amount) || !price || price === 0) {
-      return null
-    }
-    const fiatPrice = amount * price
-    return Math.round(fiatPrice * 100) / 100
-  }, [amount, price])
-}
-
-export const useConvertPriceToCrypto = (
+export const useConvertPriceToFiat = (
   amount?: number | null,
   currency?: string
 ) => {
@@ -66,7 +51,7 @@ export const useConvertPriceToCrypto = (
     if (!amount || isNaN(amount) || !price || price === 0) {
       return null
     }
-    const cryptoPrice = amount / price
-    return Math.round(cryptoPrice * 10000) / 10000
+    const fiatPrice = amount * price
+    return Math.round(fiatPrice * 100) / 100
   }, [amount, price])
 }
