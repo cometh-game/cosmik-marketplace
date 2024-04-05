@@ -170,6 +170,7 @@ export function MakeBuyOfferButton({
 
   const closeDialog = () => {
     setOpen(false)
+    setPrice(null)
   }
 
   const onClose = () => {

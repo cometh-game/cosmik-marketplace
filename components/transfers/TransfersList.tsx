@@ -41,6 +41,7 @@ import {
   TooltipTrigger,
 } from "../ui/Tooltip"
 import { UserButton } from "../ui/user/UserButton"
+import { DateTime } from "luxon"
 
 dayjs.extend(relativeTime)
 
@@ -223,11 +224,16 @@ const TimestampTooltip = ({
   </TooltipProvider>
 )
 
-const renderTimestampCell = (activity: AssetActivity) => {
-  const activityTimestamp = getActivityTimestamp(activity)
-  const dayJsTimestamp = dayjs(activityTimestamp)
-  const timeFromNow = dayJsTimestamp.fromNow()
-  const readableDate = dayJsTimestamp.format("MMMM D, YYYY [at] h:mm A")
+function ActivityTimestampCell({ activity }: { activity: AssetActivity }) {
+  const { timeFromNow, readableDate } = useMemo(() => {
+    const activityTimestamp = getActivityTimestamp(activity)
+    const luxonTimestamp = DateTime.fromMillis(activityTimestamp)
+
+    return {
+      timeFromNow: luxonTimestamp.toRelative(),
+      readableDate: luxonTimestamp.toLocaleString(DateTime.DATETIME_FULL),
+    }
+  }, [activity])
 
   if (isTransferActivity(activity)) {
     return (
@@ -236,7 +242,7 @@ const renderTimestampCell = (activity: AssetActivity) => {
           href={`${globalConfig.network.explorer?.url}/tx/${activity.transfer.transactionHash}`}
           target="_blank"
           rel="noreferrer"
-          className="flex items-center gap-2 font-medium text-accent hover:text-white"
+          className="text-accent flex items-center gap-2 font-medium hover:text-white"
         >
           {timeFromNow}
           <ExternalLink size="18" className="" />
@@ -246,9 +252,11 @@ const renderTimestampCell = (activity: AssetActivity) => {
   } else if (isOrderActivity(activity)) {
     return (
       <TimestampTooltip tooltipContent={readableDate}>
-        <div className="font-medium text-accent">{timeFromNow}</div>
+        <div className="text-accent font-medium">{timeFromNow}</div>
       </TimestampTooltip>
     )
+  } else {
+    return null // Or return some default UI for other types of activities
   }
 }
 
@@ -278,6 +286,7 @@ const renderActivitiesRows = (
       <TableRow key={getActivityId(activity)}>
         <TableCell className="items-center">
           {renderActivityEventCell(activity)}
+          <ActivityTimestampCell activity={activity} />
         </TableCell>
 
         <TableCell>
@@ -306,7 +315,9 @@ const renderActivitiesRows = (
             )}
           </div>
         </TableCell>
-        <TableCell>{renderTimestampCell(activity)}</TableCell>
+        <TableCell>
+          <ActivityTimestampCell activity={activity} />
+        </TableCell>
       </TableRow>
     )
   })
