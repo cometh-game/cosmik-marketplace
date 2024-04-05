@@ -21,19 +21,7 @@ export const RefreshStep: React.FC<RefreshStepProps> = ({
     useWeb3OnboardContext()
   const [isLoading, setIsLoading] = useState(false)
   const { connect: connectWallet } = useWalletConnect()
-  const [canRefresh, setCanRefresh] = useState(false)
   const walletLogout = useDisconnect()
-
-  useEffect(() => {
-    const retrieveWalletAddress = async () => {
-      await retrieveWalletAddressFromSigner(userAddress)
-      setCanRefresh(true)
-    }
-
-    // polling to check if the user has authorized the device
-    const interval = setInterval(retrieveWalletAddress, 2000)
-    return () => clearInterval(interval)
-  }, [])
 
   const handleRefresh = async () => {
     setIsLoading(true)
@@ -45,7 +33,6 @@ export const RefreshStep: React.FC<RefreshStepProps> = ({
           isComethWallet: true,
           walletAddress: userAddress,
         })
-        // await connectWallet({ isComethWallet: true })
         const wallet = await connectWallet({ isComethWallet: true })
         const walletAddress = ethers.utils.getAddress(
           wallet.accounts[0].address
@@ -89,7 +76,7 @@ export const RefreshStep: React.FC<RefreshStepProps> = ({
         size="lg"
         onClick={handleRefresh}
         isLoading={isLoading}
-        disabled={isLoading || !canRefresh}
+        disabled={isLoading}
       >
         Refresh
       </Button>
