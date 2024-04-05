@@ -1,5 +1,6 @@
 "use client"
 
+import { useCallback } from "react"
 import { useMemo } from "react"
 import { useCurrentCollectionContext } from "@/providers/currentCollection/currentCollectionContext"
 import {
@@ -10,6 +11,7 @@ import { Address } from "viem"
 import { useAccount } from "wagmi"
 
 import globalConfig from "@/config/globalConfig"
+import { useNFTFilters } from "@/lib/utils/nftFilters"
 import { Tabs } from "@/components/ui/Tabs"
 
 import { TabBar } from "./TabBar"
@@ -38,14 +40,19 @@ export const AccountAssetActivities = ({
   const sentOffers = useAssetSentOffers({ owner: walletAddress })
   const { switchCollection, currentCollectionAddress } =
     useCurrentCollectionContext()
+  const { reset } = useNFTFilters()
 
   const defaultValue = COLLECTION_TAB_PREFIX + currentCollectionAddress
 
-  const onTabValueChange = (value: string) => {
-    if (value.startsWith(COLLECTION_TAB_PREFIX)) {
-      switchCollection(value.replace(COLLECTION_TAB_PREFIX, "") as Address)
-    }
-  }
+  const onTabValueChange = useCallback(
+    (value: string) => {
+      if (value.startsWith(COLLECTION_TAB_PREFIX)) {
+        switchCollection(value.replace(COLLECTION_TAB_PREFIX, "") as Address)
+        reset()
+      }
+    },
+    [reset, switchCollection]
+  )
 
   return (
     <Tabs

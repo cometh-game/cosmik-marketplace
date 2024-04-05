@@ -1,20 +1,28 @@
 import { useMemo } from "react"
 import Link from "next/link"
 import { manifest } from "@/manifests/manifests"
+import { useGetCollection } from "@/services/cometh-marketplace/collectionService"
 import { AssetWithTradeData } from "@cometh/marketplace-sdk"
 import qs from "qs"
+import { Address } from "viem"
 
+import { shortenTokenId } from "@/lib/utils/formatToken"
 import { Badge } from "@/components/ui/Badge"
 import { ShareButton } from "@/components/ui/ShareButton"
 import { TransferAssetButton } from "@/components/asset-actions/buttons/TransferAssetButton"
 import { ProductBlock } from "@/components/asset-actions/product-blocks/ProductBlock"
 import { BreadcrumbContainer, BreadcrumbElement } from "@/components/Breadcrumb"
 
+import AssetFloorPricePanel from "./floorPrice/AssetFloorPricePanel"
+
 export type AssetDetailsProps = {
   asset: AssetWithTradeData
 }
 
 export default function AssetDetails({ asset }: AssetDetailsProps) {
+  const { data: collection } = useGetCollection(
+    asset.contractAddress as Address
+  )
   const attributes = useMemo(() => {
     const mainAttributes = manifest.pages?.asset?.mainAttributes ?? []
     return asset.metadata.attributes?.reduce(
@@ -32,7 +40,8 @@ export default function AssetDetails({ asset }: AssetDetailsProps) {
     return attributes?.map((attribute, index) => {
       const property = attribute.trait_type
       const value = `${attribute.value}`
-      const href = `/nfts?${qs.stringify({
+      // TODO: fix and add again attribute link
+      const href = `/nfts/${asset.contractAddress}?${qs.stringify({
         [property as string]: `${value}`,
       })}`
 
@@ -44,7 +53,7 @@ export default function AssetDetails({ asset }: AssetDetailsProps) {
         </Link>
       )
     })
-  }, [attributes])
+  }, [attributes, asset.contractAddress])
 
   return (
     <div className="flex-1 lg:sticky lg:left-0 lg:top-[5%] lg:w-[35%] lg:pt-[100px]">

@@ -23,7 +23,7 @@ export const CurrentCollectionProvider: React.FC<CollectionProviderProps> = ({
       setCurrentCollection(collectionAddress)
       reset()
     },
-    [setCurrentCollection, reset]
+    [setCurrentCollection]
   )
 
   return (
