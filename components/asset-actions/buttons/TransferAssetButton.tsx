@@ -147,11 +147,11 @@ export function TransferAssetButton({
         <div className="flex w-full items-center justify-center">
           <AssetHeaderImage asset={asset} />
         </div>
-        <div className="font-medium">
+        <p className="font-medium">
           Make sure to enter a valid address for this network. You will
           permanently loose ownership of your asset once the transfer is
           validated.
-        </div>
+        </p>
         <div className="">
           <Label htmlFor="transfer-address" className="mb-0.5">Transfer asset to address:</Label>
           <Input

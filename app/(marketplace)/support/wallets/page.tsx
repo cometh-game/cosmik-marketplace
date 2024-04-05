@@ -18,8 +18,11 @@ import {
 } from "wagmi"
 
 import { env } from "@/config/env"
+import globalConfig from "@/config/globalConfig"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
+import { AccountBalance } from "@/components/account-dropdown/AccountBalance"
+import ERC20TransferButton from "@/components/activities/account/ERC20TransferButton"
 import { TransferAssetButton } from "@/components/asset-actions/buttons/TransferAssetButton"
 
 const COMETH_PASSKEY_PREFIX = "cometh-connect-"
@@ -75,6 +78,7 @@ const WalletAssetTransfer = () => {
       <div className="text-base">
         Current collection address: {currentCollectionAddress}
       </div>
+      <hr className="my-4" />
       <div>
         <div className="flex items-center justify-between gap-2">
           <div className="text-xl font-bold">Assets</div>
@@ -90,6 +94,36 @@ const WalletAssetTransfer = () => {
             </li>
           ))}
         </ul>
+      </div>
+
+      <div className="mb-1 mt-3">
+        <div className="mb-1 text-xl font-bold">ERC20 (funds)</div>
+        <div className="mb-1">Your Current Balance</div>
+        <AccountBalance />
+      </div>
+      <div className="mt-3 flex gap-3">
+        <div>
+          <ERC20TransferButton
+            tokenSymbol={globalConfig.network.nativeToken.symbol}
+            decimalNumber={globalConfig.network.nativeToken.decimals}
+          />
+        </div>
+        <div>
+          <ERC20TransferButton
+            tokenAddress={globalConfig.network.wrappedNativeToken.address}
+            tokenSymbol={globalConfig.network.wrappedNativeToken.symbol}
+            decimalNumber={globalConfig.network.nativeToken.decimals}
+          />
+        </div>
+        {!globalConfig.useNativeForOrders && (
+          <div>
+            <ERC20TransferButton
+              tokenAddress={globalConfig.ordersErc20.address}
+              tokenSymbol={globalConfig.ordersErc20.symbol}
+              decimalNumber={globalConfig.ordersErc20.decimals}
+            />
+          </div>
+        )}
       </div>
     </div>
   )
