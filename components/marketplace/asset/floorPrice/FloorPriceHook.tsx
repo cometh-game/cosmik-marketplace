@@ -17,26 +17,24 @@ const isAttributeDefined = (
   return attribute !== undefined
 }
 
-export const useAssetFloorPriceAttributes = (
-  asset: AssetWithTradeData | undefined
-) => {
+export const useAssetFloorPriceAttributes = (asset: AssetWithTradeData | undefined) => {
   return useMemo(() => {
-    if (!asset) return []
-
+    if(!asset) return []
+    console.log("asset", asset)
     const floorPriceAttributeTypes =
       globalConfig.collectionSettingsByAddress[
         asset.contractAddress.toLowerCase() as Address
       ].floorPriceAttributeTypes
-
+    console.log("floorPriceAttributeTypes", floorPriceAttributeTypes)
     const allAttributes = floorPriceAttributeTypes.map((type) => {
       const matchingAttribute = asset.metadata.attributes.find(
         (attribute) => attribute.trait_type === type
       )
       return matchingAttribute
     })
+    console.log("allAttributes", allAttributes)
 
-    const definedAttributes: AssetAttribute[] =
-      allAttributes.filter(isAttributeDefined)
+    const definedAttributes: AssetAttribute[] = allAttributes.filter(isAttributeDefined)
     return definedAttributes
   }, [asset])
 }
@@ -58,14 +56,14 @@ export const useFloorPriceAsset = (asset: AssetWithTradeData | undefined) => {
     return [filters]
   }, [assetFloorPriceAttributes])
 
-  const floorPriceSearch = useSearchAssets({
+  const floorPriceSearch =  useSearchAssets({
     contractAddress: shouldSearchAssets ? asset?.contractAddress : undefined,
     orderBy: FilterOrderBy.PRICE,
     direction: FilterDirection.ASC,
     attributes: attributeFilters,
     isOnSale: true,
     limit: 1,
-  })
+  }) 
   const floorPriceAsset = useMemo(() => {
     return floorPriceSearch.data?.assets[0]
   }, [floorPriceSearch.data?.assets])

@@ -16,12 +16,10 @@ export const CurrentCollectionProvider: React.FC<CollectionProviderProps> = ({
   const [currentCollectionAddress, setCurrentCollection] = useState<Address>(
     globalConfig.defaultContractAddress
   )
-  const { reset } = useNFTFilters()
 
   const switchCollection = useCallback(
     (collectionAddress: Address) => {
       setCurrentCollection(collectionAddress)
-      reset()
     },
     [setCurrentCollection]
   )

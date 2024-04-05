@@ -96,6 +96,7 @@ const minimumBalanceForGas = network.minimumBalanceForGas
 
 const DEFAULT_COLLECTION_SETTINGS: CollectionUiSettings = {
   imageAspectRatio: 1,
+  floorPriceAttributeTypes: []
 }
 let collectionSettingsByAddress: Record<Address, CollectionUiSettings> = {}
 contractAddress.forEach((address) => {

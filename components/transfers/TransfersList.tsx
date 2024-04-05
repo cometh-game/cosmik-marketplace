@@ -242,7 +242,7 @@ function ActivityTimestampCell({ activity }: { activity: AssetActivity }) {
           href={`${globalConfig.network.explorer?.url}/tx/${activity.transfer.transactionHash}`}
           target="_blank"
           rel="noreferrer"
-          className="text-accent flex items-center gap-2 font-medium hover:text-white"
+          className="text-accent relative z-[1] flex items-center gap-2 font-medium hover:text-white"
         >
           {timeFromNow}
           <ExternalLink size="18" className="" />

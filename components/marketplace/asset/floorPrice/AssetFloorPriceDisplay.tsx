@@ -62,7 +62,7 @@ export function AssetFloorPriceDisplay({
                 href={`/nfts/${pageAsset.contractAddress}${attributeQueryFilters}`}
                 className="ml-1 font-semibold"
               >
-                <Button variant="secondary" size="sm">
+                <Button variant="third" size="sm">
                   <SearchIcon size={16} />
                 </Button>
               </Link>
