@@ -62,7 +62,7 @@ steps:
         from_secret: dev_cosmik_url
       NEXT_PUBLIC_ZERO_EX_CONTRACT_ADDRESS:
         from_secret: dev_zero_ex_address
-        NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID:
+      NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID:
         from_secret: dev_wallet_connect_id
       NEXT_PUBLIC_COINGECKO_API_KEY:
         from_secret: dev_coingecko_api_key
