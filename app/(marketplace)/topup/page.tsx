@@ -71,8 +71,8 @@ export default function TopupPage() {
   )
 
   if (!userIsReconnecting && !userIsFullyConnected) {
-    push("/nfts")
-    return
+    // push("/nfts")
+    return null
   }
 
   if (userIsReconnecting) {

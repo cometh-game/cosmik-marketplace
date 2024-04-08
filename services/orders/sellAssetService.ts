@@ -16,7 +16,7 @@ import { useBuildOfferOrder } from "./buildOfferOrderService"
 import { useBuyOffer } from "./buyOfferService"
 
 export type SellAssetOptions = {
-  asset: AssetWithTradeData
+  asset: AssetWithTradeData | SearchAssetWithTradeData
   price: BigNumber
   validity: string
 }
