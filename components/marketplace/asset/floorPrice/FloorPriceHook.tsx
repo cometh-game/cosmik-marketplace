@@ -20,19 +20,16 @@ const isAttributeDefined = (
 export const useAssetFloorPriceAttributes = (asset: AssetWithTradeData | undefined) => {
   return useMemo(() => {
     if(!asset) return []
-    console.log("asset", asset)
     const floorPriceAttributeTypes =
       globalConfig.collectionSettingsByAddress[
         asset.contractAddress.toLowerCase() as Address
       ].floorPriceAttributeTypes
-    console.log("floorPriceAttributeTypes", floorPriceAttributeTypes)
     const allAttributes = floorPriceAttributeTypes.map((type) => {
       const matchingAttribute = asset.metadata.attributes.find(
         (attribute) => attribute.trait_type === type
       )
       return matchingAttribute
     })
-    console.log("allAttributes", allAttributes)
 
     const definedAttributes: AssetAttribute[] = allAttributes.filter(isAttributeDefined)
     return definedAttributes

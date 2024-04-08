@@ -80,6 +80,7 @@ export default function AssetDetails({ asset }: AssetDetailsProps) {
       </h1>
       <div className="mb-8 mt-2 flex flex-wrap items-center gap-2">{links}</div>
       <ProductBlock asset={asset} />
+      <AssetFloorPricePanel asset={asset} />
       <p className="text-muted-foreground py-6 text-base font-medium max-md:pb-0">
         {asset.metadata.description}
       </p>
