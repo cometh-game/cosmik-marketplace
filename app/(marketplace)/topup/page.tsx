@@ -30,6 +30,7 @@ export default function TopupPage() {
   const [currency, setCurrency] = useState<string>("")
   const currencyInStorage =
     typeof window !== "undefined" && localStorage.getItem("currency")
+  const [resumeOrder, setResumeOrder] = useState<any>(null)
 
   useEffect(() => {
     currencyInStorage ? setCurrency(currencyInStorage) : setCurrency("USD")
@@ -55,6 +56,7 @@ export default function TopupPage() {
           fiatCurrency: currency,
           defaultFiatAmount: amount,
           onSuccess: () => {
+            setResumeOrder(orderData)
             setShowTransakSuccessDialog(true)
           },
         })
@@ -103,6 +105,7 @@ export default function TopupPage() {
       </div>
       {showTransakSuccessDialog && (
         <TransakSuccessDialog
+          resumeOrder={resumeOrder}
           onClose={() => setShowTransakSuccessDialog(false)}
         />
       )}
