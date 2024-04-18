@@ -255,9 +255,9 @@ export function Web3OnboardProvider({
     const startReconnecting = async () => {
       setReconnecting(true)
       try {
-        if (!isAddress(currentWalletInStorage!)) {
-          throw new Error("Invalid wallet address.")
-        }
+        // if (!isAddress(currentWalletInStorage!)) {
+        //   throw new Error("Invalid wallet address.")
+        // }
         const connectionResult = await onboard?.connectWallet({
           autoSelect: {
             label: currentWalletInStorage!,
