@@ -64,10 +64,10 @@ export const useTransak = () => {
       const transak = new Transak({
         apiKey: env.NEXT_PUBLIC_TRANSAK_API_KEY,
         network: "arbitrum",
-        environment:
-          env.NEXT_PUBLIC_NODE_ENV === "production"
-            ? Transak.ENVIRONMENTS.PRODUCTION
-            : Transak.ENVIRONMENTS.STAGING,
+        environment: Transak.ENVIRONMENTS.PRODUCTION,
+          // env.NEXT_PUBLIC_NODE_ENV === "production"
+          //   ? Transak.ENVIRONMENTS.PRODUCTION
+          //   : Transak.ENVIRONMENTS.STAGING,
         estimatedGasLimit,
         smartContractAddress,
         walletAddress: getUser().address,
