@@ -35,7 +35,7 @@ export function AccountBalance() {
         </div>
       </div>
       
-      <div>
+      <div className="flex flex-col gap-2">
         {globalConfig.useNativeForOrders && (
           <div className="grid">
             <WrapButton
@@ -44,7 +44,7 @@ export function AccountBalance() {
             />
           </div>
         )}
-        <Button onClick={() => push("/topup")}>
+        <Button className="w-full" size="lg" onClick={() => push("/topup")}>
           Fill your wallet
         </Button>
       </div>
