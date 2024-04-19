@@ -41,7 +41,11 @@ export function CurrentAccountDropdown({
       <DropdownMenuTrigger asChild>
         <Button size={isMobile ? "icon" : "default"} variant={buttonVariant}>
           <User size="18" className="md:mr-1" />
-          {!isMobile && "Account"}
+          {!isMobile && (isFetchingUsername ? (
+                    <span>...</span>
+                  ) : (
+                    <span>@{username}</span>
+                  ))}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent variant="dialog" align="end" asChild>
@@ -57,11 +61,7 @@ export function CurrentAccountDropdown({
               />
               <Link href={`/profile/${viewerAddress}`} className="group">
                 <div className="relative -mb-0.5 text-base font-bold uppercase">
-                  {isFetchingUsername ? (
-                    <span>...</span>
-                  ) : (
-                    <span>@{username}</span>
-                  )}
+                 My account
                 </div>
                 {viewerAddress && (
                   <div className="text-accent mr-2 text-sm font-medium transition-colors group-hover:text-white">

@@ -7,10 +7,13 @@ import globalConfig from "@/config/globalConfig"
 import { FiatPrice } from "@/components/ui/FiatPrice"
 import { Separator } from "@/components/ui/Separator"
 import { WrapButton } from "@/components/asset-actions/buttons/WrapButton"
+import { Button } from "../ui/Button"
+import { useRouter } from "next/navigation"
 
 export function AccountBalance() {
   const balance = useBalance()
   const [isUnwrap, setIsUnwrap] = useState(false)
+  const { push } = useRouter()
   
   return (
     <>
@@ -31,15 +34,20 @@ export function AccountBalance() {
           />
         </div>
       </div>
-
-      {globalConfig.useNativeForOrders && (
-        <div className="grid">
-          <WrapButton
-            isUnwrap={isUnwrap}
-            onToggleMode={() => setIsUnwrap(!isUnwrap)}
-          />
-        </div>
-      )}
+      
+      <div>
+        {globalConfig.useNativeForOrders && (
+          <div className="grid">
+            <WrapButton
+              isUnwrap={isUnwrap}
+              onToggleMode={() => setIsUnwrap(!isUnwrap)}
+            />
+          </div>
+        )}
+        <Button onClick={() => push("/topup")}>
+          Fill your wallet
+        </Button>
+      </div>
     </>
   )
 }
