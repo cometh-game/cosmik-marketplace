@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useMemo } from "react"
-import { useUsernames } from "@/services/user/userNameService"
+import { useUsernames } from "@/services/cosmik/userService"
 import {
   AssetTransfer,
   AssetTransfers,

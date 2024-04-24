@@ -1,4 +1,4 @@
-import { useUsername } from "@/services/user/userNameService"
+// import { useUsername } from "@/services/user/userNameService"
 import { AssetWithTradeData } from "@cometh/marketplace-sdk"
 import { Address } from "viem"
 
@@ -16,6 +16,7 @@ import { BuyAssetButton } from "../buttons/BuyAssetButton"
 import { MakeBuyOfferButton } from "../buttons/MakeBuyOfferPriceDialog"
 import { SwitchNetwork } from "../buttons/SwitchNetwork"
 import { BestOfferColumn } from "./columns/BestOfferColumn"
+import { useGetUser } from "@/services/cosmik/userService"
 
 export type BuyProductBlockProps = {
   asset: AssetWithTradeData
@@ -23,7 +24,8 @@ export type BuyProductBlockProps = {
 
 export function BuyProductBlock({ asset }: BuyProductBlockProps) {
   const listingPrice = asset.orderbookStats.lowestListingPrice
-  const { username, isFetchingUsername } = useUsername(asset.owner as Address)
+  // const { username, isFetchingUsername } = useUsername(asset.owner as Address)
+  const { user, isFetching: isFetchingUsername } = useGetUser(asset.owner as Address)
 
   return (
     <ProductBlockContainer>
@@ -47,7 +49,7 @@ export function BuyProductBlock({ asset }: BuyProductBlockProps) {
           <UserLink
             variant="link"
             // className="mt-1"
-            user={{ address: asset.owner as Address, username: username }}
+            user={{ address: asset.owner as Address, username: user.userName }}
           />
         )}
       </ProductBlockDividedColumn>

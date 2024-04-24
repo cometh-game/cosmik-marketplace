@@ -9,7 +9,7 @@ import { useAccount } from "wagmi"
 import { DataTable } from "@/components/DataTable"
 
 import { columns } from "./columns"
-import { useUsernames } from "@/services/user/userNameService"
+import { useUsernames } from "@/services/cosmik/userService"
 
 export type BuyOffersTableProps = {
   offers: BuyOffer[]

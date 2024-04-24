@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react"
+import { useGetUser } from "@/services/cosmik/userService"
 import {
   AssetWithTradeData,
   SearchAssetWithTradeData,
@@ -64,7 +65,8 @@ export function TransferAssetButton({
   const [open, setOpen] = useState(false)
   const client = useQueryClient()
   const invalidateAssetQueries = useInvalidateAssetQueries()
-
+  const { user: receiverUser, isFetching: isFetchingReceiverUser } =
+    useGetUser(receiverAddress)
   const account = useAccount()
   const viewerAddress = account.address
 
@@ -80,6 +82,15 @@ export function TransferAssetButton({
 
   const transferAsset = useCallback(() => {
     if (!viewerAddress) return
+    if (!receiverUser) {
+      toast({
+        title: "Receiver address not found",
+        description:
+          "This address is not valid or does not have a Cosmik account.",
+        variant: "destructive",
+      })
+      return
+    }
     writeContract({
       address: asset.contractAddress as Address,
       abi: erc721Abi,
@@ -97,6 +108,7 @@ export function TransferAssetButton({
     receiverAddress,
     asset.tokenId,
     writeContract,
+    receiverUser,
   ])
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
@@ -151,13 +163,44 @@ export function TransferAssetButton({
         <div className="flex w-full items-center justify-center">
           <AssetHeaderImage asset={asset} />
         </div>
-        <p className="font-medium">
-          Make sure to enter a valid address for this network. You will
-          permanently loose ownership of your asset once the transfer is
-          validated.
-        </p>
+        <div className="text-muted-foreground">
+          <p className="mb-2">
+            Attention pilot! You’re about to transfer a Digital Collectible to
+            another wallet.{" "}
+            <span className="font-semibold">
+              Please make sure that the recipient address is compatible with the
+              Muster Network
+            </span>{" "}
+            before proceeding with the transfer. For more information, please
+            visit :
+          </p>
+          <ul className="ml-5 list-disc">
+            <li>
+              <a
+                href="https://www.cosmikbattle.com/cosmik-academy/wallet-management"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-accent-foreground font-medium underline transition-colors"
+              >
+                Wallet Management
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.cosmikbattle.com/cosmik-academy/marketplace-gettingready"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-accent-foreground font-medium underline transition-colors"
+              >
+                Marketplace Getting Ready
+              </a>
+            </li>
+          </ul>
+        </div>
         <div className="">
-          <Label htmlFor="transfer-address" className="mb-0.5">Transfer asset to address:</Label>
+          <Label htmlFor="transfer-address" className="mb-0.5">
+            Transfer asset to address:
+          </Label>
           <Input
             id="transfer-address"
             placeholder="0x1a..."
@@ -172,9 +215,12 @@ export function TransferAssetButton({
         <Button
           size="lg"
           disabled={
-            !receiverAddressValidation.success || isConfirming || isPending
+            !receiverAddressValidation.success ||
+            isConfirming ||
+            isPending ||
+            isFetchingReceiverUser
           }
-          isLoading={isConfirming || isPending}
+          isLoading={isConfirming || isPending || isFetchingReceiverUser}
           onClick={transferAsset}
         >
           {isConfirming || isPending

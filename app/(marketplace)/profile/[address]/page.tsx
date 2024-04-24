@@ -1,7 +1,7 @@
 "use client"
 
 import { useAttributeFilters } from "@/services/cometh-marketplace/filtersService"
-import { useUsername } from "@/services/user/userNameService"
+// import { useUsername } from "@/services/user/userNameService"
 import { ArrowLeftIcon, UserIcon } from "lucide-react"
 import { Address } from "viem"
 
@@ -12,6 +12,7 @@ import { Link } from "@/components/ui/Link"
 import { ShareButton } from "@/components/ui/ShareButton"
 import { AccountAssetActivities } from "@/components/activities/account/tabs/AccountAssetActivities"
 import { AssetsSearchGrid } from "@/components/marketplace/grid/AssetSearchGrid"
+import { useGetUser } from "@/services/cosmik/userService"
 
 export default function ProfilePage({
   params,
@@ -19,10 +20,11 @@ export default function ProfilePage({
   params: { address: Address }
 }) {
   const attributesFilters = useAttributeFilters()
-  const { username, isFetchingUsername } = useUsername(params.address)
-  const user =
-    username && !isFetchingUsername
-      ? `@${username}`
+  // const { username, isFetchingUsername } = useUsername(params.address)
+  const { user, isFetching: isFetchingUsername } = useGetUser(params.address)
+  const userName =
+  user.userName && !isFetchingUsername
+      ? `@${user.userName}`
       : shortenAddress(params.address)
 
   if (!attributesFilters) {
@@ -41,7 +43,7 @@ export default function ProfilePage({
         <div className="flex items-center gap-2">
           <h1 className="inline-flex items-center text-2xl font-semibold tracking-tight sm:text-3xl">
             <UserIcon size="28" className="mr-2" />
-            Profile {user}
+            Profile {userName}
           </h1>
           <CopyButton
             label="Copy wallet address"

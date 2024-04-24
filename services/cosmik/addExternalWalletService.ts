@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query"
 import { SiweMessage } from "siwe"
-import { Address } from "viem"
 
 import { cosmikClient } from "@/lib/clients"
 import { toast } from "@/components/ui/toast/hooks/useToast"

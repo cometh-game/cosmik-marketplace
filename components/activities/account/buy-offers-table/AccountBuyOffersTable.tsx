@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo } from "react"
-import { useUsernames } from "@/services/user/userNameService"
+import { useUsernames } from "@/services/cosmik/userService"
 import { Address, isAddressEqual } from "viem"
 import { useAccount } from "wagmi"
 

@@ -3,7 +3,7 @@
  * listed the asset for sale.
  */
 
-import { useUsername } from "@/services/user/userNameService"
+// import { useUsername } from "@/services/user/userNameService"
 import { AssetWithTradeData } from "@cometh/marketplace-sdk"
 import { Address } from "viem"
 
@@ -19,13 +19,15 @@ import {
 
 import { CancelListingButton } from "../buttons/CancelListingButton"
 import { SwitchNetwork } from "../buttons/SwitchNetwork"
+import { useGetUser } from "@/services/cosmik/userService"
 
 export type SellProductBlockProps = {
   asset: AssetWithTradeData
 }
 
 export function ViewerListingProductBlock({ asset }: SellProductBlockProps) {
-  const { username, isFetchingUsername } = useUsername(asset.owner as Address)
+  // const { username, isFetchingUsername } = useUsername(asset.owner as Address)
+  const { user, isFetching: isFetchingUsername } = useGetUser(asset.owner as Address)
 
   return (
     <ProductBlockContainer>
@@ -59,7 +61,7 @@ export function ViewerListingProductBlock({ asset }: SellProductBlockProps) {
           <UserLink
             variant="link"
             // className="mt-1"
-            user={{ address: asset.owner as Address, username: username }}
+            user={{ address: asset.owner as Address, username: user.userName }}
           />
         )}
       </ProductBlockDividedColumn>
