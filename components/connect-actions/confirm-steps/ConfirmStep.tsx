@@ -20,11 +20,13 @@ export const ConfirmStep: React.FC<ConfirmStepProps> = ({
   onValid,
 }) => {
   const [hasReading, setHasReading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const { connectComethWallet } = useConnectComethWallet()
   const { setUserIsFullyConnected } = useUserAuthContext()
 
   const handleConfirmClick = async () => {
     if (hasReading) {
+      setIsLoading(true)
       try {
         await connectComethWallet(userAddress)
         setUserIsFullyConnected(true)
@@ -36,6 +38,8 @@ export const ConfirmStep: React.FC<ConfirmStepProps> = ({
             error?.message || "There was an error connecting your wallet.",
           variant: "destructive",
         })
+      } finally {
+        setIsLoading(false)
       }
     } else {
       toast({
@@ -96,7 +100,7 @@ export const ConfirmStep: React.FC<ConfirmStepProps> = ({
           with ETH
         </Label>
       </div>
-      <Button size="lg" onClick={handleConfirmClick} disabled={!hasReading}>
+      <Button size="lg" onClick={handleConfirmClick} disabled={!hasReading} isLoading={isLoading}>
         Confirm
       </Button>
     </>
