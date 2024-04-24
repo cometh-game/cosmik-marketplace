@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { useConnectComethWallet } from "@/providers/authentication/comethConnectHooks"
-import { useUserAuthContext } from "@/providers/userAuth"
 
 import { Button } from "@/components/ui/Button"
 import { toast } from "@/components/ui/toast/hooks/useToast"
@@ -14,34 +13,21 @@ export const RefreshStep: React.FC<RefreshStepProps> = ({
   userAddress,
   onValid,
 }) => {
-  const { connectComethWallet, retrieveWalletAddress } =
+  const { retrieveWalletAddress } =
     useConnectComethWallet()
-  const { setUserIsFullyConnected } = useUserAuthContext()
   const [isLoading, setIsLoading] = useState(false)
 
   const handleRefresh = async () => {
     setIsLoading(true)
     try {
       await retrieveWalletAddress(userAddress)
-
-      try {
-        await connectComethWallet(userAddress)
-        setUserIsFullyConnected(true)
-        onValid()
-      } catch (error: any) {
-        toast({
-          title: "Error",
-          description:
-            error?.message || "There was an error connecting your wallet.",
-          variant: "destructive",
-        })
-      }
       toast({
         title: "Device succesfully Authorized!",
         description:
           "Your Cosmik Battle account has been successfully linked to the marketplace.",
         variant: "default",
       })
+      onValid()
     } catch (error: any) {
       toast({
         title: "Something went wrong",

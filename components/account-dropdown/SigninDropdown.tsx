@@ -35,7 +35,7 @@ export function SigninDropdown({
   const [displayAutorizationProcess, setDisplayAutorizationProcess] =
     useState(false)
   const [displaySigninDialog, setDisplaySigninDialog] = useState(false)
-  const { isSuccess, isPending, data } = useCosmikSignin()
+  const { isPending } = useCosmikSignin()
   const [isLoading, setIsLoading] = useState(false)
   const { connectComethWallet, retrieveWalletAddress } =
     useConnectComethWallet()
@@ -49,37 +49,30 @@ export function SigninDropdown({
     [displayAutorizationProcess]
   )
 
-  const handleLoginSuccess = useCallback(
-    async (user: User) => {
-      try {
-        setIsLoading(true)
-        setUser(user)
-        // Attempt to retrieve the wallet address to determine if it is the first connection
-        await retrieveWalletAddress(user.address)
-        // If passkey signer is found for this address, connect the wallet
-        await connectComethWallet(user.address)
-        toast({
-          title: "Login successful",
-          duration: 3000,
-        })
-      } catch (error) {
-        console.error("Error connecting wallet in SigninDropdown", error)
-        // If an error occurs, likely due to a first-time connection, display the authorization modal
-        setDisplaySigninDialog(false)
-        setDisplayAutorizationProcess(true)
-      } finally {
-        setIsLoading(false)
-      }
-    },
-    [connectComethWallet, retrieveWalletAddress]
-  )
+  const handleLoginSuccess = async (user: User) => {
+    if (!user) return
 
-  useEffect(() => {
-    if (isSuccess) {
-      handleLoginSuccess(data.user)
+    try {
+      setIsLoading(true)
+      setUser(user)
+      // Attempt to retrieve the wallet address to determine if it is the first connection
+      await retrieveWalletAddress(user.address)
+      // If passkey signer is found for this address, connect the wallet
+      await connectComethWallet(user.address)
+      toast({
+        title: "Login successful",
+        duration: 3000,
+      })
+    } catch (error) {
+      console.error("Error connecting wallet in SigninDropdown", error)
+      // If an error occurs, likely due to a first-time connection, display the authorization modal
+      setDisplaySigninDialog(false)
+      setDisplayAutorizationProcess(true)
+    } finally {
+      setIsLoading(false)
     }
-  }, [isSuccess, handleLoginSuccess])
-
+  }
+  
   return (
     <>
       <Dialog

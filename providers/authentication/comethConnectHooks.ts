@@ -55,14 +55,12 @@ export const useConnectComethWallet = () => {
           throw new Error("Invalid wallet address. Please contact support")
         }
         await connect({ connector })
-        // console.log("Connected to wallet")
-        // console.log("Account", account)
-        // if (account.isConnected && account.address !== walletAddress) {
-        //   // disconnect()
-        //   throw new Error(
-        //     "Your Cosmik wallet address doesn't match the one stored in your browser. Please contact support"
-        //   )
-        // }
+        if (account.isConnected && account.address !== walletAddress) {
+          disconnect()
+          throw new Error(
+            "Your Cosmik wallet address doesn't match the one stored in your browser. Please contact support."
+          )
+        }
       } catch (error) {
         console.error("Error connecting wallet", error)
       }
@@ -102,7 +100,7 @@ export const useConnectComethWallet = () => {
       try {
         await walletDisconnect({ connector: account.connector })
         await cosmikDisconnect()
-        // window.localStorage.removeItem("walletAddress")
+        window.localStorage.removeItem("walletAddress")
         setUser(null)
         setUserIsFullyConnected(false)
       } catch (e) {
