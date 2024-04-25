@@ -64,6 +64,8 @@ export function AccountBalanceLine({
   currency,
   logo,
 }: AccountBalanceLineProps) {
+  console.log("balance", balance)
+
   const logoSrc =
     typeof logo === "string" ? logo : logo?.native || logo?.wrapped
   return (
@@ -81,11 +83,9 @@ export function AccountBalanceLine({
       <span className="text-[15px] font-semibold">
         {balance} {currency}
       </span>
-      {balance !== "0" && (
-        <span>
-          (<FiatPrice amount={balance} />)
-        </span>
-      )}
+      <span>
+        (<FiatPrice amount={balance} />)
+      </span>
     </div>
   )
 }
