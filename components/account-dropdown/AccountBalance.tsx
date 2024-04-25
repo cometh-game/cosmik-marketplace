@@ -84,7 +84,9 @@ export function AccountBalanceLine({
         {balance} {currency}
       </span>
       <span>
-        (<FiatPrice amount={balance} />)
+        {balance !== "0.0" && (
+          (<FiatPrice amount={balance} />)
+        )}
       </span>
     </div>
   )
