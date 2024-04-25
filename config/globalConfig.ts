@@ -1,10 +1,14 @@
-import { manifest } from "@/manifests"
-import { Address, parseEther } from "viem"
+import { manifest } from "@/manifests/manifests"
+import { CollectionUiSettings } from "@/manifests/types"
+import { Address } from "viem"
+import { z } from "zod"
 
 import networks, { NetworkConfig } from "@/config/networks"
 
 type GlobalConfig = {
-  contractAddress: Address
+  contractAddresses: Address[]
+  defaultContractAddress: Address
+  shipsContractAddress: Address
   useNativeForOrders: boolean
   ordersErc20: {
     name: string
@@ -32,16 +36,26 @@ type GlobalConfig = {
     inputMaxDecimals: number
     nativeTokenDecimals: number
   }
+  coinGeckoId?: string
+  collectionSettingsByAddress: Record<Address, CollectionUiSettings>
 }
 
 export const NATIVE_TOKEN_ADDRESS_AS_ERC20 =
   "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" as Address
 
-const { useNativeTokenForOrders } = manifest
+const { useNativeTokenForOrders, contractAddress } = manifest
 
-if (!manifest.contractAddress || manifest.contractAddress.indexOf("0x") !== 0) {
-  throw new Error("Contract address is not correctly defined in the manifest")
-}
+const addressSchema = z
+  .string()
+  .regex(/^0x[a-fA-F0-9]{40}$/, "Invalid address format")
+const manifestAddressSchema = z
+  .array(addressSchema)
+  .min(1)
+  .or(addressSchema.transform((v) => [v]))
+const globalConfigContractAddresses = manifestAddressSchema
+  .parse(contractAddress)
+  .map((address) => address.toLowerCase() as Address)
+
 if (!useNativeTokenForOrders && !manifest.erc20) {
   throw new Error(
     "Incompatible settings. erc20 should be defined if useNativeTokenForOrders is false "
@@ -60,6 +74,13 @@ const ordersErc20 = {
   address: rawOrdersErc20.address as Address,
 }
 
+const coinId =
+  !useNativeTokenForOrders &&
+  manifest.erc20 !== null &&
+  manifest.fiatCurrency?.enable
+    ? manifest.erc20.coinGeckoId
+    : network.nativeToken.id
+
 const ordersDisplayCurrency = {
   name: ordersErc20.name,
   symbol: ordersErc20.symbol,
@@ -73,8 +94,23 @@ if (useNativeTokenForOrders) {
 
 const minimumBalanceForGas = network.minimumBalanceForGas
 
+const DEFAULT_COLLECTION_SETTINGS: CollectionUiSettings = {
+  imageAspectRatio: 1,
+  floorPriceAttributeTypes: []
+}
+let collectionSettingsByAddress: Record<Address, CollectionUiSettings> = {}
+contractAddress.forEach((address) => {
+  const manifestConfig = manifest.collectionSettingsByAddress[address]
+  collectionSettingsByAddress[address.toLowerCase() as Address] = {
+    ...DEFAULT_COLLECTION_SETTINGS,
+    ...manifestConfig,
+  }
+})
+
 const globalConfig: GlobalConfig = {
-  contractAddress: manifest.contractAddress as Address,
+  contractAddresses: globalConfigContractAddresses as Address[],
+  defaultContractAddress: globalConfigContractAddresses[0] as Address,
+  shipsContractAddress: manifest.shipsContractAddress as Address,
   useNativeForOrders: useNativeTokenForOrders,
   ordersErc20: {
     name: ordersErc20.name,
@@ -91,10 +127,12 @@ const globalConfig: GlobalConfig = {
   areContractsSponsored: manifest.areContractsSponsored,
   minimumBalanceForGas,
   decimals: {
-    displayMaxSmallDecimals: 4,
-    inputMaxDecimals: 18,
-    nativeTokenDecimals: 18
+    displayMaxSmallDecimals: 6,
+    inputMaxDecimals: 4,
+    nativeTokenDecimals: 18,
   },
+  coinGeckoId: coinId,
+  collectionSettingsByAddress,
 }
 
 export default globalConfig

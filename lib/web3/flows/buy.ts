@@ -1,20 +1,19 @@
-import { fetchNeedsMoreAllowance } from "@/services/allowance/needs-more-allowance"
-import { fetchHasEnoughGas } from "@/services/balance/has-enough-gas"
-import { fetchNeedsToUnwrap } from "@/services/exchange/needs-to-unwrap"
-// import { useLoader } from "@/services/loaders"
-import { AssetWithTradeDataCore } from "@cometh/marketplace-sdk"
+import { useIsComethConnectWallet } from "@/providers/authentication/comethConnectHooks"
+import { fetchNeedsMoreAllowance } from "@/services/allowance/allowanceService"
+import { fetchHasSufficientFunds } from "@/services/balance/fundsService"
+import { fetchHasEnoughGas } from "@/services/balance/gasService"
+import { fetchNeedsToUnwrap } from "@/services/exchange/unwrapService"
+import { AssetWithTradeData, AssetWithTradeDataCore, SearchAssetWithTradeData } from "@cometh/marketplace-sdk"
 import { useQuery } from "@tanstack/react-query"
 import { BigNumber } from "ethers"
 import { Address } from "viem"
+import { useAccount } from "wagmi"
 
 import globalConfig from "@/config/globalConfig"
 import { useStepper } from "@/lib/utils/stepper"
 
-import { fetchHasSufficientFunds } from "../../../services/balance/has-sufficient-funds"
-import { useCurrentViewerAddress, useIsComethWallet } from "../auth"
-
 export type UseRequiredBuyingStepsOptions = {
-  asset: AssetWithTradeDataCore
+  asset: AssetWithTradeData | SearchAssetWithTradeData
 }
 
 export type BuyingStepValue = "add-funds" | "buy" | "confirmation"
@@ -27,7 +26,7 @@ export type BuyingStep = {
 const defaultSteps: BuyingStep[] = [{ label: "Payment", value: "buy" }]
 
 export type FetchRequiredBuyingStepsOptions = {
-  asset: AssetWithTradeDataCore
+  asset: AssetWithTradeData | SearchAssetWithTradeData
   address: Address
   wrappedContractAddress: Address
   isComethWallet: boolean
@@ -61,10 +60,10 @@ export const fetchRequiredBuyingSteps = async ({
     price,
   })
   const displayAddFundsStep = !missingFundsData?.hasSufficientFunds
-
   const needsToUnwrapData = await fetchNeedsToUnwrap({
     address,
     price,
+    isComethWallet
   })
   const displayAddUnwrappedNativeTokenStep =
     needsToUnwrapData.needsToUnwrap &&
@@ -84,15 +83,15 @@ export const fetchRequiredBuyingSteps = async ({
     displayAllowanceStep && { value: "allowance", label: "Permissions" },
     ...defaultSteps,
   ].filter(Boolean) as BuyingStep[]
-
   return buyingSteps
 }
 
 export const useRequiredBuyingSteps = ({
   asset,
 }: UseRequiredBuyingStepsOptions) => {
-  const viewerAddress = useCurrentViewerAddress()
-  const isComethWallet = useIsComethWallet()
+  const account = useAccount()
+  const viewerAddress = account.address
+  const isComethWallet = useIsComethConnectWallet()
   return useQuery({
     queryKey: ["requiredBuyingSteps", asset, viewerAddress],
     queryFn: async () => {
@@ -105,7 +104,6 @@ export const useRequiredBuyingSteps = ({
         wrappedContractAddress: globalConfig.network.wrappedNativeToken.address,
         isComethWallet,
       })
-
       return steps
     },
 
@@ -114,7 +112,7 @@ export const useRequiredBuyingSteps = ({
 }
 
 export type UseBuyAssetButtonOptions = {
-  asset: AssetWithTradeDataCore
+  asset: AssetWithTradeData | SearchAssetWithTradeData
 }
 
 export const useBuyAssetButton = ({ asset }: UseBuyAssetButtonOptions) => {

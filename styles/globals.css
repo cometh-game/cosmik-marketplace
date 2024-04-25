@@ -62,11 +62,6 @@
   --ring: 215 20.2% 65.1%;
 
   --radius: 4px;
-
-  /* Onboard custom styles */
-
-  /* --account-select-modal-font-family-normal: 'font-chakra-petch'; */
-  --onboard-modal-z-index: 100;
 }
 
 @layer base {
@@ -306,11 +301,11 @@ table tbody tr > td:last-child:after {
 }
 
 /* Fix Gas fees Connect Wallet */
-/* #cometh-gas-modal-wrapper {
+#cometh-gas-modal-wrapper {
   pointer-events: auto;
   position: fixed;
   z-index: 1000;
-} */
+}
 
 /* Inputs */
 input:-webkit-autofill,
@@ -321,4 +316,9 @@ input:-webkit-autofill:active {
   -webkit-text-fill-color: white;
   transition: background-color 5000s ease-in-out 0s;
   box-shadow: inset 0 0 20px 20px var(--input);
+}
+
+/* Custom styles */
+#transakCloseIcon {
+  background: inherit !important;
 }
