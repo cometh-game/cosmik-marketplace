@@ -29,10 +29,11 @@ export const RefreshStep: React.FC<RefreshStepProps> = ({
       })
       onValid()
     } catch (error: any) {
+      console.log("Error on refreshing", error?.message)
       toast({
         title: "Something went wrong",
-        description: error?.message || "Please try again",
-        variant: "destructive",
+        description: "Please try again",
+        // variant: "destructive",
       })
     } finally {
       setIsLoading(false)
@@ -42,7 +43,7 @@ export const RefreshStep: React.FC<RefreshStepProps> = ({
   return (
     <>
       <p className="text-muted-foreground">
-        Please log-in to Cosmik Battle and validate this device to retrieve your
+        Please log-in to Cosmik Battle (the game) and validate this device to retrieve your
         items. Once this device is validated, please press refresh to update
         your inventory.
       </p>
