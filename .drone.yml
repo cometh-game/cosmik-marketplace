@@ -165,7 +165,7 @@ steps:
       NEXT_PUBLIC_CONTRACT_ADDRESS:
         from_secret: prod_contract_address
       NEXT_PUBLIC_CONTRACT_ADDRESS_SHIPS:
-      from_secret: prod_contract_address_ships
+        from_secret: prod_contract_address_ships
       NEXT_PUBLIC_NETWORK_ID:
         from_secret: prod_network_id
       NEXT_PUBLIC_RPC_URL:
