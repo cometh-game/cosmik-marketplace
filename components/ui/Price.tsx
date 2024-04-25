@@ -89,6 +89,7 @@ const PriceTrigger = forwardRef<HTMLSpanElement, PriceTriggerProps>(
       <span
         ref={ref}
         className={cn(
+          `${fiatPriceNewLine ? "inline-flex gap-x-1" : ""}`,
           priceTriggerVariants({ size, variant, className, fontWeight })
         )}
       >
