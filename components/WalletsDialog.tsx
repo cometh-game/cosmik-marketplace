@@ -74,7 +74,7 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
     }
 
     updateWallets()
-  }, [user.address, user.externalAddresses])
+  }, [user?.address, user?.externalAddresses])
 
   useEffect(() => {
     if (walletAddress) {
@@ -113,6 +113,10 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
       if (!walletAddress) {
         throw new Error("No wallet")
       }
+      // const walletExists = wallets.some(wallet => wallet.address === walletAddress);
+      // if (walletExists) {
+      //   throw new Error("This wallet address has already been added.");
+      // }
       const { nonce } = await getUserNonceAsync({ walletAddress })
       const message = await createMessage({
         nonce,
@@ -155,7 +159,7 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
             {loading ? (
               <Loading />
             ) : (
-              <WalletList wallets={wallets} mainAddress={user.address} />
+              <WalletList wallets={wallets} mainAddress={user?.address} />
             )}
           </ul>
           <div className="text-muted-foreground">

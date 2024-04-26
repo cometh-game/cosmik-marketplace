@@ -66,7 +66,7 @@ export const UserAuthProvider = ({
           await connectComethWallet(userLogged.address)
           setUserIsFullyConnected(true)
         } catch (error) {
-          console.error("Erreur lors de la connexion au wallet", error)
+          console.error("Error reconnecting wallet", error)
           setUserIsFullyConnected(false)
         }
       }

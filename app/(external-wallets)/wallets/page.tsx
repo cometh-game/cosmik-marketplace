@@ -1,8 +1,7 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import dynamic from "next/dynamic"
-import { useConnectComethWallet } from "@/providers/authentication/comethConnectHooks"
 import { useUserAuthContext } from "@/providers/userAuth"
 import { User } from "@/services/cosmik/signinService"
 
@@ -26,7 +25,7 @@ const DynamicWalletsDialog = dynamic(
 )
 
 export default function WalletsPage() {
-  const { userIsReconnecting, userIsFullyConnected, getUser, setUser } =
+  const { userIsReconnecting, userIsFullyConnected, getUser, setUser, setUserIsFullyConnected } =
     useUserAuthContext()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -39,15 +38,16 @@ export default function WalletsPage() {
           title: "Login successful",
           duration: 3000,
         })
+        setUserIsFullyConnected(true)
       } catch (error) {
         console.error("Error connecting wallet", error)
       } finally {
         setIsLoading(false)
       }
     },
-    [setUser]
+    [setUser, setUserIsFullyConnected]
   )
-  
+
   return (
     <div className="container mx-auto flex items-center justify-center gap-4 py-5 sm:py-6">
       {userIsReconnecting && <Loading />}

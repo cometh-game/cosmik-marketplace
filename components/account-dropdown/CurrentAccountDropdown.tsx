@@ -46,7 +46,7 @@ export function CurrentAccountDropdown({
           {!isMobile && (isFetchingUsername ? (
                     <span>...</span>
                   ) : (
-                    <span>@{user.userName}</span>
+                    <span>@{user?.userName}</span>
                   ))}
         </Button>
       </DropdownMenuTrigger>

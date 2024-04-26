@@ -17,12 +17,11 @@ import { useUserAuthContext } from "@/providers/userAuth"
 export function AccountLogoutAction() {
   const { disconnect } = useConnectComethWallet()
   const { push } = useRouter()
-  const { getUser } = useUserAuthContext()
 
   const handleLogout = useCallback(async () => {
     await disconnect()
-    push("/nfts")
-  }, [disconnect, push])
+    // push("/nfts")
+  }, [disconnect])
 
   return (
     <div className="absolute right-4 top-4">
