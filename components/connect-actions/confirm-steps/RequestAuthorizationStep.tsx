@@ -21,7 +21,7 @@ export const RequestAuthorizationStep: React.FC<
     try {
       const signerRequest = await initNewSignerRequest(userAddress)
       const response = await cosmikClient.post(
-        "new-signer-request",
+        "/new-signer-request",
         signerRequest
       )
       if (response.data.success) {
