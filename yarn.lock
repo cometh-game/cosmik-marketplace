@@ -409,22 +409,22 @@
     preact "^10.16.0"
     sha.js "^2.4.11"
 
-"@cometh/connect-sdk-viem@2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@cometh/connect-sdk-viem/-/connect-sdk-viem-2.0.1.tgz#c807793f72636361be849bade0fd7391f5849350"
-  integrity sha512-FUNDESvy37hsWlaTg26GrEMVyGGitXHUp/9fD4t0BRCH+vZ9sKis3o7q0iz++KUs4+UsvUpcOVuuHr++Hz2Xvw==
+"@cometh/connect-sdk-viem@2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@cometh/connect-sdk-viem/-/connect-sdk-viem-2.0.3.tgz#76e8997cb06820861b7c03212ebb4d44d293b540"
+  integrity sha512-vMplRJ8vwq1r/D93DU4HkncBdGOM7zZ0h45cE27JIkHx6Sx+jbFQ+qrBBGSWkAt+pYGWrSlXQdX4uMpxsl3ilQ==
   dependencies:
     "@babel/traverse" "^7.23.4"
-    "@cometh/connect-sdk" "^1.2.16"
+    "@cometh/connect-sdk" "^1.2.20"
     "@rainbow-me/rainbowkit" "^2"
     "@types/babel__core" "^7.20.0"
     viem "^2"
     wagmi "^2"
 
-"@cometh/connect-sdk@^1.2.16":
-  version "1.2.18"
-  resolved "https://registry.yarnpkg.com/@cometh/connect-sdk/-/connect-sdk-1.2.18.tgz#14c606e414727e2970394d717553ea1ac401d20c"
-  integrity sha512-7c39wVarvd+zI6pw0ANo87Ka26j5b3+crINgnzLxFnL79XeIWk7q4nTOzYIOqfS1VWTW+mIohI0hq0P2RObOqg==
+"@cometh/connect-sdk@^1.2.20":
+  version "1.2.20"
+  resolved "https://registry.yarnpkg.com/@cometh/connect-sdk/-/connect-sdk-1.2.20.tgz#07d1afaafe2af709f7fd165a28bd46775aae683b"
+  integrity sha512-QbOXBqTP6o5LvV0G506/3wx19creZmK/sFnorWotL/r4GtrCK2s0oBnpB5G6m7NONRBcPw81ftyZ2fgW3nookg==
   dependencies:
     "@alembic/ui" "^1.5.4"
     "@babel/traverse" "^7.23.4"
