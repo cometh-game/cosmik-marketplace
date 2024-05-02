@@ -42,6 +42,7 @@ ARG NEXT_PUBLIC_COINGECKO_API_KEY
 ARG NEXT_PUBLIC_TRANSAK_API_KEY
 ARG NEXT_PUBLIC_COMETH_ONRAMP_URI
 ARG NEXT_PUBLIC_COMETH_ONRAMP_API_KEY
+ARG NEXT_PUBLIC_BUGSNAG_API_KEY
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
