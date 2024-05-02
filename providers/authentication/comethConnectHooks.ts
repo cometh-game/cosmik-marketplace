@@ -92,7 +92,7 @@ export const useConnectComethWallet = () => {
     const adaptor = new ConnectAdaptor({
       chainId: chainId,
       apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
-      // baseUrl: env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL!,
+      baseUrl: env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL!,
     })
     const wallet = new ComethWallet({
       authAdapter: adaptor,
