@@ -69,11 +69,13 @@ export const useConnectComethWallet = () => {
   )
 
   const initNewSignerRequest = useCallback(async (walletAddress: string) => {
+    if (!isAddress(walletAddress)) {
+      throw new Error("Invalid wallet address.")
+    }
     const adaptor = new ConnectAdaptor({
       chainId: numberToHex(env.NEXT_PUBLIC_NETWORK_ID) as SupportedNetworks,
       apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
     })
-
     try {
       const addSignerRequest = await adaptor.initNewSignerRequest(walletAddress)
       return addSignerRequest
@@ -83,6 +85,9 @@ export const useConnectComethWallet = () => {
   }, [])
 
   const retrieveWalletAddress = useCallback(async (walletAddress: string) => {
+    if (!isAddress(walletAddress)) {
+      throw new Error("Invalid wallet address.")
+    }
     const adaptor = new ConnectAdaptor({
       chainId: chainId,
       apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,

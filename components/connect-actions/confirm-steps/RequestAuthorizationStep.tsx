@@ -20,6 +20,10 @@ export const RequestAuthorizationStep: React.FC<
     setIsLoading(true)
     try {
       const signerRequest = await initNewSignerRequest(userAddress)
+      if (!signerRequest) {
+        console.error("Error initializing new signer request")
+        throw new Error("Error initializing new signer request")
+      }
       const response = await cosmikClient.post(
         "/new-signer-request",
         signerRequest
