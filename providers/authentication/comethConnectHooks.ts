@@ -74,7 +74,7 @@ export const useConnectComethWallet = () => {
     }
     
     const adaptor = new ConnectAdaptor({
-      chainId: numberToHex(env.NEXT_PUBLIC_NETWORK_ID) as SupportedNetworks,
+      chainId: chainId,
       apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
     })
     try {
