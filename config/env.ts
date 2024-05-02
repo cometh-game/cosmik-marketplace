@@ -51,6 +51,8 @@ const client = z.object({
   NEXT_PUBLIC_TRANSAK_API_KEY: z.string().min(1),
   NEXT_PUBLIC_COMETH_ONRAMP_URI: z.string().url(),
   NEXT_PUBLIC_COMETH_ONRAMP_API_KEY: z.string().min(1),
+
+  NEXT_PUBLIC_BUGSNAG_API_KEY: z.string().min(1).optional(),
 })
 
 /**
@@ -92,6 +94,8 @@ const processEnv: Record<
   NEXT_PUBLIC_COMETH_ONRAMP_URI: process.env.NEXT_PUBLIC_COMETH_ONRAMP_URI,
   NEXT_PUBLIC_COMETH_ONRAMP_API_KEY:
     process.env.NEXT_PUBLIC_COMETH_ONRAMP_API_KEY,
+
+  NEXT_PUBLIC_BUGSNAG_API_KEY: process.env.NEXT_PUBLIC_BUGSNAG_API_KEY,
 }
 
 // Don't touch the part below
