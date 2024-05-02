@@ -1,7 +1,6 @@
 "use client"
 
 import { useAttributeFilters } from "@/services/cometh-marketplace/filtersService"
-// import { useUsername } from "@/services/user/userNameService"
 import { ArrowLeftIcon, UserIcon } from "lucide-react"
 import { Address } from "viem"
 
@@ -20,9 +19,7 @@ export default function ProfilePage({
   params: { address: Address }
 }) {
   const attributesFilters = useAttributeFilters()
-  // const { username, isFetchingUsername } = useUsername(params.address)
   const { user, isFetching: isFetchingUsername } = useGetUser(params.address)
-  console.log('user', user)
   const userName =
   user?.userName && !isFetchingUsername
       ? `@${user.userName}`
