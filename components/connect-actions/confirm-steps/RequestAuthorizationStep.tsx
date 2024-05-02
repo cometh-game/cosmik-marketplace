@@ -1,25 +1,27 @@
 import React, { useState } from "react"
 import { useConnectComethWallet } from "@/providers/authentication/comethConnectHooks"
+import Bugsnag from "@bugsnag/js"
 
 import { cosmikClient } from "@/lib/clients"
 import { Button } from "@/components/ui/Button"
 import { toast } from "@/components/ui/toast/hooks/useToast"
+import { User } from "@/services/cosmik/signinService"
 
 export type RequestAuthorizationStepProps = {
-  userAddress: string
+  user: User
   onValid: () => void
 }
 
 export const RequestAuthorizationStep: React.FC<
   RequestAuthorizationStepProps
-> = ({ userAddress, onValid }) => {
+> = ({ user, onValid }) => {
   const { initNewSignerRequest } = useConnectComethWallet()
   const [isLoading, setIsLoading] = useState(false)
 
   const handleNewSignerRequest = async () => {
     setIsLoading(true)
     try {
-      const signerRequest = await initNewSignerRequest(userAddress)
+      const signerRequest = await initNewSignerRequest(user.address)
       if (!signerRequest) {
         console.error("Error initializing new signer request")
         throw new Error("Error initializing new signer request")
@@ -32,6 +34,10 @@ export const RequestAuthorizationStep: React.FC<
         onValid()
       }
     } catch (error: any) {
+      Bugsnag.addOnError(function (event) {
+        event.context = "User Login - Authorization Request"
+        event.addMetadata("user", user)
+      })
       toast({
         title: "Error sending the authorization request",
         description: error?.message || "Please try again",

@@ -25,8 +25,13 @@ const DynamicWalletsDialog = dynamic(
 )
 
 export default function WalletsPage() {
-  const { userIsReconnecting, userIsFullyConnected, getUser, setUser, setUserIsFullyConnected } =
-    useUserAuthContext()
+  const {
+    userIsReconnecting,
+    userIsFullyConnected,
+    getUser,
+    setUser,
+    setUserIsFullyConnected,
+  } = useUserAuthContext()
   const [isLoading, setIsLoading] = useState(false)
 
   const handleLoginSuccess = useCallback(

@@ -40,7 +40,7 @@ export function NotListedProductBlock({ asset }: NotListedProductBlockProps) {
           <UserLink
             variant="link"
             className="mt-0.5"
-            user={{ address: asset.owner as Address, username: user.username }}
+            user={{ address: asset.owner as Address, username: user?.userName }}
           />
         )}
       </ProductBlockDividedColumn>

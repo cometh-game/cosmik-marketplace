@@ -1,8 +1,9 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import { useConnectComethWallet } from "@/providers/authentication/comethConnectHooks"
 import { useCosmikSignin, User } from "@/services/cosmik/signinService"
+import Bugsnag from "@bugsnag/js"
 import { cx } from "class-variance-authority"
 import { WalletIcon } from "lucide-react"
 
@@ -60,12 +61,18 @@ export function SigninDropdown({
         await retrieveWalletAddress(user.address)
         // If passkey signer is found for this address, connect the wallet
         await connectComethWallet(user.address)
+        // Bugsnag.setUser(user.id, user.email, user.userName)
         toast({
           title: "Login successful",
           duration: 3000,
         })
       } catch (error) {
         console.error("Error connecting wallet in SigninDropdown", error)
+        Bugsnag.addOnError(function (event) {
+          event.context = "User Login"
+          event.addMetadata("user", user)
+        })
+        Bugsnag.clearMetadata("user")
         // If an error occurs, likely due to a first-time connection, display the authorization modal
         setDisplaySigninDialog(false)
         setDisplayAutorizationProcess(true)
@@ -73,7 +80,7 @@ export function SigninDropdown({
         setIsLoading(false)
       }
     },
-    [connectComethWallet]
+    [connectComethWallet, retrieveWalletAddress]
   )
 
   return (

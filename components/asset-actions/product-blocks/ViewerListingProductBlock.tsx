@@ -61,7 +61,7 @@ export function ViewerListingProductBlock({ asset }: SellProductBlockProps) {
           <UserLink
             variant="link"
             // className="mt-1"
-            user={{ address: asset.owner as Address, username: user.userName }}
+            user={{ address: asset.owner as Address, username: user?.userName }}
           />
         )}
       </ProductBlockDividedColumn>

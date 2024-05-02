@@ -56,12 +56,17 @@ export function AuthorizationProcess({
         <Switch value={currentStep.value}>
           <Case value="request-authorization">
             <RequestAuthorizationStep
-              userAddress={user.address}
+              user={user}
+              // userAddress={user.address}
               onValid={nextStep}
             />
           </Case>
           <Case value="refresh">
-            <RefreshStep userAddress={user.address} onValid={nextStep} />
+            <RefreshStep
+              user={user}
+              // userAddress={user.address}
+              onValid={nextStep}
+            />
           </Case>
           <Case value="confirm">
             <ConfirmStep userAddress={user.address} onValid={onClose} />
