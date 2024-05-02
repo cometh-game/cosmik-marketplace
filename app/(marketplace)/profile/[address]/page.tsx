@@ -22,8 +22,9 @@ export default function ProfilePage({
   const attributesFilters = useAttributeFilters()
   // const { username, isFetchingUsername } = useUsername(params.address)
   const { user, isFetching: isFetchingUsername } = useGetUser(params.address)
+  console.log('user', user)
   const userName =
-  user.userName && !isFetchingUsername
+  user?.userName && !isFetchingUsername
       ? `@${user.userName}`
       : shortenAddress(params.address)
 
