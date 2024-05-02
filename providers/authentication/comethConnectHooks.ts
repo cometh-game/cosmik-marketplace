@@ -84,7 +84,7 @@ export const useConnectComethWallet = () => {
     } catch (error) {
       console.error("Error initializing new signer request", error)
     }
-  }, [])
+  }, [chainId])
 
   const retrieveWalletAddress = useCallback(async (walletAddress: string) => {
     if (!isAddress(walletAddress)) {
