@@ -2,9 +2,6 @@ import { useState } from "react"
 import { useConnectComethWallet } from "@/providers/authentication/comethConnectHooks"
 import { useUserAuthContext } from "@/providers/userAuth"
 
-// import { useConnectComethWallet } from "@/providers/authentication/comethConnectHooks"
-// import { useUserAuthContext } from "@/providers/userAuth"
-
 import { Button } from "@/components/ui/Button"
 import { Label } from "@/components/ui/Label"
 import { Switch } from "@/components/ui/Switch"

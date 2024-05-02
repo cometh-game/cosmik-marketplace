@@ -33,9 +33,10 @@ export const RefreshStep: React.FC<RefreshStepProps> = ({
       onValid()
     } catch (error: any) {
       console.log("Error on refreshing", error?.message)
-      Bugsnag.addOnError(function (event) {
-        event.context = "User Login - Refresh Authorization Request"
-        event.addMetadata("user", user)
+      Bugsnag.notify(error as Error, function (report) {
+        report.context = "User Login - Refresh Authorization Request"
+        report.setUser(user.id, user.email, user.userName)
+        report.addMetadata("user", user)
       })
       toast({
         title: "Something went wrong",
