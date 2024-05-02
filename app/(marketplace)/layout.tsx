@@ -13,7 +13,6 @@ import { SiteHeader } from "@/components/SiteHeader"
 Bugsnag.start({
   apiKey: env.NEXT_PUBLIC_BUGSNAG_API_KEY!,
   plugins: [new BugsnagPluginReact()],
-  enabledReleaseStages: ["production"],
 })
 // BugsnagPerformance.start({ apiKey: env.NEXT_PUBLIC_BUGSNAG_API_KEY! })
 
