@@ -24,7 +24,7 @@ export type NotListedProductBlockProps = {
 export function NotListedProductBlock({ asset }: NotListedProductBlockProps) {
   // const { username, isFetchingUsername } = useUsername(asset.owner as Address)
   const { user, isFetching: isFetchingUsername } = useGetUser(asset.owner as Address)
-
+  console.log('user', user)
   return (
     <ProductBlockContainer>
       <ProductBlockDividedColumn>

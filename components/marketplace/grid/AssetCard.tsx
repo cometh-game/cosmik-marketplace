@@ -120,7 +120,7 @@ export function AssetCardBase({
           isOwnerAsset && "bg-[#f4f2e8]/[.02]"
         )}
       >
-        <div className="relative w-1/3 sm:w-full">
+        <div className="relative  sm:w-full">
           <Link
             href={`/nfts/${asset.contractAddress}/${asset.tokenId}`}
             className={cn(isHovered.value && "brightness-90", "block h-full")}
@@ -137,7 +137,7 @@ export function AssetCardBase({
                 height={380}
                 width={320}
                 className={cn("z-20 size-full rounded-lg object-contain", {
-                  "p-8": isCardbacksAsset,
+                  "p-3 sm:p-8": isCardbacksAsset,
                 })}
               />
             </AssetImageContainer>
@@ -153,14 +153,14 @@ export function AssetCardBase({
           </div>
         </div>
 
-        <div className={cn("h-full w-2/3 sm:w-full")}>
+        <div className={cn("h-full  sm:w-full")}>
           <Link
             href={`/nfts/${asset.contractAddress}/${asset.tokenId}`}
-            className={cn(
-              "flex h-full flex-nowrap font-medium text-white "
-            )}
+            className={cn("flex h-full flex-nowrap font-medium text-white ")}
           >
-            <div className="w-full pl-2 sm:p-5">{children}</div>
+            <div className="flex w-full flex-col justify-center pl-2 sm:p-5 ">
+              <div>{children}</div>
+            </div>
           </Link>
         </div>
       </Card>
@@ -198,7 +198,7 @@ export function AssetCard({ asset, children }: AssetCardProps) {
             {asset.metadata.name ? asset.metadata.name : "Unknown NFT"}
           </span>
         </Link>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3">
           <div>
             <div className="text-sm font-medium">Price</div>
             {asset.orderbookStats.lowestListingPrice ? (
@@ -209,7 +209,7 @@ export function AssetCard({ asset, children }: AssetCardProps) {
                 shouldDisplayFiatPrice={true}
                 fiatPriceNewLine={true}
               />
-            ): (
+            ) : (
               "No for sale yet"
             )}
           </div>
@@ -249,23 +249,15 @@ function renderAssetActions(
     buttonText = "Buy now "
   } else if (!isOwnerAsset) {
     button = (
-      <MakeBuyOfferButton
-        asset={asset as unknown as AssetWithTradeData}
-      />
+      <MakeBuyOfferButton asset={asset as unknown as AssetWithTradeData} />
     )
     buttonText = "Make an offer"
   } else if (!asset.orderbookStats.lowestListingPrice) {
-    button = (
-      <SellAssetButton
-        asset={asset as unknown as AssetWithTradeData}
-      />
-    )
+    button = <SellAssetButton asset={asset as unknown as AssetWithTradeData} />
     buttonText = "Sell now"
   } else {
     button = (
-      <CancelListingButton
-        asset={asset as unknown as AssetWithTradeData}
-      />
+      <CancelListingButton asset={asset as unknown as AssetWithTradeData} />
     )
     buttonText = "Cancel listing"
   }
