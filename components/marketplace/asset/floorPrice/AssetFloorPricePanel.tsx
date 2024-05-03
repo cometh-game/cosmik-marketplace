@@ -16,7 +16,7 @@ type AssetFloorPriceProps = {
 
 export default function AssetFloorPricePanel({ asset }: AssetFloorPriceProps) {
   const assetFloorPriceAttributes = useAssetFloorPriceAttributes(asset)
-  
+
   const { isLoading, floorPriceAsset } = useFloorPriceAsset(asset)
 
   console.log("assetFloorPriceAttributes", assetFloorPriceAttributes)
@@ -31,15 +31,16 @@ export default function AssetFloorPricePanel({ asset }: AssetFloorPriceProps) {
       <CardContent className="py-[22px]">
         <div className="">
           <div className="mb-2 font-semibold text-white">Floor price</div>
-          <div className="flex gap-4">
-            <div className="flex grow flex-wrap gap-2">
+          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+            <div className="flex grow flex-wrap items-center gap-2">
               {assetFloorPriceAttributes.map((attribute) => (
-                <Button
-                  key={attribute.trait_type}
-                  variant="secondary"
-                  size="sm"
-                  className="hover:bg-primary/60 cursor-default text-sm"
-                >
+                // <Button
+                //   key={attribute.trait_type}
+                //   variant="secondary"
+                //   size="sm"
+                //   className="hover:bg-primary/60 cursor-default text-sm"
+                // >
+                <div>
                   <span className="font-medium capitalize">
                     {attribute.trait_type}:
                   </span>{" "}
@@ -48,7 +49,8 @@ export default function AssetFloorPricePanel({ asset }: AssetFloorPriceProps) {
                       ? attribute.value.toString()
                       : JSON.stringify(attribute.value)}
                   </span>
-                </Button>
+                </div>
+                // </Button>
               ))}
             </div>
             <div>
