@@ -46,12 +46,14 @@ export function AssetFloorPriceDisplay({
       <div>
         {floorPriceAsset && floorPriceAsset.orderbookStats.lowestListingPrice ? (
           <Price
-            size="lg"
             amount={floorPriceAsset.orderbookStats.lowestListingPrice}
+            variant="accent"
+            isNativeToken={true}
             shouldDisplayFiatPrice={true}
+            fiatPriceNewLine={true}
           />
         ) : (
-          <div className="text-center  font-medium">No listing</div>
+          <div className="text-center font-medium">No listing</div>
         )}
       </div>
       <div>

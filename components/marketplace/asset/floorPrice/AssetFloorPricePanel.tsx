@@ -30,7 +30,7 @@ export default function AssetFloorPricePanel({ asset }: AssetFloorPriceProps) {
     <Card className="btn-default bg-primary/20 text-accent before:bg-primary/20 relative mt-4 after:content-none">
       <CardContent className="py-[22px]">
         <div className="">
-          <div className="mb-2 font-semibold">Floor price:</div>
+          <div className="mb-2 font-semibold text-white">Floor price</div>
           <div className="flex gap-4">
             <div className="flex grow flex-wrap gap-2">
               {assetFloorPriceAttributes.map((attribute) => (
@@ -38,12 +38,12 @@ export default function AssetFloorPricePanel({ asset }: AssetFloorPriceProps) {
                   key={attribute.trait_type}
                   variant="secondary"
                   size="sm"
-                  className="text-sm"
+                  className="hover:bg-primary/60 cursor-default text-sm"
                 >
-                  <span className="text-foreground/60 font-medium">
+                  <span className="font-medium capitalize">
                     {attribute.trait_type}:
                   </span>{" "}
-                  <span className="ml-1 font-medium  text-white">
+                  <span className="ml-1 font-medium text-white">
                     {attribute.value
                       ? attribute.value.toString()
                       : JSON.stringify(attribute.value)}

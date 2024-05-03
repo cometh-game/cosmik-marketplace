@@ -62,7 +62,7 @@ export const useFloorPriceAsset = (asset: AssetWithTradeData | undefined) => {
     attributes: attributeFilters,
     isOnSale: true,
     limit: 1,
-  })
+  }) 
   const floorPriceAsset = useMemo(() => {
     return floorPriceSearch.data?.assets[0]
   }, [floorPriceSearch.data?.assets])

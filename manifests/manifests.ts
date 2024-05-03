@@ -46,7 +46,7 @@ const manifest: Manifest = {
   authenticationUiType: AuthenticationUiLibrary.WEB3_MODAL,
   collectionSettingsByAddress: {
     "0xe2C1Cc5Bd04cf7DA0F5dAAb75406A8135e2c05Ad": {
-      floorPriceAttributeTypes: ["Name"],
+      floorPriceAttributeTypes: ["name"],
     },
   },
 }
