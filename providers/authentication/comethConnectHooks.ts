@@ -78,12 +78,8 @@ export const useConnectComethWallet = () => {
       apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
       baseUrl: env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL!,
     })
-    try {
-      const addSignerRequest = await adaptor.initNewSignerRequest(walletAddress)
-      return addSignerRequest
-    } catch (error) {
-      console.error("Error initializing new signer request", error)
-    }
+    
+    return await adaptor.initNewSignerRequest(walletAddress)
   }, [chainId])
 
   const retrieveWalletAddress = useCallback(async (walletAddress: string) => {
