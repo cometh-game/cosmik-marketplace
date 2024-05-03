@@ -17,21 +17,13 @@ export type SellAssetButtonProps = {
   asset: AssetWithTradeData | SearchAssetWithTradeData
 } & React.ComponentProps<typeof ButtonLoading>
 
-export function SellAssetButton({
-  asset,
-  size = "lg"
-}: SellAssetButtonProps) {
+export function SellAssetButton({ asset, size = "lg" }: SellAssetButtonProps) {
   const [open, setOpen] = useState(false)
   const { requiredSteps, isLoading, currentStep, nextStep, reset } =
     useSellAssetButton({ asset })
 
   if (isLoading) {
-    return (
-      <ButtonLoading
-        size={size}
-        variant="default"
-      />
-    )
+    return <ButtonLoading size={size} variant="default" />
   }
 
   if (!requiredSteps?.length || !currentStep) return null
@@ -56,7 +48,11 @@ export function SellAssetButton({
           <AddGasStep onValid={nextStep} />
         </Case>
         <Case value="token-approval">
-          <CollectionApprovalStep asset={asset} onValid={nextStep} />
+          <CollectionApprovalStep
+            contractAddress={asset.contractAddress}
+            tokenId={asset.tokenId}
+            onValid={nextStep}
+          />
         </Case>
         <Case value="sell">
           <SellStep asset={asset} onClose={closeDialog} />

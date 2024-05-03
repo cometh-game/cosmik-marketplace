@@ -2,19 +2,22 @@ import { useState } from "react"
 
 import { BuyOffer } from "@/types/buy-offers"
 import { useAcceptBuyOfferAssetButton } from "@/lib/web3/flows/acceptBuyOffer"
+import { Button } from "@/components/ui/Button"
 import { TransactionDialogButton } from "@/components/TransactionDialogButton"
 import { Case, Switch } from "@/components/utils/Switch"
 
 import { AddGasStep } from "../transaction-steps/AddGasStep"
 import { CollectionApprovalStep } from "../transaction-steps/CollectionApprovalStep"
 import { ConfirmAcceptBuyOfferStep } from "../transaction-steps/ConfirmAcceptBuyOfferStep"
-import { Button } from "@/components/ui/Button"
 
 export type AcceptBuyOfferButtonProps = {
   offer: BuyOffer
 } & React.ComponentProps<typeof Button>
 
-export function AcceptBuyOfferButton({ offer, size }: AcceptBuyOfferButtonProps) {
+export function AcceptBuyOfferButton({
+  offer,
+  size,
+}: AcceptBuyOfferButtonProps) {
   const { requiredSteps, isLoading, currentStep, nextStep, reset } =
     useAcceptBuyOfferAssetButton({ offer })
   const [open, setOpen] = useState(false)
@@ -42,7 +45,8 @@ export function AcceptBuyOfferButton({ offer, size }: AcceptBuyOfferButtonProps)
         </Case>
         <Case value="token-approval">
           <CollectionApprovalStep
-            asset={offer.asset! || offer.trade}
+            contractAddress={offer.trade.tokenAddress}
+            tokenId={offer.trade.tokenId}
             onValid={nextStep}
           />
         </Case>
