@@ -3,7 +3,10 @@ import { fetchNeedsMoreAllowance } from "@/services/allowance/allowanceService"
 import { fetchHasSufficientFunds } from "@/services/balance/fundsService"
 import { fetchHasEnoughGas } from "@/services/balance/gasService"
 import { fetchNeedsToUnwrap } from "@/services/exchange/unwrapService"
-import { AssetWithTradeData, AssetWithTradeDataCore, SearchAssetWithTradeData } from "@cometh/marketplace-sdk"
+import {
+  AssetWithTradeData,
+  SearchAssetWithTradeData,
+} from "@cometh/marketplace-sdk"
 import { useQuery } from "@tanstack/react-query"
 import { BigNumber } from "ethers"
 import { Address } from "viem"
@@ -28,14 +31,14 @@ const defaultSteps: BuyingStep[] = [{ label: "Payment", value: "buy" }]
 export type FetchRequiredBuyingStepsOptions = {
   asset: AssetWithTradeData | SearchAssetWithTradeData
   address: Address
-  wrappedContractAddress: Address
+  // wrappedContractAddress: Address
   isComethWallet: boolean
 }
 
 export const fetchRequiredBuyingSteps = async ({
   asset,
   address,
-  wrappedContractAddress,
+  // wrappedContractAddress,
   isComethWallet,
 }: FetchRequiredBuyingStepsOptions) => {
   const rawPrice = asset.orderbookStats.lowestListingPrice
@@ -51,7 +54,8 @@ export const fetchRequiredBuyingSteps = async ({
     (await fetchNeedsMoreAllowance({
       address,
       price,
-      contractAddress: wrappedContractAddress,
+      // contractAddress: wrappedContractAddress,
+      contractAddress: globalConfig.ordersErc20.address,
       spender: globalConfig.network.zeroExExchange,
     }))
 
@@ -63,7 +67,7 @@ export const fetchRequiredBuyingSteps = async ({
   const needsToUnwrapData = await fetchNeedsToUnwrap({
     address,
     price,
-    isComethWallet
+    isComethWallet,
   })
   const displayAddUnwrappedNativeTokenStep =
     needsToUnwrapData.needsToUnwrap &&
@@ -101,9 +105,14 @@ export const useRequiredBuyingSteps = ({
       const steps = await fetchRequiredBuyingSteps({
         asset,
         address: viewerAddress,
-        wrappedContractAddress: globalConfig.network.wrappedNativeToken.address,
         isComethWallet,
       })
+      // const steps = await fetchRequiredBuyingSteps({
+      //   asset,
+      //   address: viewerAddress,
+      //   wrappedContractAddress: globalConfig.network.wrappedNativeToken.address,
+      //   isComethWallet,
+      // })
       return steps
     },
 
