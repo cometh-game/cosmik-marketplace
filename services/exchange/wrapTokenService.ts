@@ -30,27 +30,24 @@ export const useWrapToken = () => {
       if (
         !viemPublicClient ||
         !viemWalletClient ||
-        !globalConfig.network.wrappedNativeToken.address.toLowerCase()
+        !globalConfig.network.wrappedNativeToken.address
       ) {
         throw new Error("Could not wrap token")
       }
-      console.log("viemWalletClient", viemWalletClient)
-      console.log("account", viemWalletClient.account)
 
-      const { request } = await viemPublicClient.simulateContract({
+      const txHash = await viemWalletClient.writeContract({
         address: globalConfig.ordersErc20.address,
         abi: wethAbi,
         functionName: "deposit",
         args: [],
-        value: amount.toBigInt(),
-        account: viewerAddress,
+        value: amount.toBigInt()
       })
-      const txHash = await viemWalletClient.writeContract(request)
       const transaction = await viemPublicClient.waitForTransactionReceipt({
         hash: txHash,
       })
       return transaction
     },
+
     onSuccess: () => {
       toast({
         title: "Token wrapped!",
