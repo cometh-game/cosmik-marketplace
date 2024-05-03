@@ -44,7 +44,11 @@ const manifest: Manifest = {
     currencySymbol: "$", // symbol to display after the amount
   },
   authenticationUiType: AuthenticationUiLibrary.WEB3_MODAL,
-  collectionSettingsByAddress: {},
+  collectionSettingsByAddress: {
+    "0xe2C1Cc5Bd04cf7DA0F5dAAb75406A8135e2c05Ad": {
+      floorPriceAttributeTypes: ["Name"],
+    },
+  },
 }
 
 export { manifest }

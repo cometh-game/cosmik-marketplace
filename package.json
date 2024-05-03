@@ -18,7 +18,7 @@
     "@bugsnag/js": "^7.22.7",
     "@bugsnag/plugin-react": "^7.22.7",
     "@cometh/connect-sdk-viem": "2.0.3",
-    "@cometh/marketplace-sdk": "2.1.1",
+    "@cometh/marketplace-sdk": "2.2.6",
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",

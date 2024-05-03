@@ -20,10 +20,12 @@ const isAttributeDefined = (
 export const useAssetFloorPriceAttributes = (asset: AssetWithTradeData | undefined) => {
   return useMemo(() => {
     if(!asset) return []
+
     const floorPriceAttributeTypes =
       globalConfig.collectionSettingsByAddress[
         asset.contractAddress.toLowerCase() as Address
       ].floorPriceAttributeTypes
+
     const allAttributes = floorPriceAttributeTypes.map((type) => {
       const matchingAttribute = asset.metadata.attributes.find(
         (attribute) => attribute.trait_type === type
@@ -60,7 +62,7 @@ export const useFloorPriceAsset = (asset: AssetWithTradeData | undefined) => {
     attributes: attributeFilters,
     isOnSale: true,
     limit: 1,
-  }) 
+  })
   const floorPriceAsset = useMemo(() => {
     return floorPriceSearch.data?.assets[0]
   }, [floorPriceSearch.data?.assets])

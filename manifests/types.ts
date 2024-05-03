@@ -43,5 +43,5 @@ export type Manifest = {
     currencySymbol: string
   }
 
-  collectionSettingsByAddress: Record<Address, CollectionUiSettings>
+  collectionSettingsByAddress: Record<Address, Partial<CollectionUiSettings>>
 }

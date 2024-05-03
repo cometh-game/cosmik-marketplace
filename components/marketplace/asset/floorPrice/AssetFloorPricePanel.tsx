@@ -16,8 +16,11 @@ type AssetFloorPriceProps = {
 
 export default function AssetFloorPricePanel({ asset }: AssetFloorPriceProps) {
   const assetFloorPriceAttributes = useAssetFloorPriceAttributes(asset)
-
+  
   const { isLoading, floorPriceAsset } = useFloorPriceAsset(asset)
+
+  console.log("assetFloorPriceAttributes", assetFloorPriceAttributes)
+  console.log("floorPriceAsset", floorPriceAsset)
 
   if (assetFloorPriceAttributes.length === 0) {
     return null
