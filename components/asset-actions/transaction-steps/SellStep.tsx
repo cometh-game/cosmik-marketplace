@@ -1,6 +1,9 @@
 import { useCallback, useMemo, useState } from "react"
 import { useSellAsset } from "@/services/orders/sellAssetService"
-import { AssetWithTradeData, SearchAssetWithTradeData } from "@cometh/marketplace-sdk"
+import {
+  AssetWithTradeData,
+  SearchAssetWithTradeData,
+} from "@cometh/marketplace-sdk"
 import { parseUnits } from "ethers/lib/utils"
 
 import globalConfig from "@/config/globalConfig"
@@ -9,22 +12,18 @@ import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
 import { Price } from "@/components/ui/Price"
 import { PriceDetails } from "@/components/ui/PriceDetails"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/Select"
 import { AssetHeaderImage } from "@/components/marketplace/asset/AssetHeaderImage"
-
-import { SwitchNetwork } from "../buttons/SwitchNetwork"
 import AssetFloorPriceLine from "@/components/marketplace/asset/floorPrice/AssetFloorPriceLine"
+
+import { OrderExpirySelect } from "../buttons/OrderExpirySelect"
+import { SwitchNetwork } from "../buttons/SwitchNetwork"
 
 export type SellStepProps = {
   asset: AssetWithTradeData | SearchAssetWithTradeData
   onClose: () => void
 }
+
+const DEFAULT_VALIDITY = "10"
 
 /**
  * Arriving at this stage means that the user has approved the collection
@@ -34,7 +33,7 @@ export type SellStepProps = {
 export function SellStep({ asset, onClose }: SellStepProps) {
   const { mutateAsync: sell, isPending } = useSellAsset(asset)
   const [price, setPrice] = useState("")
-  const [validity, setValidity] = useState("1")
+  const [validity, setValidity] = useState(DEFAULT_VALIDITY)
 
   const orderParams = useMemo(() => {
     if (!price) return null
@@ -77,17 +76,10 @@ export function SellStep({ asset, onClose }: SellStepProps) {
         </div>
 
         <div className="flex flex-col gap-3 sm:w-auto">
-          <Label htmlFor="make-buy-offer-price">Validity time</Label>
-          <Select defaultValue="10" onValueChange={(v) => setValidity(v)}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="" />
-            </SelectTrigger>
-            <SelectContent>
-            <SelectItem value="10">10 days</SelectItem>
-            <SelectItem value="20">30 days</SelectItem>
-            <SelectItem value="30">90 days</SelectItem>
-            </SelectContent>
-          </Select>
+          <OrderExpirySelect
+            setValidity={setValidity}
+            defaultValidity={DEFAULT_VALIDITY}
+          />
         </div>
       </div>
 

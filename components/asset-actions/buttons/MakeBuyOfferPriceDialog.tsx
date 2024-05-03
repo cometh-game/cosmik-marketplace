@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/Select"
 import { ButtonLoading } from "@/components/ButtonLoading"
 import { AssetHeaderImage } from "@/components/marketplace/asset/AssetHeaderImage"
+import AssetFloorPriceLine from "@/components/marketplace/asset/floorPrice/AssetFloorPriceLine"
 import { TransactionDialogButton } from "@/components/TransactionDialogButton"
 import { Case, Switch } from "@/components/utils/Switch"
 
@@ -37,7 +38,7 @@ import { AllowanceStep } from "../transaction-steps/AllowanceStep"
 import { ConfirmMakeBuyOfferStep } from "../transaction-steps/ConfirmMakeBuyOfferStep"
 import { FundsStep } from "../transaction-steps/FundsStep"
 import { WrapStep } from "../transaction-steps/WrapStep"
-import AssetFloorPriceLine from "@/components/marketplace/asset/floorPrice/AssetFloorPriceLine"
+import { OrderExpirySelect } from "./OrderExpirySelect"
 
 export type MakeBuyOfferProps = {
   asset: AssetWithTradeData | SearchAssetWithTradeData
@@ -48,13 +49,15 @@ type MakeBuyOfferPriceDialogProps = {
   asset: AssetWithTradeData | SearchAssetWithTradeData
 } & React.ComponentProps<typeof Button>
 
+const DEFAULT_VALIDITY = "10"
+
 export function MakeBuyOfferPriceDialog({
   submitCallback,
   asset,
   size = "lg",
 }: MakeBuyOfferPriceDialogProps) {
   const [price, setPrice] = useState("")
-  const [validity, setValidity] = useState("1")
+  const [validity, setValidity] = useState(DEFAULT_VALIDITY)
   const orderParams = useMemo(() => {
     try {
       const parsedPrice = parseUnits(price, globalConfig.ordersErc20.decimals)
@@ -69,11 +72,7 @@ export function MakeBuyOfferPriceDialog({
   return (
     <Dialog modal>
       <DialogTrigger asChild>
-        <Button
-          size={size}
-          variant="default"
-          disabled={!isChainSupported}
-        >
+        <Button size={size} variant="default" disabled={!isChainSupported}>
           Make an offer
         </Button>
       </DialogTrigger>
@@ -99,17 +98,10 @@ export function MakeBuyOfferPriceDialog({
             />
           </div>
           <div className="flex w-full flex-col gap-3 md:w-1/3">
-            <Label htmlFor="make-buy-offer-price">Validity time</Label>
-            <Select defaultValue="10" onValueChange={(v) => setValidity(v)}>
-              <SelectTrigger className="md:w-[180px]">
-                <SelectValue placeholder="" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="10">10 days</SelectItem>
-                <SelectItem value="20">30 days</SelectItem>
-                <SelectItem value="30">90 days</SelectItem>
-              </SelectContent>
-            </Select>
+            <OrderExpirySelect
+              setValidity={setValidity}
+              defaultValidity={DEFAULT_VALIDITY}
+            />
           </div>
         </div>
         <Button
@@ -127,10 +119,7 @@ export function MakeBuyOfferPriceDialog({
   )
 }
 
-export function MakeBuyOfferButton({
-  asset,
-  size = "lg",
-}: MakeBuyOfferProps) {
+export function MakeBuyOfferButton({ asset, size = "lg" }: MakeBuyOfferProps) {
   const [open, setOpen] = useState(false)
   const {
     isLoading,
