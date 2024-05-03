@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from "react"
 import { useCosmikLogout } from "@/services/cosmik/logoutService"
+import Bugsnag from "@bugsnag/js"
 import {
   ComethWallet,
   ConnectAdaptor,
@@ -68,36 +69,42 @@ export const useConnectComethWallet = () => {
     [connect]
   )
 
-  const initNewSignerRequest = useCallback(async (walletAddress: string) => {
-    if (!isAddress(walletAddress)) {
-      throw new Error("Invalid wallet address.")
-    }
-    
-    const adaptor = new ConnectAdaptor({
-      chainId: chainId,
-      apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
-      baseUrl: env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL!,
-    })
-    
-    return await adaptor.initNewSignerRequest(walletAddress)
-  }, [chainId])
+  const initNewSignerRequest = useCallback(
+    async (walletAddress: string) => {
+      if (!isAddress(walletAddress)) {
+        throw new Error("Invalid wallet address.")
+      }
 
-  const retrieveWalletAddress = useCallback(async (walletAddress: string) => {
-    if (!isAddress(walletAddress)) {
-      throw new Error("Invalid wallet address.")
-    }
-    const adaptor = new ConnectAdaptor({
-      chainId: chainId,
-      apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
-      baseUrl: env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL!,
-    })
-    const wallet = new ComethWallet({
-      authAdapter: adaptor,
-      apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
-      rpcUrl: env.NEXT_PUBLIC_RPC_URL!,
-    })
-    await wallet.connect(walletAddress)
-  }, [chainId])
+      const adaptor = new ConnectAdaptor({
+        chainId: chainId,
+        apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
+        baseUrl: env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL!,
+      })
+
+      return await adaptor.initNewSignerRequest(walletAddress)
+    },
+    [chainId]
+  )
+
+  const retrieveWalletAddress = useCallback(
+    async (walletAddress: string) => {
+      if (!isAddress(walletAddress)) {
+        throw new Error("Invalid wallet address.")
+      }
+      const adaptor = new ConnectAdaptor({
+        chainId: chainId,
+        apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
+        baseUrl: env.NEXT_PUBLIC_COMETH_CONNECT_BASE_URL!,
+      })
+      const wallet = new ComethWallet({
+        authAdapter: adaptor,
+        apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
+        rpcUrl: env.NEXT_PUBLIC_RPC_URL!,
+      })
+      await wallet.connect(walletAddress)
+    },
+    [chainId]
+  )
 
   const disconnect = useCallback(async () => {
     if (account.isConnected || getUser() !== null) {
@@ -107,9 +114,13 @@ export const useConnectComethWallet = () => {
         window.localStorage.removeItem("walletAddress")
         setUser(null)
         setUserIsFullyConnected(false)
-      } catch (e) {
-        console.error("Error disconnecting wallet", e)
-        // displayError((e as Error).message)
+      } catch (error) {
+        console.error("Error disconnecting wallet", error)
+        Bugsnag.notify(error as Error, function (report) {
+          report.context = "User Logout from /wallets page"
+          report.setUser(getUser().id, getUser().email, getUser().userName)
+          report.addMetadata("user", getUser())
+        })
       }
     }
   }, [

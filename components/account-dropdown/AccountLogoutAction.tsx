@@ -12,7 +12,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
 import { useRouter } from "next/navigation"
-import { useUserAuthContext } from "@/providers/userAuth"
 
 export function AccountLogoutAction() {
   const { disconnect } = useConnectComethWallet()
