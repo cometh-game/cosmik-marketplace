@@ -36,9 +36,10 @@ export default function AssetFloorPriceLine({
     }
   }, [asset, fullAsset])
 
+  const assetFloorPriceAttributes = useAssetFloorPriceAttributes(assetWithAttributes)
   const { isLoading, floorPriceAsset } = useFloorPriceAsset(assetWithAttributes)
 
-  if (!assetWithAttributes) {
+  if (!assetWithAttributes || !assetFloorPriceAttributes.length) {
     return null
   }
 
