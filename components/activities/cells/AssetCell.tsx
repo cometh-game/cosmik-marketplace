@@ -20,7 +20,7 @@ export const AssetCell = ({ row }: AssetCellProps) => {
       href={`/nfts/${tokenAddress}/${tokenId}`}
       className="relative z-[1] inline-flex items-center gap-x-2 font-medium transition-colors hover:text-white"
     >
-      {`${assetName} #${shortenTokenId(tokenId, 7)}`} <ExternalLink size="16" />
+      {assetName} <ExternalLink size="16" />
     </Link>
   )
 }
