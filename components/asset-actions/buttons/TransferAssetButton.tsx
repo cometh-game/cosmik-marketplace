@@ -45,6 +45,7 @@ type Inputs = {
 
 type TransferAssetButtonProps = {
   asset: SearchAssetWithTradeData | AssetWithTradeData
+  verifyAddress?: boolean
 } & React.ComponentProps<typeof Button>
 
 const addressSchema = z
@@ -57,6 +58,7 @@ const addressSchema = z
 
 export function TransferAssetButton({
   asset,
+  verifyAddress = true,
   ...buttonProps
 }: TransferAssetButtonProps) {
   const [receiverAddress, setReceiverAddress] = useState("")
@@ -82,7 +84,7 @@ export function TransferAssetButton({
 
   const transferAsset = useCallback(() => {
     if (!viewerAddress) return
-    if (!receiverUser) {
+    if (verifyAddress && !receiverUser) {
       toast({
         title: "Receiver address not found",
         description:
@@ -101,15 +103,7 @@ export function TransferAssetButton({
         BigInt(asset.tokenId),
       ],
     })
-  }, [
-    viewerAddress,
-    asset.contractAddress,
-    asset.owner,
-    receiverAddress,
-    asset.tokenId,
-    writeContract,
-    receiverUser,
-  ])
+  }, [viewerAddress, verifyAddress, receiverUser, writeContract, asset.contractAddress, asset.owner, asset.tokenId, receiverAddress])
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({

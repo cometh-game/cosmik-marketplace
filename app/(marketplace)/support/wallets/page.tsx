@@ -88,9 +88,9 @@ const WalletAssetTransfer = () => {
         </div>
         <ul>
           {assets?.map((asset: any) => (
-            <li className="flex items-center" key={asset.tokenId}>
+            <li className="flex items-center gap-2" key={asset.tokenId}>
               {asset.tokenId} <b>{asset.metadata.name}</b>
-              <TransferAssetButton asset={asset} />
+              <TransferAssetButton asset={asset} verifyAddress={false} />
             </li>
           ))}
         </ul>

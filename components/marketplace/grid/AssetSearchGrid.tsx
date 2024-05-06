@@ -74,6 +74,8 @@ export const AssetsSearchGrid = ({
   const { width } = useWindowSize()
   const isMobile = width < 768
 
+  console.log("assets", assets)
+
   return (
     <div className="flex w-full flex-col items-center justify-center">
       <div className="relative flex w-full flex-wrap items-center justify-between gap-4">

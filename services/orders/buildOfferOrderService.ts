@@ -47,6 +47,8 @@ export const useBuildOfferOrder = ({
         .plus({ days: parseInt(validity) })
         .toJSDate()
 
+      console.log("expiry", expiry)
+
       const sumOfFeesPercentages = collection.collectionFees.reduce(
         (sum, fee) => sum + fee.feePercentage,
         0
