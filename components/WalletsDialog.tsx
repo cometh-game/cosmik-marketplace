@@ -73,7 +73,9 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
       }
     }
 
-    updateWallets()
+    if (user?.address || user?.externalAddresses.length > 0) {
+      updateWallets()
+    }
   }, [user?.address, user?.externalAddresses])
 
   useEffect(() => {
