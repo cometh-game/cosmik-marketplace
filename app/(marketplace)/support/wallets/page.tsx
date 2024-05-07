@@ -5,7 +5,7 @@ import { manifest } from "@/manifests/manifests"
 import { marketplaceChain } from "@/providers/authentication/marketplaceWagmiChain"
 import { useCurrentCollectionContext } from "@/providers/currentCollection/currentCollectionContext"
 import { useSearchAssets } from "@/services/cometh-marketplace/searchAssetsService"
-import { comethConnectConnector, muster, musterTestnet } from "@cometh/connect-sdk-viem"
+import { comethConnectConnector } from "@cometh/connect-sdk-viem"
 import { useQueryClient } from "@tanstack/react-query"
 import { RotateCcw } from "lucide-react"
 import {

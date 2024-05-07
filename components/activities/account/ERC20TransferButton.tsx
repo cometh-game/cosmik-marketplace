@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useCallback, useEffect, useMemo, useState } from "react"
-import { Address, erc20Abi, parseEther, parseGwei, parseUnits } from "viem"
+import { Address, erc20Abi, parseUnits } from "viem"
 import {
   useAccount,
   useSendTransaction,
@@ -95,7 +95,7 @@ const ERC20TransferButton = ({
       sendTransaction({
         account: viewerAddress as Address,
         to: receiverAddress as Address,
-        value: parseEther(amount),
+        value: parseUnits(amount, decimalNumber),
       })
     }
   }, [viewerAddress, tokenAddress, writeContract, receiverAddress, amount, decimalNumber, sendTransaction])
