@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useCallback, useEffect, useMemo, useState } from "react"
-import { Address, erc20Abi, parseUnits } from "viem"
+import { Address, erc20Abi, parseEther, parseGwei, parseUnits } from "viem"
 import {
   useAccount,
   useSendTransaction,
@@ -49,6 +49,7 @@ const ERC20TransferButton = ({
   const [amount, setAmount] = useState("")
   const [isPristine, setIsPristine] = useState(true)
   const {
+    data: txHash,
     sendTransaction,
     isPending: isPendingSendTransaction,
     isSuccess: isSuccessSendTransaction,
@@ -92,22 +93,15 @@ const ERC20TransferButton = ({
     } else {
       // Native token transfer
       sendTransaction({
+        account: viewerAddress as Address,
         to: receiverAddress as Address,
-        value: parseUnits(amount, decimalNumber),
+        value: parseEther(amount),
       })
     }
-  }, [
-    viewerAddress,
-    tokenAddress,
-    receiverAddress,
-    amount,
-    writeContract,
-    sendTransaction,
-    decimalNumber,
-  ])
+  }, [viewerAddress, tokenAddress, writeContract, receiverAddress, amount, decimalNumber, sendTransaction])
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({ hash })
+    useWaitForTransactionReceipt({ hash: txHash })
 
   useEffect(() => {
     if (
@@ -134,8 +128,8 @@ const ERC20TransferButton = ({
         <DialogHeader>
           <DialogTitle>
             {tokenAddress
-              ? "Token Transfer " + tokenSymbol
-              : "Native Token Transfer" + tokenSymbol}
+              ? "Token Transfer: " + tokenSymbol
+              : "Native Token Transfer: " + tokenSymbol}
           </DialogTitle>
         </DialogHeader>
         <div className="mt-4">
@@ -186,16 +180,19 @@ const ERC20TransferButton = ({
             isPending ||
             isPendingSendTransaction
           }
-          isLoading={isConfirming || isPending}
+          isLoading={isConfirming || isPending || isPendingSendTransaction}
           onClick={transferTokens}
         >
           {isConfirming || isPending || isPendingSendTransaction
-            ? "Processing..."
+            ? "Processing"
             : tokenAddress
               ? "Transfer Tokens"
               : "Send Native Tokens"}
         </Button>
-        <div className="mt-2">{error && <div>Error: {error.message}</div>}</div>
+        {hash && <div>Transaction Hash: {hash}</div>}
+        {isConfirming && <div>Waiting for confirmation...</div>}
+        {isConfirmed && <div>Transaction confirmed.</div>}
+        {error && <div className="mt-2"><div>Error: {error.message}</div></div>}
       </DialogContent>
     </Dialog>
   )

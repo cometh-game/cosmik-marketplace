@@ -103,7 +103,16 @@ export function TransferAssetButton({
         BigInt(asset.tokenId),
       ],
     })
-  }, [viewerAddress, verifyAddress, receiverUser, writeContract, asset.contractAddress, asset.owner, asset.tokenId, receiverAddress])
+  }, [
+    viewerAddress,
+    verifyAddress,
+    receiverUser,
+    writeContract,
+    asset.contractAddress,
+    asset.owner,
+    asset.tokenId,
+    receiverAddress,
+  ])
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({
