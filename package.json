@@ -17,7 +17,7 @@
     "@bugsnag/browser-performance": "^2.5.0",
     "@bugsnag/js": "^7.22.7",
     "@bugsnag/plugin-react": "^7.22.7",
-    "@cometh/connect-sdk-viem": "2.0.3",
+    "@cometh/connect-sdk-viem": "2.0.5",
     "@cometh/marketplace-sdk": "2.1.2",
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",

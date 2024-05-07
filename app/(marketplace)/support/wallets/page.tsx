@@ -5,7 +5,7 @@ import { manifest } from "@/manifests/manifests"
 import { marketplaceChain } from "@/providers/authentication/marketplaceWagmiChain"
 import { useCurrentCollectionContext } from "@/providers/currentCollection/currentCollectionContext"
 import { useSearchAssets } from "@/services/cometh-marketplace/searchAssetsService"
-import { comethConnectConnector } from "@cometh/connect-sdk-viem"
+import { comethConnectConnector, muster, musterTestnet } from "@cometh/connect-sdk-viem"
 import { useQueryClient } from "@tanstack/react-query"
 import { RotateCcw } from "lucide-react"
 import {
@@ -88,8 +88,8 @@ const WalletAssetTransfer = () => {
         </div>
         <ul>
           {assets?.map((asset: any) => (
-            <li className="flex items-center gap-2" key={asset.tokenId}>
-              {asset.tokenId} <b>{asset.metadata.name}</b>
+            <li className="flex items-center" key={asset.tokenId}>
+              {asset.tokenId} -&nbsp;<b>{asset.metadata.name}</b>
               <TransferAssetButton asset={asset} verifyAddress={false} />
             </li>
           ))}
@@ -159,8 +159,9 @@ const WalletDebugPanels = () => {
       apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY,
       walletAddress: newWalletAddress,
     })
-    connect({ connector })
+    connect({ connector: connector as any })
   }, [newWalletAddress, disconnect, connect, account?.isConnected])
+  console.log("account", account)
 
   return (
     <div className="container mx-auto flex w-full max-w-[880px] flex-col gap-4 py-4 max-sm:pt-4">
