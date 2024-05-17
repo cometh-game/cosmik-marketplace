@@ -9,7 +9,7 @@ export const Link = ({
 }: ComponentProps<typeof NextLink>) => (
   <NextLink
     className={cn(
-      "inline text-base font-medium text-accent hover:text-white",
+      "inline text-base font-medium text-white/80 hover:text-white",
       className
     )}
     {...props}

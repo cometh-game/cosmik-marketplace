@@ -15,7 +15,7 @@ export function SearchAsset({ onChange }: SearchAssetProps) {
     debounce(() => {
       onChange(SearchRef?.current?.value as string)
     }, 300),
-    [SearchRef, onChange]
+    [onChange, SearchRef]
   )
 
   return (

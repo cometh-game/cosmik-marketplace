@@ -11,15 +11,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
-import { useRouter } from "next/navigation"
 
 export function AccountLogoutAction() {
   const { disconnect } = useConnectComethWallet()
-  const { push } = useRouter()
 
   const handleLogout = useCallback(async () => {
     await disconnect()
-    // push("/nfts")
   }, [disconnect])
 
   return (

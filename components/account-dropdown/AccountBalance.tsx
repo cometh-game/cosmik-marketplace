@@ -1,20 +1,21 @@
 import { useState } from "react"
 import Image from "next/image"
-import { useBalance } from "@/services/balance/balanceService"
+import { useRouter } from "next/navigation"
+import { useAllBalances } from "@/services/balance/balanceService"
 
 import { env } from "@/config/env"
 import globalConfig from "@/config/globalConfig"
 import { FiatPrice } from "@/components/ui/FiatPrice"
 import { Separator } from "@/components/ui/Separator"
 import { WrapButton } from "@/components/asset-actions/buttons/WrapButton"
+
 import { Button } from "../ui/Button"
-import { useRouter } from "next/navigation"
 
 export function AccountBalance() {
-  const balance = useBalance()
+  const balance = useAllBalances()
   const [isUnwrap, setIsUnwrap] = useState(false)
   const { push } = useRouter()
-  
+
   return (
     <>
       <div className="border-accent/10 mb-3 space-y-3 rounded-md border p-3">
@@ -23,6 +24,7 @@ export function AccountBalance() {
             balance={balance.native}
             currency={globalConfig.network.nativeToken.symbol}
             logo={globalConfig.network.nativeToken.thumb}
+            hideFiatPrice={!globalConfig.useNativeForOrders}
           />
           <Separator />
           <AccountBalanceLine
@@ -34,9 +36,9 @@ export function AccountBalance() {
           />
         </div>
       </div>
-      
+
       <div className="flex flex-col gap-2">
-      <Button className="w-full" onClick={() => push("/topup")}>
+        <Button className="w-full" onClick={() => push("/topup")}>
           Fill your wallet
         </Button>
         {globalConfig.useNativeForOrders && (
@@ -47,7 +49,6 @@ export function AccountBalance() {
             />
           </div>
         )}
-       
       </div>
     </>
   )
@@ -57,17 +58,18 @@ type AccountBalanceLineProps = {
   balance: string
   currency: string
   logo?: string | { native: string; wrapped: string }
+  hideFiatPrice?: boolean
 }
 
 export function AccountBalanceLine({
   balance,
   currency,
   logo,
+  hideFiatPrice = false,
 }: AccountBalanceLineProps) {
-  console.log("balance", balance)
-
   const logoSrc =
     typeof logo === "string" ? logo : logo?.native || logo?.wrapped
+
   return (
     <div className="inline-flex items-center gap-1.5">
       {logo && (
@@ -83,11 +85,7 @@ export function AccountBalanceLine({
       <span className="text-[15px] font-semibold">
         {balance} {currency}
       </span>
-      <span>
-        {balance !== "0.0" && (
-          (<FiatPrice amount={balance} />)
-        )}
-      </span>
+      <span>{balance !== "0.0" && <FiatPrice amount={balance} />}</span>
     </div>
   )
 }

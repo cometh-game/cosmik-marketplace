@@ -7,7 +7,8 @@ export default {
   content: [
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
-    "./lib/utils/colors-attributes.{ts,tsx}"
+    "./lib/utils/colors-attributes.{ts,tsx}",
+    "./styles/**/*.{ts,tsx}",
   ],
   theme: {
     container: {
@@ -30,6 +31,7 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        owner: "hsl(var(--owner))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",

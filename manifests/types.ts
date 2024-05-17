@@ -1,3 +1,4 @@
+import init from "@web3-onboard/core"
 import { Address } from "viem"
 
 import { SupportedCurrencies } from "../types/currencies"
@@ -22,6 +23,10 @@ export type Manifest = {
     }
   }
 
+  web3Onboard?: {
+    theme?: Parameters<typeof init>[0]["theme"]
+  }
+
   chainId: number
   useNativeTokenForOrders: boolean
   erc20: {
@@ -39,7 +44,7 @@ export type Manifest = {
 
   fiatCurrency: {
     enable: boolean
-    currencyId: SupportedCurrencies[]
+    currencyId: SupportedCurrencies
     currencySymbol: string
   }
 

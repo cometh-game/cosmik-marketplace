@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   AssetWithTradeData,
   SearchAssetWithTradeData,
 } from "@cometh/marketplace-sdk"
 import { BigNumber } from "ethers"
 import { parseUnits } from "ethers/lib/utils"
+import { parseEther } from "viem"
 
 import globalConfig from "@/config/globalConfig"
 import { useMakeBuyOfferAssetButton } from "@/lib/web3/flows/makeBuyOffer"
@@ -19,6 +20,7 @@ import {
 } from "@/components/ui/Dialog"
 import { Label } from "@/components/ui/Label"
 import { Price } from "@/components/ui/Price"
+import { PriceDetails } from "@/components/ui/PriceDetails"
 import { PriceInput } from "@/components/ui/PriceInput"
 import {
   Select,
@@ -28,6 +30,8 @@ import {
   SelectValue,
 } from "@/components/ui/Select"
 import { ButtonLoading } from "@/components/ButtonLoading"
+import { useAssetIs1155 } from "@/components/erc1155/ERC1155Hooks"
+import TokenQuantityInput from "@/components/erc1155/TokenQuantityInput"
 import { AssetHeaderImage } from "@/components/marketplace/asset/AssetHeaderImage"
 import AssetFloorPriceLine from "@/components/marketplace/asset/floorPrice/AssetFloorPriceLine"
 import { TransactionDialogButton } from "@/components/TransactionDialogButton"
@@ -56,16 +60,29 @@ export function MakeBuyOfferPriceDialog({
   asset,
   size = "lg",
 }: MakeBuyOfferPriceDialogProps) {
-  const [price, setPrice] = useState("")
+  const [unitPrice, setUnitPrice] = useState("")
   const [validity, setValidity] = useState(DEFAULT_VALIDITY)
+  const [quantity, setQuantity] = useState(BigInt(1))
+  const isErc1155 = useAssetIs1155(asset)
+
+  const parsedUnitPrice = useMemo(
+    () =>
+      unitPrice
+        ? parseUnits(unitPrice, globalConfig.ordersErc20.decimals)
+        : BigNumber.from(0),
+    [unitPrice]
+  )
+  const totalPrice = useMemo(
+    () => parsedUnitPrice.mul(quantity),
+    [parsedUnitPrice, quantity]
+  )
   const orderParams = useMemo(() => {
     try {
-      const parsedPrice = parseUnits(price, globalConfig.ordersErc20.decimals)
-      return { price: parsedPrice, validity }
+      return { price: totalPrice, validity, quantity: quantity }
     } catch (e) {
       return null
     }
-  }, [price, validity])
+  }, [totalPrice, validity, quantity])
 
   const { isChainSupported } = useCorrectNetwork()
 
@@ -81,8 +98,11 @@ export function MakeBuyOfferPriceDialog({
           <DialogTitle>Buy Offer</DialogTitle>
         </DialogHeader>
 
-        <div className="flex w-full items-center justify-center">
+        <div className="flex w-full flex-col items-center justify-center">
           <AssetHeaderImage asset={asset} />
+          <div>
+            <h1 className="mt-2 text-2xl font-bold">{asset.metadata.name}</h1>
+          </div>
         </div>
 
         <AssetFloorPriceLine asset={asset} />
@@ -90,11 +110,12 @@ export function MakeBuyOfferPriceDialog({
         <div className="mt-4 flex flex-col gap-4 md:flex-row">
           <div className="flex flex-col gap-3 md:w-2/3">
             <Label htmlFor="make-buy-offer-price">
-              Offer price in {globalConfig.ordersDisplayCurrency.symbol} *
+              {isErc1155 ? "Unit offer" : "Offer"} price in{" "}
+              {globalConfig.ordersDisplayCurrency.symbol} *
             </Label>
             <PriceInput
               id="make-buy-offer-price"
-              onInputUpdate={(inputValue) => setPrice(inputValue)}
+              onInputUpdate={(inputValue) => setUnitPrice(inputValue)}
             />
           </div>
           <div className="flex w-full flex-col gap-3 md:w-1/3">
@@ -104,14 +125,36 @@ export function MakeBuyOfferPriceDialog({
             />
           </div>
         </div>
+
+        {isErc1155 && (
+          <>
+            <TokenQuantityInput
+              max={BigInt(asset.supply)}
+              label="Token purchase quantity*"
+              onChange={setQuantity}
+              initialQuantity={BigInt(1)}
+            />
+            <PriceDetails
+              quantity={quantity}
+              unitPrice={parseEther(unitPrice)}
+              isErc1155={isErc1155}
+            />
+          </>
+        )}
+
         <Button
           size="lg"
-          disabled={!orderParams || !orderParams.price}
+          disabled={!totalPrice || totalPrice.isZero()}
           onClick={() =>
-            submitCallback(orderParams!.price, orderParams!.validity)
+            submitCallback(
+              orderParams!.price,
+              orderParams!.validity,
+              orderParams!.quantity
+            )
           }
         >
-          Make offer for&nbsp;
+          Make offer for {isErc1155 && <>{quantity.toString()} tokens</>} at the
+          price of&nbsp;
           <Price amount={orderParams?.price} isNativeToken={true} />
         </Button>
       </DialogContent>
@@ -129,6 +172,8 @@ export function MakeBuyOfferButton({ asset, size = "lg" }: MakeBuyOfferProps) {
     reset,
     price,
     setPrice,
+    quantity,
+    setQuantity,
     validity,
     setValidity,
   } = useMakeBuyOfferAssetButton({ asset })
@@ -139,13 +184,28 @@ export function MakeBuyOfferButton({ asset, size = "lg" }: MakeBuyOfferProps) {
     }
   }, [price, validity])
 
+  const closeDialog = useCallback(() => {
+    setOpen(false)
+    setPrice(null)
+    setQuantity(BigInt(1))
+  }, [setOpen, setPrice, setQuantity])
+
+  const onClose = useCallback(() => {
+    setPrice(null)
+    setValidity(null)
+    setQuantity(BigInt(1))
+    reset()
+  }, [setPrice, setValidity, setQuantity, reset])
+
   if (!price) {
     return (
       <MakeBuyOfferPriceDialog
         size={size}
         asset={asset}
-        submitCallback={(newPrice, newValidity) => {
-          setPrice(newPrice), setValidity(newValidity)
+        submitCallback={(newPrice, newValidity, newQuantity) => {
+          setPrice(newPrice)
+          setValidity(newValidity)
+          setQuantity(newQuantity)
         }}
       />
     )
@@ -157,17 +217,6 @@ export function MakeBuyOfferButton({ asset, size = "lg" }: MakeBuyOfferProps) {
 
   if (!requiredSteps?.length || !currentStep) return null
 
-  const closeDialog = () => {
-    setOpen(false)
-    setPrice(null)
-  }
-
-  const onClose = () => {
-    setPrice(null)
-    setValidity(null)
-    reset()
-  }
-
   return (
     <TransactionDialogButton
       open={open}
@@ -176,6 +225,7 @@ export function MakeBuyOfferButton({ asset, size = "lg" }: MakeBuyOfferProps) {
       currentStep={currentStep}
       steps={requiredSteps}
       onClose={onClose}
+      size={size}
       isLoading={isLoading}
     >
       <Switch value={currentStep.value}>
@@ -195,6 +245,7 @@ export function MakeBuyOfferButton({ asset, size = "lg" }: MakeBuyOfferProps) {
           <ConfirmMakeBuyOfferStep
             asset={asset}
             price={price}
+            quantity={quantity}
             validity={validity ?? "1"}
             onValid={closeDialog}
           />

@@ -1,7 +1,9 @@
 "use client"
 
+import { useAssetOwners } from "@/services/cometh-marketplace/assetOwners"
 import { useAssetTransfers } from "@/services/cometh-marketplace/assetTransfersService"
 import { useAssetDetails } from "@/services/cometh-marketplace/searchAssetsService"
+import { useSearchFilledEvents } from "@/services/cometh-marketplace/searchFilledEventsService"
 import { useSearchOrders } from "@/services/cometh-marketplace/searchOrdersService"
 import {
   FilterDirection,
@@ -11,7 +13,7 @@ import {
 import { Address } from "viem"
 
 import { Loading } from "@/components/ui/Loading"
-import { AssetActivities } from "@/components/activities/asset-details/tabs/AssetActivities"
+import { AssetDetailsTabs } from "@/components/activities/asset-details/tabs/AssetDetailsTabs"
 import AssetDetails from "@/components/marketplace/asset/AssetDetails"
 import { AssetHeaderImage } from "@/components/marketplace/asset/AssetHeaderImage"
 
@@ -22,17 +24,34 @@ export default function DetailsPage({
 }) {
   const { assetId, contractAddress } = params
   const { data: asset } = useAssetDetails(contractAddress, assetId)
+  console.log("asset", asset)
   const { data: assetTransfers } = useAssetTransfers(contractAddress, assetId)
-  const { data: assetOrders } = useSearchOrders({
+  console.log("assetTransfers", assetTransfers)
+  const { data: assetOwners } = useAssetOwners(contractAddress, assetId)
+  console.log("assetOwners", assetOwners)
+  const { data: assetOrdersSearch } = useSearchOrders({
     tokenAddress: contractAddress,
     tokenIds: [assetId],
-    statuses: [TradeStatus.FILLED, TradeStatus.OPEN],
+    statuses: [TradeStatus.OPEN],
     orderBy: SearchOrdersSortOption.UPDATED_AT,
     orderByDirection: FilterDirection.DESC,
     limit: 100,
   })
+  console.log("assetOrdersSearch", assetOrdersSearch)
+  const { data: assetFilledEventsSearch } = useSearchFilledEvents({
+    tokenAddress: contractAddress,
+    tokenIds: [assetId],
+    limit: 100,
+  })
+  console.log("assetFilledEventsSearch", assetFilledEventsSearch)
 
-  const loading = !asset || !assetTransfers || !assetOrders
+  const loading =
+    !asset ||
+    !assetTransfers ||
+    !assetOrdersSearch ||
+    !assetOwners ||
+    !assetFilledEventsSearch
+  console.log("loading", loading)
 
   return (
     <div className="container py-6">
@@ -41,11 +60,13 @@ export default function DetailsPage({
         <div className="sm:container-mask flex w-full flex-col flex-wrap gap-6 sm:p-6 md:gap-12 md:p-10 lg:flex-row lg:items-center">
           <AssetHeaderImage asset={asset} />
           <AssetDetails asset={asset} />
-          {assetTransfers && (
-            <AssetActivities
+          {assetTransfers && assetOwners && (
+            <AssetDetailsTabs
               asset={asset}
-              assetOrders={assetOrders?.orders}
+              assetOrders={assetOrdersSearch?.orders}
+              assetFilledEvents={assetFilledEventsSearch?.filledEvents}
               assetTransfers={assetTransfers}
+              assetOwners={assetOwners}
             />
           )}
         </div>

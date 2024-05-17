@@ -19,5 +19,7 @@ export type AssetStatusBadgeProps = {
 
 export function AssetStatusBadge({ status }: AssetStatusBadgeProps) {
   // return <Badge variant={colors[status]}>{content[status]}</Badge>
-  return <div className="text-accent text-lg font-medium">{content[status]}</div>
+  return (
+    <div className="text-accent text-lg font-medium">{content[status]}</div>
+  )
 }

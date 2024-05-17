@@ -1,11 +1,12 @@
 import { useCurrentCollectionContext } from "@/providers/currentCollection/currentCollectionContext"
+import { useIsViewerAnOwner } from "@/services/cometh-marketplace/assetOwners"
 import { useGetCollection } from "@/services/cometh-marketplace/collectionService"
 import {
   AssetWithTradeData,
   SearchAssetWithTradeData,
 } from "@cometh/marketplace-sdk"
-import { useAccount } from "wagmi"
 
+import { OrderAsset } from "@/types/assets"
 import { cn } from "@/lib/utils/utils"
 import { AspectRatio } from "@/components/ui/AspectRatio"
 import { AssetImage } from "@/components/ui/AssetImage"
@@ -13,11 +14,10 @@ import { AssetImage } from "@/components/ui/AssetImage"
 export const AssetHeaderImage = ({
   asset,
 }: {
-  asset: SearchAssetWithTradeData | AssetWithTradeData
+  asset: SearchAssetWithTradeData | AssetWithTradeData | OrderAsset
 }) => {
-  const account = useAccount()
-  const viewerAddress = account.address
-  const owner = asset.owner === viewerAddress
+  const isViewerAnOwner = useIsViewerAnOwner(asset)
+
   const { currentCollectionAddress } = useCurrentCollectionContext()
   const { data: collection } = useGetCollection(currentCollectionAddress)
   const isCardbacks = collection?.name === "Cardbacks"
@@ -34,7 +34,7 @@ export const AssetHeaderImage = ({
     <div
       className={cn(
         "btn-default text-accent relative w-full overflow-hidden before:bg-transparent after:content-none lg:w-[55%]",
-        owner ? "bg-[#f4f2e8]" : "bg-primary/20"
+        isViewerAnOwner ? "bg-[#f4f2e8]" : "bg-primary/20"
       )}
     >
       <AspectRatio ratio={1}>

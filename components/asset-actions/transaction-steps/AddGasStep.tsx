@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { useIsComethConnectWallet } from "@/providers/authentication/comethConnectHooks"
+import { useEffect } from "react"
+import { useNativeBalance } from "@/services/balance/balanceService"
 import {
-  fetchHasEnoughGas,
   useHasEnoughGas,
 } from "@/services/balance/gasService"
 import { useAccount } from "wagmi"
@@ -10,6 +8,7 @@ import { useAccount } from "wagmi"
 import globalConfig from "@/config/globalConfig"
 import { Button } from "@/components/ui/Button"
 import { Price } from "@/components/ui/Price"
+import { useRouter } from "next/navigation"
 
 export type AddGasStepProps = {
   onValid: () => void
@@ -18,23 +17,13 @@ export type AddGasStepProps = {
 export function AddGasStep({ onValid }: AddGasStepProps) {
   const account = useAccount()
   const viewer = account.address
-  const [isRefreshingBalance, setIsRefreshingBalance] = useState(false)
-  const isComethWallet = useIsComethConnectWallet()
+  const {
+    refreshBalance,
+    isPending: isRefreshingBalance,
+  } = useNativeBalance(viewer)
   const { push } = useRouter()
 
-  const { data } = useHasEnoughGas(viewer)
-
-  const checkBalance = async () => {
-    setIsRefreshingBalance(true)
-
-    if (!viewer) return
-    const { hasEnoughGas } = await fetchHasEnoughGas(viewer, isComethWallet)
-    if (hasEnoughGas) {
-      onValid()
-    }
-    setIsRefreshingBalance(false)
-  }
-
+  const data = useHasEnoughGas(viewer)
 
   useEffect(() => {
     if (data?.hasEnoughGas === true) {
@@ -70,7 +59,7 @@ export function AddGasStep({ onValid }: AddGasStepProps) {
         <Button
           variant="link"
           isLoading={isRefreshingBalance}
-          onClick={checkBalance}
+          onClick={refreshBalance}
           className="px-0"
         >
           Refresh balance

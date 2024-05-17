@@ -38,12 +38,12 @@ export const FilterMultiCombobox = ({
         <PopoverTrigger asChild>
           <Button
             variant="neutral"
-            className="flex justify-between gap-2 p-2 hover:bg-white/[0.05] hover:text-accent-foreground"
+            className="hover:text-accent-foreground flex justify-between gap-2 p-2 hover:bg-white/[0.05]"
           >
             <span className="font-medium capitalize">
               {label}
               {checkedCount && (
-                <span className="ml-2 text-xs font-bold text-primary/80">
+                <span className="text-primary/80 ml-2 text-xs font-bold">
                   ({checkedCount})
                 </span>
               )}

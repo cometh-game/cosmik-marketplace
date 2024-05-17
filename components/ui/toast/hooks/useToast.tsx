@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+
 import type {
   ToastActionElement,
   ToastProps,
@@ -12,7 +13,6 @@ type ToasterToast = ToastProps & {
   title?: React.ReactNode
   description?: React.ReactNode
   action?: ToastActionElement
-  className?: string
 }
 
 const actionTypes = {
@@ -139,7 +139,7 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, "id">
 
-function toast({ className, ...props }: Toast) {
+function toast({ ...props }: Toast) {
   const id = genId()
 
   const update = (props: ToasterToast) =>

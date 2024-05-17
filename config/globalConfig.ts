@@ -38,6 +38,7 @@ type GlobalConfig = {
   }
   coinGeckoId?: string
   collectionSettingsByAddress: Record<Address, CollectionUiSettings>
+  isComethConnectEnabled?: boolean
 }
 
 export const NATIVE_TOKEN_ADDRESS_AS_ERC20 =
@@ -133,6 +134,7 @@ const globalConfig: GlobalConfig = {
   },
   coinGeckoId: coinId,
   collectionSettingsByAddress,
+  isComethConnectEnabled: !!process.env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY
 }
 
 export default globalConfig

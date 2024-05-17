@@ -1,24 +1,28 @@
 import { manifest } from "@/manifests/manifests"
 import { useApproveCollection } from "@/services/token-approval/approveCollectionService"
+import { TokenType } from "@cometh/marketplace-sdk"
 
 import { Button } from "@/components/ui/Button"
 import { ButtonLoading } from "@/components/ButtonLoading"
 
 export type CollectionApprovalStepProps = {
-  contractAddress: string
-  tokenId: string
+  asset: {
+    contractAddress: string
+    tokenId: string
+    tokenType: TokenType
+  }
   onValid: () => void
 }
 
 export function CollectionApprovalStep({
-  contractAddress,
-  tokenId,
+  asset,
   onValid,
 }: CollectionApprovalStepProps) {
   const { mutate: approveCollection, isPending } = useApproveCollection({
-    tokenAddress: contractAddress,
-    tokenId: tokenId,
+    tokenAddress: asset.contractAddress,
+    tokenId: asset.tokenId,
     onSuccess: onValid,
+    tokenType: asset.tokenType,
   })
 
   return (

@@ -264,40 +264,40 @@
 
 /* Table */
 table tbody > tr {
-  @apply bg-primary text-third-foreground;
+  @apply bg-primary/70 text-third-foreground;
 }
 
 table tbody > tr td {
-  @apply relative border-y border-border;
+  /* @apply relative border-y border-border; */
 }
 
 table tbody tr > td:first-child {
-  @apply border-l;
+  /* @apply border-l; */
 }
 
 table tbody tr > td:last-child {
-  @apply border-r;
+  /* @apply border-r; */
 }
 
 table tbody > tr td:first-child:after,
 table tbody tr > td:last-child:after {
-  content: "";
+  /* content: "";
   position: absolute;
-  inset: -1px;
+  inset: -1px; */
 }
 
 table tbody > tr td:first-child:after {
-  background:
+  /* background:
     url("/cards/third-top-left.png") top left no-repeat,
     url("/cards/third-bottom-left.png") bottom left no-repeat;
-  background-size: auto;
+  background-size: auto; */
 }
 
 table tbody tr > td:last-child:after {
-  background:
+  /* background:
     url("/cards/third-top-right.png") top right no-repeat,
     url("/cards/third-bottom-right.png") bottom right no-repeat;
-  background-size: auto;
+  background-size: auto; */
 }
 
 /* Fix Gas fees Connect Wallet */

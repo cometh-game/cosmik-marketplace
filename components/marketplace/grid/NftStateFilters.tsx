@@ -1,12 +1,13 @@
 import Link from "next/link"
 import { usePathname, useSearchParams } from "next/navigation"
-import { LayoutGridIcon, TagIcon, UserIcon } from "lucide-react"
+import { useCurrentCollectionContext } from "@/providers/currentCollection/currentCollectionContext"
+import { useUserAuthContext } from "@/providers/userAuth"
+import { CalendarIcon, LayoutGridIcon, TagIcon, UserIcon } from "lucide-react"
 import { useAccount } from "wagmi"
 
 import { useNFTFilters } from "@/lib/utils/nftFilters"
+import { cn } from "@/lib/utils/utils"
 import { Button } from "@/components/ui/Button"
-import { cx } from "class-variance-authority"
-import { useUserAuthContext } from "@/providers/userAuth"
 
 export type NFTStateFilterItemProps = {
   label: string
@@ -22,11 +23,17 @@ const NFTStateFilterItem = ({
   iconComponent = undefined,
 }: NFTStateFilterItemProps) => {
   const { update } = useNFTFilters()
+
   return (
     <Button
       onClick={() => update({ isOnSale })}
       variant={isSelected ? "default" : "ghost"}
-      className={cx("font-medium", isSelected ? "bg-accent-foreground text-accent-foreground after:content-none" : "hover:text-accent-foreground")}
+      className={cn(
+        "font-medium",
+        isSelected
+          ? "bg-accent-foreground text-accent-foreground after:content-none"
+          : "hover:text-accent-foreground"
+      )}
     >
       {iconComponent ? iconComponent : ""}
       {label}
@@ -41,8 +48,10 @@ type NFTStateFiltersProps = {
 
 export function NFTStateFilters({ results }: NFTStateFiltersProps) {
   const { get } = useSearchParams()
-  const pathname = usePathname()
+  const currentCollectionContext = useCurrentCollectionContext()
+  const contractAddress = currentCollectionContext.currentCollectionAddress
   const { userIsFullyConnected } = useUserAuthContext()
+  const pathname = usePathname()
   const account = useAccount()
   const viewerAddress = account.address
 
@@ -69,6 +78,13 @@ export function NFTStateFilters({ results }: NFTStateFiltersProps) {
           />
         </Link>
       )}
+
+      <Link href={`/activities/${contractAddress}`}>
+        <NFTStateFilterItem
+          label="Collection activities"
+          iconComponent={<CalendarIcon size="16" className="mr-2" />}
+        />
+      </Link>
     </div>
   )
 }
