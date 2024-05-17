@@ -49,11 +49,11 @@ export type MakeBuyOfferProps = {
 } & React.ComponentProps<typeof Button>
 
 type MakeBuyOfferPriceDialogProps = {
-  submitCallback: (price: BigNumber, validity: string) => void
+  submitCallback: (price: BigNumber, validity: string, quantity: BigInt) => void
   asset: AssetWithTradeData | SearchAssetWithTradeData
 } & React.ComponentProps<typeof Button>
 
-const DEFAULT_VALIDITY = "10"
+const DEFAULT_VALIDITY = "3"
 
 export function MakeBuyOfferPriceDialog({
   submitCallback,
