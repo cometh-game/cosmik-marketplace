@@ -24,6 +24,7 @@ export function AllowanceStep({
       refetchSteps?.()
     },
   })
+
   const approve = useCallback(async () => {
     await approveToken()
     onValid()
@@ -33,7 +34,8 @@ export function AllowanceStep({
     <div className="flex flex-col items-center justify-center">
       <p className="text-md mb-[32px] mt-[40px] text-center">
         Let {manifest.marketplaceName} spend your{" "}
-        <strong>{globalConfig.ordersErc20.name}</strong> to buy this Digital Collectibles.
+        <strong>{globalConfig.ordersErc20.name}</strong> to buy this Digital
+        Collectibles.
       </p>
 
       {isPending ? (

@@ -17,13 +17,10 @@ export type UnwrapStepProps = {
 
 export function UnwrapStep({ price, onValid }: UnwrapStepProps) {
   const { mutateAsync: unwrapToken, isPending } = useUnwrapToken()
-  const account = useAccount()
-  const viewerAddress = account.address
   const isComethWallet = useIsComethConnectWallet()
 
-  const { data: needsToUnwrapData } = useNeedsToUnwrap({
+  const needsToUnwrapData = useNeedsToUnwrap({
     price,
-    address: viewerAddress,
   })
 
   useEffect(() => {
@@ -39,13 +36,13 @@ export function UnwrapStep({ price, onValid }: UnwrapStepProps) {
   return (
     <div className="flex flex-col items-center justify-center">
       <p className="text-md my-[32px] text-center">
-        You are about to buy this Digital Collectibles for <Price amount={price} isNativeToken={true} /> but you are
-        missing <Price amount={needsToUnwrapData?.balanceToUnwrap} /> in your
-        wallet.
+        You are about to buy this Digital Collectibles for{" "}
+        <Price amount={price} isNativeToken={true} /> but you are missing{" "}
+        <Price amount={needsToUnwrapData?.balanceToUnwrap} /> in your wallet.
         {(!globalConfig.areContractsSponsored || !isComethWallet) && (
           <>
             The minimum amount of native token includes{" "}
-            <Price amount={globalConfig.minimumBalanceForGas} /> which are
+            <Price amount={globalConfig.minimumBalanceForGas} isNativeToken /> which are
             necessary to pay for gas. <br />
             It seems that you have wrapped some native token, you need to unwrap
             some {globalConfig.network.wrappedNativeToken.symbol} first as a

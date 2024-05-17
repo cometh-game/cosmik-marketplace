@@ -30,10 +30,6 @@ export function SiteHeader() {
     )
   }
 
-  // if (pathname === "/wallets") {
-  //   return null
-  // }
-
   return (
     <div className="container mx-auto py-5 sm:py-10">
       <header className="relative flex items-center justify-between gap-x-5 md:gap-x-10">

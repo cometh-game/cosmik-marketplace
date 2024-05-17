@@ -1,6 +1,6 @@
 import { useState } from "react"
+import { OrderWithAsset } from "@cometh/marketplace-sdk"
 
-import { BuyOffer } from "@/types/buy-offers"
 import { useAcceptBuyOfferAssetButton } from "@/lib/web3/flows/acceptBuyOffer"
 import { Button } from "@/components/ui/Button"
 import { TransactionDialogButton } from "@/components/TransactionDialogButton"
@@ -11,7 +11,7 @@ import { CollectionApprovalStep } from "../transaction-steps/CollectionApprovalS
 import { ConfirmAcceptBuyOfferStep } from "../transaction-steps/ConfirmAcceptBuyOfferStep"
 
 export type AcceptBuyOfferButtonProps = {
-  offer: BuyOffer
+  offer: OrderWithAsset
 } & React.ComponentProps<typeof Button>
 
 export function AcceptBuyOfferButton({
@@ -26,6 +26,12 @@ export function AcceptBuyOfferButton({
 
   const closeDialog = () => {
     setOpen(false)
+  }
+
+  const asset = offer.asset
+
+  if (!asset) {
+    return <div>Asset not found</div>
   }
 
   return (
@@ -44,11 +50,7 @@ export function AcceptBuyOfferButton({
           <AddGasStep onValid={nextStep} />
         </Case>
         <Case value="token-approval">
-          <CollectionApprovalStep
-            contractAddress={offer.trade.tokenAddress}
-            tokenId={offer.trade.tokenId}
-            onValid={nextStep}
-          />
+          <CollectionApprovalStep asset={asset} onValid={nextStep} />
         </Case>
         <Case value="confirm-accept-buy-offer">
           <ConfirmAcceptBuyOfferStep offer={offer} onValid={closeDialog} />

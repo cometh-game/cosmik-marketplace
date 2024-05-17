@@ -93,15 +93,23 @@ const ERC20TransferButton = ({
     } else {
       // Native token transfer
       sendTransaction({
-        account: viewerAddress as Address,
         to: receiverAddress as Address,
         value: parseUnits(amount, decimalNumber),
       })
     }
-  }, [viewerAddress, tokenAddress, writeContract, receiverAddress, amount, decimalNumber, sendTransaction])
+  }, [
+    viewerAddress,
+    tokenAddress,
+    receiverAddress,
+    amount,
+    writeContract,
+    sendTransaction,
+    decimalNumber,
+  ])
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({ hash: txHash })
+  const { data: tx, isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({ hash: hash || txHash })
+  console.log("tx", tx)
 
   useEffect(() => {
     if (
@@ -180,11 +188,11 @@ const ERC20TransferButton = ({
             isPending ||
             isPendingSendTransaction
           }
-          isLoading={isConfirming || isPending || isPendingSendTransaction}
+          isLoading={isConfirming || isPending}
           onClick={transferTokens}
         >
           {isConfirming || isPending || isPendingSendTransaction
-            ? "Processing"
+            ? "Processing..."
             : tokenAddress
               ? "Transfer Tokens"
               : "Send Native Tokens"}

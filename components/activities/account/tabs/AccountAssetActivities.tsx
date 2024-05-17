@@ -1,23 +1,20 @@
 "use client"
 
 import { useCallback } from "react"
-import { useMemo } from "react"
 import { useCurrentCollectionContext } from "@/providers/currentCollection/currentCollectionContext"
-import {
-  useAssetReceivedOffers,
-  useAssetSentOffers,
-} from "@/services/orders/assetOffersService"
+import { useUserPurchaseOffers } from "@/services/orders/assetOffersService"
 import { Address } from "viem"
-import { useAccount } from "wagmi"
 
 import globalConfig from "@/config/globalConfig"
 import { useNFTFilters } from "@/lib/utils/nftFilters"
 import { Tabs } from "@/components/ui/Tabs"
+import { AccountActivitiesTab } from "@/components/trade-activities/AccountActivitiesTab"
+import { useBuyOffersSearch } from "@/components/trade-activities/activityDataHooks"
 
-import { TabBar } from "./TabBar"
-import { BuyOffersTabContent } from "./tabs-content/BuyOffersTabContent"
+import { ListingsTabContent } from "../../order-tables/listings/ListingsTabContent"
+import { BuyOffersTabContent } from "../../order-tables/offers/BuyOffersTabContent"
+import { AccountTabBar } from "./AccountTabBar"
 import { CollectionAssetsSearchTabContent } from "./tabs-content/CollectionAssetsSearchTabContent"
-import { SendBuyOffersTabContent } from "./tabs-content/SendBuyOffersTabContent"
 
 export type AccountAssetActivitiesProps = {
   walletAddress: Address
@@ -30,14 +27,13 @@ export const AccountAssetActivities = ({
   walletAddress,
   children,
 }: AccountAssetActivitiesProps) => {
-  const account = useAccount()
-  const viewerAddress = account.address
-  const owner = useMemo(() => {
-    return walletAddress === viewerAddress
-  }, [viewerAddress, walletAddress])
-
-  const receivedOffers = useAssetReceivedOffers({ owner: walletAddress })
-  const sentOffers = useAssetSentOffers({ owner: walletAddress })
+  const { offers: receivedOffers } = useBuyOffersSearch({
+    owner: walletAddress,
+    filteredOutMaker: walletAddress,
+  })
+  const { offers: sentOffers } = useBuyOffersSearch({
+    maker: walletAddress,
+  })
   const { switchCollection, currentCollectionAddress } =
     useCurrentCollectionContext()
   const { reset } = useNFTFilters()
@@ -60,10 +56,9 @@ export const AccountAssetActivities = ({
       onValueChange={onTabValueChange}
       className="w-full "
     >
-      <TabBar
-        receivedCounter={receivedOffers.length}
-        sentCounter={sentOffers.length}
-        owner={owner}
+      <AccountTabBar
+        receivedCounter={receivedOffers ? receivedOffers.length : 0}
+        sentCounter={sentOffers ? sentOffers.length : 0}
       />
       {globalConfig.contractAddresses.map((address) => (
         <CollectionAssetsSearchTabContent
@@ -73,8 +68,14 @@ export const AccountAssetActivities = ({
           {children}
         </CollectionAssetsSearchTabContent>
       ))}
-      <BuyOffersTabContent offers={receivedOffers} />
-      <SendBuyOffersTabContent offers={sentOffers} />
+      <BuyOffersTabContent
+        tabKey="received-offers"
+        owner={walletAddress}
+        filteredOutMaker={walletAddress}
+      />
+      <BuyOffersTabContent tabKey="sent-offers" maker={walletAddress} />
+      <ListingsTabContent maker={walletAddress} />
+      <AccountActivitiesTab walletAddress={walletAddress} />
     </Tabs>
   )
 }

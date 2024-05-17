@@ -4,9 +4,9 @@ import { useDebounceValue } from "usehooks-ts"
 import { Input } from "@/components/ui/Input"
 
 import { FiatPrice } from "./FiatPrice"
+import { InputProps } from "./Input"
 
-export interface PriceInputProps {
-  id?: string
+export interface PriceInputProps extends InputProps {
   onInputUpdate?: (value: string) => void
 }
 

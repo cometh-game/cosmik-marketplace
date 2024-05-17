@@ -1,5 +1,4 @@
-import React, { useMemo, useState } from "react"
-import { manifest } from "@/manifests/manifests"
+import React, { useState } from "react"
 import { ChevronDown, FilterIcon, XIcon } from "lucide-react"
 
 import { CardFiltersRaw } from "@/types/assets"
@@ -23,10 +22,10 @@ import { CheckboxFilter } from "./CheckboxFilter"
 import { FiltersBadgeCounter } from "./FiltersBadgeCounter"
 import { FiltersResetBtn } from "./FiltersResetBtn"
 
-export const FiltersFullscreen = ({
-  filters,
+const FiltersFullscreen = ({
+  attributeFilterOptions: filters,
 }: {
-  filters: MarketplacePanelFilters
+  attributeFilterOptions: MarketplacePanelFilters
 }) => {
   const { filtersCounter } = useNFTFilters()
   const [isOpen, setIsOpen] = useState(false)
@@ -37,8 +36,8 @@ export const FiltersFullscreen = ({
     <>
       <Button
         variant="secondary"
-        onClick={toggleFilters}
         className="relative max-md:px-3"
+        onClick={toggleFilters}
       >
         <FilterIcon size="16" className="md:mr-2" />
         <span className="max-md:hidden">Attributes filters</span>
@@ -95,7 +94,6 @@ export const FiltersFullscreen = ({
               ))}
             </div>
             <div className="mt-auto">
-              {/* <FiltersResetBtn size="lg" /> */}
               <FiltersResetBtn />
             </div>
           </div>

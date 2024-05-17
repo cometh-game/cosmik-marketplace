@@ -24,7 +24,7 @@ export const BreadcrumbElement = forwardRef<
   ComponentProps<typeof Link>
 >(({ children, ...props }, ref) => {
   return (
-    <Link ref={ref} {...props}>
+    <Link ref={ref} {...props} className="text-accent">
       {children}
     </Link>
   )

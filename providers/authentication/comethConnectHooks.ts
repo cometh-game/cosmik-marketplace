@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from "react"
+import { manifest } from "@/manifests/manifests"
 import { useCosmikLogout } from "@/services/cosmik/logoutService"
 import Bugsnag from "@bugsnag/js"
 import {
@@ -18,6 +19,48 @@ export const useIsComethConnectWallet = () => {
   const { connector } = useAccount()
   return useMemo(() => connector?.type === "cometh", [connector])
 }
+
+export const useComethConnectConnector = (userWalletAddress?: string) => {
+  return useMemo(() => {
+    if (!env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY || typeof window === 'undefined') {
+      return undefined
+    }
+    return comethConnectConnector({
+      apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY,
+      rpcUrl: manifest.rpcUrl,
+      walletAddress: userWalletAddress,
+    })
+  }, [userWalletAddress])
+}
+
+export const useComethConnectLogin = (
+  userWalletAddress?: string,
+  onConnectError?: (error: Error) => void
+) => {
+  const handleConnectError = useCallback(
+    (error: Error) => {
+      console.error("Error connecting with Cometh Connect", error)
+      if (onConnectError) {
+        onConnectError(error)
+      } else {
+        throw error
+      }
+    },
+    [onConnectError]
+  )
+  const { connect } = useConnect({
+    mutation: {
+      onError: handleConnectError,
+    },
+  })
+
+  const comethConnectConnector = useComethConnectConnector(userWalletAddress)
+
+  return useCallback(() => {
+    connect({ connector: comethConnectConnector as any })
+  }, [connect, comethConnectConnector])
+}
+
 
 function numberToHex(value: number): string {
   return `0x${value.toString(16)}`
@@ -55,7 +98,7 @@ export const useConnectComethWallet = () => {
         if (!isAddress(walletAddress)) {
           throw new Error("Invalid wallet address. Please contact support")
         }
-        await connect({ connector })
+        await connect({ connector } as any)
         if (account.isConnected && account.address !== walletAddress) {
           disconnect()
           throw new Error(
