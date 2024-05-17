@@ -145,7 +145,7 @@ export function AssetCardBase({
                 height={380}
                 width={320}
                 className={cn("z-20 size-full rounded-lg object-contain", {
-                  "p-3 sm:p-8": isCardbacksAsset,
+                  "": isCardbacksAsset,
                 })}
               />
             </AssetImageContainer>
