@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useMemo } from "react"
+import { useUsernames } from "@/services/cosmik/userService"
 import { TokenType, TradeDirection, TradeStatus } from "@cometh/marketplace-sdk"
 import { ArrowRightIcon } from "lucide-react"
 import { useAccount } from "wagmi"
@@ -31,6 +32,11 @@ export const ActivityUsersCell = ({
     [activity, viewerAddress]
   )
 
+  const { usernames, isFetchingUsernames } = useUsernames([
+    nftOwner.address,
+    nftReceiver.address,
+  ])
+
   const shouldOnlyShowOneUser = useMemo(() => {
     return (
       isOrderActivity(activity) &&
@@ -59,14 +65,28 @@ export const ActivityUsersCell = ({
     <div className="flex items-center gap-2">
       {!shouldHideOwner && (
         <>
-          <UserButton user={nftOwner} />
+          <UserButton
+            user={{
+              username: isFetchingUsernames
+                ? "..."
+                : usernames[nftOwner.address],
+              address: nftOwner.address,
+            }}
+          />
           <CopyButton textToCopy={nftOwner.address} />
         </>
       )}
       {!shouldOnlyShowOneUser && <ArrowRightIcon size={18} />}
       {!shouldHideReceiver && (
         <>
-          <UserButton user={nftReceiver} />
+          <UserButton
+            user={{
+              username: isFetchingUsernames
+                ? "..."
+                : usernames[nftReceiver.address],
+              address: nftReceiver.address,
+            }}
+          />
           <CopyButton textToCopy={nftReceiver.address} />
         </>
       )}
