@@ -1,14 +1,13 @@
 import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { useNativeBalance } from "@/services/balance/balanceService"
-import {
-  useHasEnoughGas,
-} from "@/services/balance/gasService"
+import { useHasEnoughGas } from "@/services/balance/gasService"
 import { useAccount } from "wagmi"
 
 import globalConfig from "@/config/globalConfig"
 import { Button } from "@/components/ui/Button"
+import { InfoBox } from "@/components/ui/MessageBox"
 import { Price } from "@/components/ui/Price"
-import { useRouter } from "next/navigation"
 
 export type AddGasStepProps = {
   onValid: () => void
@@ -17,10 +16,8 @@ export type AddGasStepProps = {
 export function AddGasStep({ onValid }: AddGasStepProps) {
   const account = useAccount()
   const viewer = account.address
-  const {
-    refreshBalance,
-    isPending: isRefreshingBalance,
-  } = useNativeBalance(viewer)
+  const { refreshBalance, isPending: isRefreshingBalance } =
+    useNativeBalance(viewer)
   const { push } = useRouter()
 
   const data = useHasEnoughGas(viewer)
@@ -52,10 +49,39 @@ export function AddGasStep({ onValid }: AddGasStepProps) {
       <p>
         Wallet address: <strong>{viewer}</strong>
       </p>
-      <div className="flex gap-2">
-        <Button onClick={() => push("/topup")}>
-          Fill your wallet
-        </Button>
+
+      <InfoBox
+        title="Warning"
+        description={
+          <div className="text-muted-foreground">
+            Cosmik Battle is deployed on the Muster and leverages its own
+            Account Abstraction solution. Prior to engaging in any
+            wallet-related activity, please visit our wallet tutorials.
+            <br />
+            <br />
+            <a
+              href="https://www.cosmikbattle.com/cosmik-academy/wallet-management"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-accent-foreground font-medium underline transition-colors"
+            >
+              Wallet Management
+            </a>
+            &nbsp;and&nbsp;
+            <a
+              href="https://www.cosmikbattle.com/cosmik-academy/marketplace-gettingready"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-accent-foreground font-medium underline transition-colors"
+            >
+              Marketplace Getting Ready
+            </a>
+          </div>
+        }
+      />
+
+      <div className="flex gap-4">
+        <Button onClick={() => push("/topup")}>Fill your wallet</Button>
         <Button
           variant="link"
           isLoading={isRefreshingBalance}

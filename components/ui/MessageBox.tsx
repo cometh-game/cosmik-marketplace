@@ -4,7 +4,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "./Card"
 
 export type MessageBoxProps = {
   title: string
-  description: string
+  description: string | React.ReactNode
   renderIcon?: () => React.ReactNode
   className?: string
 }
@@ -33,14 +33,14 @@ export const InfoBox = ({
   description,
 }: {
   title: string
-  description: string
+  description: string | React.ReactNode
 }) => {
   return (
     <MessageBox
       title={title}
       description={description}
       renderIcon={() => <Info size={20} />}
-      className="border-0 p-0 shadow-none"
+      className="rounded-lg border-0 bg-red-50/[0.05] p-5 shadow-none"
     />
   )
 }
