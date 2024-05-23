@@ -10,6 +10,7 @@ import { useAccount } from "wagmi"
 import globalConfig from "@/config/globalConfig"
 import { Button } from "@/components/ui/Button"
 import { Price } from "@/components/ui/Price"
+import { InfoBox } from "@/components/ui/MessageBox"
 
 export type AddGasStepProps = {
   onValid: () => void
@@ -63,7 +64,36 @@ export function AddGasStep({ onValid }: AddGasStepProps) {
       <p>
         Wallet address: <strong>{viewer}</strong>
       </p>
-      <div className="flex gap-2">
+      <InfoBox
+        title="Warning"
+        description={
+          <div className="text-muted-foreground">
+            Cosmik Battle is deployed on the Muster and leverages its own
+            Account Abstraction solution. Prior to engaging in any
+            wallet-related activity, please visit our wallet tutorials.
+            <br />
+            <br />
+            <a
+              href="https://www.cosmikbattle.com/cosmik-academy/wallet-management"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-accent-foreground font-medium underline transition-colors"
+            >
+              Wallet Management
+            </a>
+            &nbsp;and&nbsp;
+            <a
+              href="https://www.cosmikbattle.com/cosmik-academy/marketplace-gettingready"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-accent-foreground font-medium underline transition-colors"
+            >
+              Marketplace Getting Ready
+            </a>
+          </div>
+        }
+      />
+      <div className="flex gap-4">
         <Button onClick={() => push("/topup")}>
           Fill your wallet
         </Button>
