@@ -277,8 +277,7 @@ export function AssetCard({ asset, children }: AssetCardProps) {
       asset={asset}
     >
       <>
-        <Link
-          href={`/nfts/${asset.contractAddress}/${asset.tokenId}`}
+        <div
           className={cn(
             "mb-4 flex flex-nowrap items-center text-xl font-semibold text-white"
           )}
@@ -286,7 +285,7 @@ export function AssetCard({ asset, children }: AssetCardProps) {
           <span className="inline-block max-w-[100%_-_80px] truncate">
             {asset.metadata.name ? asset.metadata.name : "Unknown NFT"}
           </span>
-        </Link>
+        </div>
         <div className="flex items-center justify-between gap-3">
           <div>
             <div className="text-sm font-medium">Price</div>

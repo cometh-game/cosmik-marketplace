@@ -41,17 +41,18 @@ export function AddGasStep({ onValid }: AddGasStepProps) {
         <Price
           amount={globalConfig.minimumBalanceForGas}
           isNativeToken={true}
+          className="text-accent-foreground"
         />{" "}
         to your wallet, and then refresh your balance. Your transactions will
         not cost as much but we need an minimum amount to be sure you can pay
         for gas.
       </p>
       <p>
-        Wallet address: <strong>{viewer}</strong>
+        Wallet address: <strong className="break-words">{viewer}</strong>
       </p>
 
       <InfoBox
-        title="Warning"
+        title="Information"
         description={
           <div className="text-muted-foreground">
             Cosmik Battle is deployed on the Muster and leverages its own
@@ -59,28 +60,30 @@ export function AddGasStep({ onValid }: AddGasStepProps) {
             wallet-related activity, please visit our wallet tutorials.
             <br />
             <br />
-            <a
-              href="https://www.cosmikbattle.com/cosmik-academy/wallet-management"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-accent-foreground font-medium underline transition-colors"
-            >
-              Wallet Management
-            </a>
-            &nbsp;and&nbsp;
-            <a
-              href="https://www.cosmikbattle.com/cosmik-academy/marketplace-gettingready"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-accent-foreground font-medium underline transition-colors"
-            >
-              Marketplace Getting Ready
-            </a>
+            <div className="flex flex-col items-center justify-center gap-1 sm:flex-row sm:gap-2">
+              <a
+                href="https://www.cosmikbattle.com/cosmik-academy/wallet-management"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-accent-foreground font-medium underline transition-colors"
+              >
+                Wallet Management
+              </a>
+              and
+              <a
+                href="https://www.cosmikbattle.com/cosmik-academy/marketplace-gettingready"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-accent-foreground font-medium underline transition-colors"
+              >
+                Marketplace Getting Ready
+              </a>
+            </div>
           </div>
         }
       />
 
-      <div className="flex gap-4">
+      <div className="mt-2 flex gap-4">
         <Button onClick={() => push("/topup")}>Fill your wallet</Button>
         <Button
           variant="link"

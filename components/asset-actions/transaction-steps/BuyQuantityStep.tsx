@@ -31,11 +31,13 @@ export function BuyQuantityStep({
   const isErc1155 = useAssetIs1155(asset)
   return (
     <div className="flex flex-col items-center justify-center gap-[16px] pt-[16px]">
-      <div className="flex w-full flex-col items-center justify-center">
-        <AssetHeaderImage asset={asset} />
-        <div>
-          <h1 className="mt-2 text-2xl font-bold">{asset.metadata.name}</h1>
-        </div>
+      <div className="flex w-full justify-center">
+        <AssetHeaderImage
+          asset={asset}
+          classNames={{
+            image: "p-0",
+          }}
+        />
       </div>
 
       <TokenQuantityInput

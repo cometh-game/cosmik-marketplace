@@ -19,7 +19,7 @@ export function CurrencySwitcher({
   onCurrencyChange,
 }: CurrencySwitcherProps) {
   return (
-    <div className="flex items-center gap-x-2">
+    <div className="flex items-center gap-2">
       <Label htmlFor="make-buy-offer-price">Choose your currency :</Label>
       <Select
         defaultValue={currency}

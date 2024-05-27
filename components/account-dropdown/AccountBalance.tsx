@@ -5,13 +5,14 @@ import { useAllBalances } from "@/services/balance/balanceService"
 
 import { env } from "@/config/env"
 import globalConfig from "@/config/globalConfig"
+import { Button } from "@/components/ui/Button"
 import { FiatPrice } from "@/components/ui/FiatPrice"
 import { Separator } from "@/components/ui/Separator"
 import { WrapButton } from "@/components/asset-actions/buttons/WrapButton"
 
-import { Button } from "../ui/Button"
+import ERC20TransferButton from "../activities/account/ERC20TransferButton"
 
-export function AccountBalance() {
+export function AccountBalance({ hideFillWallet = false }: { hideFillWallet?: boolean }) {
   const balance = useAllBalances()
   const [isUnwrap, setIsUnwrap] = useState(false)
   const { push } = useRouter()
@@ -20,13 +21,22 @@ export function AccountBalance() {
     <>
       <div className="border-accent/10 mb-3 space-y-3 rounded-md border p-3">
         <div className="flex flex-col gap-2">
-          <AccountBalanceLine
-            balance={balance.native}
-            currency={globalConfig.network.nativeToken.symbol}
-            logo={globalConfig.network.nativeToken.thumb}
-            hideFiatPrice={!globalConfig.useNativeForOrders}
-          />
+          <div className="flex justify-between">
+            <AccountBalanceLine
+              balance={balance.native}
+              currency={globalConfig.network.nativeToken.symbol}
+              logo={globalConfig.network.nativeToken.thumb}
+              hideFiatPrice={!globalConfig.useNativeForOrders}
+            />
+            <ERC20TransferButton
+              tokenSymbol={globalConfig.network.nativeToken.symbol}
+              decimalNumber={globalConfig.network.nativeToken.decimals}
+              variant="ghost"
+            />
+          </div>
+
           <Separator />
+
           <AccountBalanceLine
             balance={
               globalConfig.useNativeForOrders ? balance.wrapped : balance.ERC20
@@ -38,9 +48,11 @@ export function AccountBalance() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Button className="w-full" onClick={() => push("/topup")}>
-          Fill your wallet
-        </Button>
+        {!hideFillWallet && (
+          <Button className="w-full" onClick={() => push("/topup")}>
+            Fill your wallet
+          </Button>
+        )}
         {globalConfig.useNativeForOrders && (
           <div className="grid">
             <WrapButton
@@ -85,7 +97,12 @@ export function AccountBalanceLine({
       <span className="text-[15px] font-semibold">
         {balance} {currency}
       </span>
-      <span>{balance !== "0.0" && <FiatPrice amount={balance} />}</span>
+      {balance !== "0.0" && (
+        <span>
+          {" "}
+          <FiatPrice amount={balance} />
+        </span>
+      )}
     </div>
   )
 }

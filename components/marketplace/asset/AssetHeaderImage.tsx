@@ -13,8 +13,12 @@ import { AssetImage } from "@/components/ui/AssetImage"
 
 export const AssetHeaderImage = ({
   asset,
+  classNames,
 }: {
   asset: SearchAssetWithTradeData | AssetWithTradeData | OrderAsset
+  classNames?: {
+    image?: string
+  }
 }) => {
   const isViewerAnOwner = useIsViewerAnOwner(asset)
 
@@ -34,7 +38,7 @@ export const AssetHeaderImage = ({
     <div
       className={cn(
         "btn-default text-accent relative w-full overflow-hidden before:bg-transparent after:content-none lg:w-[55%]",
-        isViewerAnOwner ? "bg-[#f4f2e8]" : "bg-primary/20"
+        isViewerAnOwner ? "bg-[#f4f2e8]/[.02]" : "bg-primary/20"
       )}
     >
       <AspectRatio ratio={1}>
@@ -47,7 +51,7 @@ export const AssetHeaderImage = ({
             width={560}
             className={cn("size-full rounded-xl object-contain p-[3.5%]", {
               "p-[10%]": isCardbacks,
-            })}
+            }, classNames?.image)}
           />
         </div>
       </AspectRatio>

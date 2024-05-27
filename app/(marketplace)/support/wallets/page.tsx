@@ -18,11 +18,11 @@ import {
 } from "wagmi"
 
 import { env } from "@/config/env"
-import globalConfig from "@/config/globalConfig"
+// import globalConfig from "@/config/globalConfig"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { AccountBalance } from "@/components/account-dropdown/AccountBalance"
-import ERC20TransferButton from "@/components/activities/account/ERC20TransferButton"
+// import ERC20TransferButton from "@/components/activities/account/ERC20TransferButton"
 import { TransferAssetButton } from "@/components/asset-actions/buttons/TransferAssetButton"
 
 const COMETH_PASSKEY_PREFIX = "cometh-connect-"
@@ -99,9 +99,9 @@ const WalletAssetTransfer = () => {
       <div className="mb-1 mt-3">
         <div className="mb-1 text-xl font-bold">ERC20 (funds)</div>
         <div className="mb-1">Your Current Balance</div>
-        <AccountBalance />
+        <AccountBalance hideFillWallet={true} />
       </div>
-      <div className="mt-3 flex gap-3">
+      {/* <div className="mt-3 flex gap-3">
         <div>
           <ERC20TransferButton
             tokenSymbol={globalConfig.network.nativeToken.symbol}
@@ -124,7 +124,7 @@ const WalletAssetTransfer = () => {
             />
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   )
 }
@@ -161,7 +161,6 @@ const WalletDebugPanels = () => {
     })
     connect({ connector: connector as any })
   }, [newWalletAddress, disconnect, connect, account?.isConnected])
-  console.log("account", account)
 
   return (
     <div className="container mx-auto flex w-full max-w-[880px] flex-col gap-4 py-4 max-sm:pt-4">
@@ -187,7 +186,7 @@ const WalletDebugPanels = () => {
         <div className="mt-3 text-lg font-bold">Burner Wallets</div>
         <ul>
           {localStorageWallets.burnerWallets.length === 0 ? (
-            <div>No burner wallet</div>
+            <li>No burner wallet</li>
           ) : (
             localStorageWallets.burnerWallets.map((wallet) => (
               <li key={wallet}>{wallet}</li>

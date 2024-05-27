@@ -17,8 +17,8 @@ const MessageBox = ({
 }: MessageBoxProps) => {
   return (
     <Card className={className}>
-      <CardHeader className="py-0">
-        <CardTitle className="flex items-center justify-center gap-2 text-lg font-semibold">
+      <CardHeader className="">
+        <CardTitle className="text-accent-foreground flex items-center justify-center gap-2 text-lg font-semibold">
           {renderIcon?.()}
           {title}
         </CardTitle>
@@ -40,7 +40,7 @@ export const InfoBox = ({
       title={title}
       description={description}
       renderIcon={() => <Info size={20} />}
-      className="rounded-lg border-0 bg-red-50/[0.05] p-5 shadow-none"
+      className="rounded-lg border-0 bg-white/[0.05] shadow-none"
     />
   )
 }

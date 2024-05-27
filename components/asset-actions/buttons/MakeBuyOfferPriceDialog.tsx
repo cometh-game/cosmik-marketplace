@@ -53,7 +53,7 @@ type MakeBuyOfferPriceDialogProps = {
   asset: AssetWithTradeData | SearchAssetWithTradeData
 } & React.ComponentProps<typeof Button>
 
-const DEFAULT_VALIDITY = "3"
+const DEFAULT_VALIDITY = "10"
 
 export function MakeBuyOfferPriceDialog({
   submitCallback,
@@ -98,17 +98,19 @@ export function MakeBuyOfferPriceDialog({
           <DialogTitle>Buy Offer</DialogTitle>
         </DialogHeader>
 
-        <div className="flex w-full flex-col items-center justify-center">
-          <AssetHeaderImage asset={asset} />
-          <div>
-            <h1 className="mt-2 text-2xl font-bold">{asset.metadata.name}</h1>
-          </div>
+        <div className="flex w-full justify-center">
+          <AssetHeaderImage
+            asset={asset}
+            classNames={{
+              image: "p-0",
+            }}
+          />
         </div>
 
         <AssetFloorPriceLine asset={asset} />
 
         <div className="mt-4 flex flex-col gap-4 md:flex-row">
-          <div className="flex flex-col gap-3 md:w-2/3">
+          <div className="flex flex-col gap-2 md:w-2/3">
             <Label htmlFor="make-buy-offer-price">
               {isErc1155 ? "Unit offer" : "Offer"} price in{" "}
               {globalConfig.ordersDisplayCurrency.symbol} *
@@ -118,7 +120,7 @@ export function MakeBuyOfferPriceDialog({
               onInputUpdate={(inputValue) => setUnitPrice(inputValue)}
             />
           </div>
-          <div className="flex w-full flex-col gap-3 md:w-1/3">
+          <div className="flex w-full flex-col gap-2 md:w-1/3">
             <OrderExpirySelect
               setValidity={setValidity}
               defaultValidity={DEFAULT_VALIDITY}

@@ -42,11 +42,6 @@ import TokenQuantityInput from "@/components/erc1155/TokenQuantityInput"
 import { useInvalidateAssetQueries } from "@/components/marketplace/asset/AssetDataHook"
 import { AssetHeaderImage } from "@/components/marketplace/asset/AssetHeaderImage"
 
-type Inputs = {
-  example: string
-  exampleRequired: string
-}
-
 type TransferAssetButtonProps = {
   asset: SearchAssetWithTradeData | AssetWithTradeData
   verifyAddress?: boolean
@@ -155,29 +150,31 @@ export function TransferAssetButton({
 
   return (
     <Dialog modal open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <TooltipProvider delayDuration={200}>
-          <Tooltip defaultOpen={false}>
-            <TooltipTrigger asChild>
+      <TooltipProvider delayDuration={200}>
+        <Tooltip defaultOpen={false}>
+          <TooltipTrigger asChild>
+            <DialogTrigger asChild>
               <Button size="sm" variant="secondary" className="mr-2">
                 <SendHorizonal size={16} />
               </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p className="text-sm font-bold">Transfer asset</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </DialogTrigger>
+            </DialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="text-sm font-bold">Transfer asset</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Asset transfer</DialogTitle>
         </DialogHeader>
-        <div className="flex w-full flex-col items-center justify-center">
-          <AssetHeaderImage asset={asset} />
-          <div>
-            <h1 className="mt-2 text-2xl font-bold">{asset.metadata.name}</h1>
-          </div>
+        <div className="flex w-full justify-center">
+          <AssetHeaderImage
+            asset={asset}
+            classNames={{
+              image: "p-0",
+            }}
+          />
         </div>
         <div className="text-muted-foreground">
           <p className="mb-2">
@@ -187,8 +184,8 @@ export function TransferAssetButton({
               Please make sure that the recipient address is compatible with the
               Muster Network
             </span>{" "}
-            before proceeding with the transfer. For more information, please
-            visit :
+            before proceeding with the transfer. <br />
+            For more information, please visit :
           </p>
           <ul className="ml-5 list-disc">
             <li>
@@ -213,10 +210,8 @@ export function TransferAssetButton({
             </li>
           </ul>
         </div>
-        <div className="">
-          <Label htmlFor="transfer-address" className="mb-0.5">
-            Transfer asset to address:
-          </Label>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="transfer-address">Transfer asset to address:</Label>
           <Input
             id="transfer-address"
             placeholder="0x1a..."

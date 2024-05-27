@@ -24,11 +24,8 @@ export default function DetailsPage({
 }) {
   const { assetId, contractAddress } = params
   const { data: asset } = useAssetDetails(contractAddress, assetId)
-  console.log("asset", asset)
   const { data: assetTransfers } = useAssetTransfers(contractAddress, assetId)
-  console.log("assetTransfers", assetTransfers)
   const { data: assetOwners } = useAssetOwners(contractAddress, assetId)
-  console.log("assetOwners", assetOwners)
   const { data: assetOrdersSearch } = useSearchOrders({
     tokenAddress: contractAddress,
     tokenIds: [assetId],
@@ -37,13 +34,11 @@ export default function DetailsPage({
     orderByDirection: FilterDirection.DESC,
     limit: 100,
   })
-  console.log("assetOrdersSearch", assetOrdersSearch)
   const { data: assetFilledEventsSearch } = useSearchFilledEvents({
     tokenAddress: contractAddress,
     tokenIds: [assetId],
     limit: 100,
   })
-  console.log("assetFilledEventsSearch", assetFilledEventsSearch)
 
   const loading =
     !asset ||
@@ -51,7 +46,6 @@ export default function DetailsPage({
     !assetOrdersSearch ||
     !assetOwners ||
     !assetFilledEventsSearch
-  console.log("loading", loading)
 
   return (
     <div className="container py-6">

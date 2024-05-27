@@ -66,6 +66,7 @@ export function FundsStep({ price, onValid }: FundsStepProps) {
           amount={missingBalance}
           hideSymbol={false}
           isNativeToken={true}
+          className="text-accent-foreground"
         />
         . Once you have funded your wallet with some{" "}
         <strong>{globalConfig.ordersDisplayCurrency.name}</strong>, please
@@ -83,27 +84,29 @@ export function FundsStep({ price, onValid }: FundsStepProps) {
             wallet-related activity, please visit our wallet tutorials.
             <br />
             <br />
-            <a
-              href="https://www.cosmikbattle.com/cosmik-academy/wallet-management"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-accent-foreground font-medium underline transition-colors"
-            >
-              Wallet Management
-            </a>
-            &nbsp;and&nbsp;
-            <a
-              href="https://www.cosmikbattle.com/cosmik-academy/marketplace-gettingready"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-accent-foreground font-medium underline transition-colors"
-            >
-              Marketplace Getting Ready
-            </a>
+            <div className="flex flex-col items-center justify-center gap-1 sm:flex-row sm:gap-2">
+              <a
+                href="https://www.cosmikbattle.com/cosmik-academy/wallet-management"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-accent-foreground font-medium underline transition-colors"
+              >
+                Wallet Management
+              </a>
+              and
+              <a
+                href="https://www.cosmikbattle.com/cosmik-academy/marketplace-gettingready"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-accent-foreground font-medium underline transition-colors"
+              >
+                Marketplace Getting Ready
+              </a>
+            </div>
           </div>
         }
       />
-      <div className="flex gap-4">
+      <div className="mt-2 flex gap-4">
         <Button onClick={() => push("/topup")}>Fill your wallet</Button>
         <Button
           variant="link"

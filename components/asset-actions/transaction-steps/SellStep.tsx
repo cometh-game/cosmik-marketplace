@@ -29,7 +29,7 @@ export type SellStepProps = {
   onClose: () => void
 }
 
-const DEFAULT_VALIDITY = "3"
+const DEFAULT_VALIDITY = "10"
 
 /**
  * Arriving at this stage means that the user has approved the collection
@@ -84,17 +84,19 @@ export function SellStep({ asset, onClose }: SellStepProps) {
 
   return (
     <>
-      <div className="flex w-full flex-col items-center justify-center">
-        <AssetHeaderImage asset={asset} />
-        <div>
-          <h1 className="mt-2 text-2xl font-bold">{asset.metadata.name}</h1>
-        </div>
+      <div className="flex w-full justify-center">
+        <AssetHeaderImage
+          asset={asset}
+          classNames={{
+            image: "p-0",
+          }}
+        />
       </div>
 
       <AssetFloorPriceLine asset={asset} />
 
       <div className="mt-4 flex w-full flex-col gap-4 sm:flex-row">
-        <div className="flex flex-col gap-3 sm:w-2/3">
+        <div className="flex flex-col gap-2 sm:w-2/3">
           <Label htmlFor="selling-price">
             {isErc1155 ? "Unit selling" : "Selling"} price in{" "}
             {globalConfig.ordersErc20.symbol}*
@@ -108,7 +110,7 @@ export function SellStep({ asset, onClose }: SellStepProps) {
           />
         </div>
 
-        <div className="flex flex-col gap-3 sm:w-auto">
+        <div className="flex flex-col gap-2 sm:w-auto">
           <OrderExpirySelect
             setValidity={setValidity}
             defaultValidity={DEFAULT_VALIDITY}
