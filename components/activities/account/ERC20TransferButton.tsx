@@ -127,9 +127,6 @@ const ERC20TransferButton = ({
     isLoading: isConfirming,
     isSuccess: isConfirmed,
   } = useWaitForTransactionReceipt({ hash: hash || txHash })
-  console.log("hash", hash)
-  console.log("txHash", txHash)
-  console.log("tx", tx)
 
   useEffect(() => {
     if (
