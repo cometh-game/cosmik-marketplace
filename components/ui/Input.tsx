@@ -22,14 +22,17 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           event.target.value,
           globalConfig.decimals.inputMaxDecimals
         )
-        if(props.min !== undefined && value < props.min) {
-          value = props.min.toString()
-        }
       }
 
       setValue(value)
       if (inputUpdateCallback) {
         inputUpdateCallback(value)
+      }
+    }
+
+    const handleBlur = () => {
+      if (props.min !== undefined && value < props.min) {
+        setValue(props.min.toString())
       }
     }
 
@@ -62,6 +65,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           value={value}
           onChange={handleChange}
+          onBlur={handleBlur}
           className="input size-full !bg-transparent pr-5 font-medium outline-none file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-white/50"
           ref={ref}
           {...props}

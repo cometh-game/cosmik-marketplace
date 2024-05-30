@@ -10,6 +10,8 @@ export interface PriceInputProps extends InputProps {
   onInputUpdate?: (value: string) => void
 }
 
+const MIN_VALUE = 0.0001
+
 export const PriceInput = ({ id, onInputUpdate }: PriceInputProps) => {
   const [inputValue, setInputValue] = useState<string>("")
 
@@ -27,7 +29,7 @@ export const PriceInput = ({ id, onInputUpdate }: PriceInputProps) => {
 
   return (
     <div className="space-y-1">
-      <Input id={id} type="number" inputUpdateCallback={handleChange} min={0} />
+      <Input id={id} type="number" inputUpdateCallback={handleChange} min={MIN_VALUE} step={MIN_VALUE} />
       <FiatPrice amount={debouncedValue} />
     </div>
   )
