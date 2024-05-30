@@ -1,10 +1,10 @@
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { SiweMessage } from "siwe"
 
 import { cosmikClient } from "@/lib/clients"
 import { toast } from "@/components/ui/toast/hooks/useToast"
 
-export type AddExternalWalletMutationOptions = {
+type AddExternalWalletMutationOptions = {
   walletAddress: string
   nonce: string
   signature: string
@@ -35,6 +35,28 @@ export const useAddExternalWallet = () => {
     onError: (error: Error) => {
       toast({
         title: "Failed to add wallet",
+        description: error?.message || "Please retry or contact support",
+        variant: "destructive",
+        duration: 5000,
+      })
+    },
+  })
+}
+
+export const useRemoveExternalWallet = () => {
+  return useMutation({
+    mutationKey: ["cosmik, external-addresses"],
+    mutationFn: ({ walletAddress }: { walletAddress: string }) =>
+      cosmikClient.delete(`/me/external-addresses/${walletAddress}`),
+    onSuccess: () => {
+      toast({
+        title: "Wallet removed",
+        description: "Your wallet has been removed from your account",
+      })
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Failed to remove wallet",
         description: error?.message || "Please retry or contact support",
         variant: "destructive",
         duration: 5000,

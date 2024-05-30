@@ -297,8 +297,7 @@ const ERC20TransferButton = ({
           />
           <Label htmlFor="reading" className="cursor-pointer leading-tight">
             I have reviewed the Wallet Management tutorial and understand that
-            my Native Tokens will be transferred to the Receiver Address wallet
-            on the Muster Network
+            my Native Tokens will be transferred to the Receiver Address on Muster Network
           </Label>
         </div>
 

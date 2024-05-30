@@ -57,6 +57,7 @@ export const UserAuthProvider = ({
         setUser(userLogged)
 
         if (isWalletsPage) {
+          console.log("Setting user is fully connected to true")
           setUserIsReconnecting(false)
           setUserIsFullyConnected(true)
           return
@@ -73,7 +74,7 @@ export const UserAuthProvider = ({
       setUserIsReconnecting(false)
     }
 
-    if (!isFetchingUserLogged && currentWalletInStorage) {
+    if (!isFetchingUserLogged) {
       reconnectingWallet()
     }
   }, [

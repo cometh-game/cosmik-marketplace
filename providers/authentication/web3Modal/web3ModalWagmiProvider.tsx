@@ -22,9 +22,12 @@ const DEFAULT_WAGMI_CONFIG_PARAMS = {
 export const wagmiConfig = createConfig(DEFAULT_WAGMI_CONFIG_PARAMS)
 
 createWeb3Modal({
-  wagmiConfig: wagmiConfig,
+  wagmiConfig,
   projectId: manifest.walletConnectProjectId,
-  connectorImages: {},
+  connectorImages: {
+    cometh:
+      "https://pbs.twimg.com/profile_images/1679433363818442753/E2kNVLBe_400x400.jpg",
+  },
 })
 
 export const useOpenLoginModal = () => {
@@ -37,26 +40,26 @@ export function MarketplaceWagmiProvider({
 }: {
   children: React.ReactNode
 }) {
-  const comethConnectConnector = useComethConnectConnector()
+  // const comethConnectConnector = useComethConnectConnector()
 
-  const getWagmiConfig = useCallback(
-    (connectorToInsert?: CreateConnectorFn) => {
-      const connectors = [...wagmiConnectors]
-      if (connectorToInsert) {
-        connectors.push(connectorToInsert)
-      }
-      return createConfig({
-        ...DEFAULT_WAGMI_CONFIG_PARAMS,
-        connectors: connectors,
-      })
-    },
-    []
-  )
+  // const getWagmiConfig = useCallback(
+  //   (connectorToInsert?: CreateConnectorFn) => {
+  //     const connectors = [...wagmiConnectors]
+  //     if (connectorToInsert) {
+  //       connectors.push(connectorToInsert)
+  //     }
+  //     return createConfig({
+  //       ...DEFAULT_WAGMI_CONFIG_PARAMS,
+  //       connectors: connectors,
+  //     })
+  //   },
+  //   []
+  // )
 
-  const coreWagmiConfig = useMemo(
-    () => getWagmiConfig(comethConnectConnector as any),
-    [getWagmiConfig, comethConnectConnector]
-  )
+  // const coreWagmiConfig = useMemo(
+  //   () => getWagmiConfig(comethConnectConnector as any),
+  //   [getWagmiConfig, comethConnectConnector]
+  // )
 
-  return <WagmiProvider config={coreWagmiConfig}>{children}</WagmiProvider>
+  return <WagmiProvider config={wagmiConfig}>{children}</WagmiProvider>
 }
