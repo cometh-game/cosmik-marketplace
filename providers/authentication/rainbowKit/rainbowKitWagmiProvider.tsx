@@ -17,7 +17,7 @@ const DEFAULT_WAGMI_CONFIG_PARAMS = {
   transports: {
     [marketplaceChain.id]: http(manifest.rpcUrl),
   },
-  ssr: true
+  ssr: true,
 }
 
 export const useOpenLoginModal = () => {
@@ -45,7 +45,7 @@ export function MarketplaceWagmiProvider({
   }, [comethConnectConnector])
 
   return (
-    <WagmiProvider config={coreWagmiConfig}>
+    <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
       <MarketplaceRainbowKitProvider>
         <>
           <div className="hidden">

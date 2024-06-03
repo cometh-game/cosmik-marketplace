@@ -16,7 +16,7 @@ const DEFAULT_WAGMI_CONFIG_PARAMS = {
   transports: {
     [marketplaceChain.id]: http(manifest.rpcUrl),
   },
-  ssr: true
+  ssr: true,
 }
 
 export const wagmiConfig = createConfig(DEFAULT_WAGMI_CONFIG_PARAMS)
@@ -61,5 +61,9 @@ export function MarketplaceWagmiProvider({
   //   [getWagmiConfig, comethConnectConnector]
   // )
 
-  return <WagmiProvider config={wagmiConfig}>{children}</WagmiProvider>
+  return (
+    <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
+      {children}
+    </WagmiProvider>
+  )
 }

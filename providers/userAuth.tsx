@@ -74,7 +74,7 @@ export const UserAuthProvider = ({
       setUserIsReconnecting(false)
     }
 
-    if (!isFetchingUserLogged) {
+    if (!isFetchingUserLogged && currentWalletInStorage) {
       reconnectingWallet()
     }
   }, [

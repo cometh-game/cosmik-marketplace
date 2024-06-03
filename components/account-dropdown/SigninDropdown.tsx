@@ -57,6 +57,7 @@ export function SigninDropdown({
       try {
         setIsLoading(true)
         setUser(user)
+        console.log("on log l'user")
         // Attempt to retrieve the wallet address to determine if it is the first connection
         await retrieveWalletAddress(user.address)
         // If passkey signer is found for this address, connect the wallet
@@ -68,11 +69,11 @@ export function SigninDropdown({
         })
       } catch (error) {
         console.error("Error connecting wallet in SigninDropdown", error)
-        Bugsnag.notify(error as Error, function (report) {
-          report.context = "User Login"
-          report.setUser(user.id, user.email, user.userName)
-          report.addMetadata("user", user)
-        })
+        // Bugsnag.notify(error as Error, function (report) {
+        //   report.context = "User Login"
+        //   report.setUser(user.id, user.email, user.userName)
+        //   report.addMetadata("user", user)
+        // })
         // If an error occurs, likely due to a first-time connection, display the authorization modal
         setDisplaySigninDialog(false)
         setDisplayAutorizationProcess(true)
