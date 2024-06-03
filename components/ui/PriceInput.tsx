@@ -36,6 +36,7 @@ export const PriceInput = ({ id, onInputUpdate }: PriceInputProps) => {
         inputUpdateCallback={handleChange}
         min={MIN_VALUE}
         step={MIN_VALUE}
+        placeholder="0.01"
       />
       <FiatPrice amount={debouncedValue} />
       {parseFloat(inputValue) < MIN_VALUE && (
