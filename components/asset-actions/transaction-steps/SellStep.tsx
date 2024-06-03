@@ -138,7 +138,7 @@ export function SellStep({ asset, onClose }: SellStepProps) {
           className="flex w-full gap-1"
           size="lg"
           onClick={onSubmit}
-          disabled={isPending || !orderParams?.price}
+          disabled={isPending || !orderParams?.price || totalPrice.isZero()}
           isLoading={isPending}
         >
           <span>Sell</span>

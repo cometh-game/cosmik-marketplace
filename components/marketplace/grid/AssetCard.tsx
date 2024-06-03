@@ -177,7 +177,6 @@ export function AssetCardBase({
               "absolute bottom-4 left-1/2 -translate-x-1/2"
             )}
           >
-            {/* {renderAssetActions(asset, isOwnerAsset)} */}
             <AssetActions asset={asset} isViewerAnOwner={isViewerAnOwner} />
           </div>
         </div>
@@ -225,7 +224,7 @@ function AssetActions({
   let button = undefined
   let buttonText = ""
   if (asset.orderbookStats.lowestListingPrice && !isViewerAnOwner) {
-    buttonText = "Buy now "
+    buttonText = "Buy now"
     if (!isAsset1155) {
       button = <BuyAssetButton asset={asset} />
     } else {

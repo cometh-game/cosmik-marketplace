@@ -1,13 +1,16 @@
 import { useEffect } from "react"
-import { useRouter } from "next/navigation"
 import { useNativeBalance } from "@/services/balance/balanceService"
-import { useHasEnoughGas } from "@/services/balance/gasService"
+import {
+  computeHasEnoughGas,
+  useHasEnoughGas,
+} from "@/services/balance/gasService"
 import { useAccount } from "wagmi"
 
 import globalConfig from "@/config/globalConfig"
 import { Button } from "@/components/ui/Button"
 import { InfoBox } from "@/components/ui/MessageBox"
 import { Price } from "@/components/ui/Price"
+import { useRouter } from "next/navigation"
 
 export type AddGasStepProps = {
   onValid: () => void
@@ -15,10 +18,10 @@ export type AddGasStepProps = {
 
 export function AddGasStep({ onValid }: AddGasStepProps) {
   const account = useAccount()
+  const { push } = useRouter()
   const viewer = account.address
   const { refreshBalance, isPending: isRefreshingBalance } =
     useNativeBalance(viewer)
-  const { push } = useRouter()
 
   const data = useHasEnoughGas(viewer)
 

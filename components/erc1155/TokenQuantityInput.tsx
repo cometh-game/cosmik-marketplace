@@ -56,7 +56,7 @@ const TokenQuantityInput: React.FC<TokenQuantityInputProps> = ({
   return (
     <div className="wrap flex h-full gap-2">
       <div className="grow">
-        <Label className="mb-2  md:mb-0" htmlFor="token-quantity-input">
+        <Label className="mb-2 md:mb-0" htmlFor="token-quantity-input">
           <div>{label}</div>
           <div className='text-muted-foreground mt-1'>
             Available: {max.toString()}

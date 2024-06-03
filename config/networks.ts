@@ -66,15 +66,15 @@ const NETWORKS: Record<number, NetworkConfig> = {
       standard: "EIP3091",
       blockUrl: "https://sepolia.arbiscan.io/block",
     },
-    nativeToken: { id: "aave-eth-v1", name: "Ether", symbol: "AETH", decimals: 18 },
+    nativeToken: { id: "aave-eth-v1", name: "Ether", symbol: "ETH", decimals: 18 },
     wrappedNativeToken: {
       name: "Wrapped Ether",
-      symbol: "WAETH",
+      symbol: "WETH",
       decimals: 18,
       address: "0x980B62Da83eFf3D4576C647993b0c1D7faf17c73",
     },
     zeroExExchange: "0xdd1de4ff6f558f21ac1a892923999fed87423560",
-    minimumBalanceForGas: parseEther("1"),
+    minimumBalanceForGas: parseEther("0.01"),
   },
   4078: {
     chainId: 4078,

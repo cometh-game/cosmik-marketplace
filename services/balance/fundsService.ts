@@ -3,6 +3,7 @@ import { BigNumber } from "ethers"
 
 import globalConfig from "@/config/globalConfig"
 import { balanceToBigNumber } from "@/lib/utils/formatBalance"
+
 import { useERC20Balance, useNativeBalance } from "./balanceService"
 
 export type FetchHasSufficientFundsOptions = {
@@ -26,10 +27,10 @@ export const computeHasSufficientFunds = ({
   includeWrappedNative = true,
 }: FetchHasSufficientFundsOptions) => {
   let availableFunds = BigNumber.from(0)
-  if (!nativeBalance || !erc20Balance) {
+  if (nativeBalance === undefined || erc20Balance === undefined) {
     return {
       hasSufficientFunds: false,
-      missingBalance: BigNumber.from(0),
+      missingBalance: BigNumber.from(price),
     }
   }
 
@@ -39,9 +40,7 @@ export const computeHasSufficientFunds = ({
   if (globalConfig.useNativeForOrders) {
     availableFunds = availableFunds.add(nativeBalance)
   }
-
   const hasSufficientFunds = availableFunds.gte(price ?? 0)
-
   const missingBalance = hasSufficientFunds
     ? BigNumber.from(0)
     : price?.sub(availableFunds)
@@ -57,7 +56,9 @@ export const useHasSufficientFunds = ({
   includeWrappedNative = true,
 }: UseHasSufficientFundsOptions) => {
   const { balance: nativeBalance } = useNativeBalance()
-  const { balance: erc20Balance } = useERC20Balance(globalConfig.ordersErc20.address)
+  const { balance: erc20Balance } = useERC20Balance(
+    globalConfig.ordersErc20.address
+  )
   return useMemo(() => {
     return computeHasSufficientFunds({
       price,

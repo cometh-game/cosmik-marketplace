@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react"
 import { useDebounceValue } from "usehooks-ts"
 
+import globalConfig from "@/config/globalConfig"
 import { Input } from "@/components/ui/Input"
 
 import { FiatPrice } from "./FiatPrice"
@@ -29,8 +30,22 @@ export const PriceInput = ({ id, onInputUpdate }: PriceInputProps) => {
 
   return (
     <div className="space-y-1">
-      <Input id={id} type="number" inputUpdateCallback={handleChange} min={MIN_VALUE} step={MIN_VALUE} />
+      <Input
+        id={id}
+        type="number"
+        inputUpdateCallback={handleChange}
+        min={MIN_VALUE}
+        step={MIN_VALUE}
+      />
       <FiatPrice amount={debouncedValue} />
+      {parseFloat(inputValue) < MIN_VALUE && (
+        <p className="text-red-500">
+          Minimum price :{" "}
+          <b>
+            {MIN_VALUE} {globalConfig.ordersErc20.symbol}
+          </b>
+        </p>
+      )}
     </div>
   )
 }

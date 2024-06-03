@@ -22,13 +22,6 @@ import { Label } from "@/components/ui/Label"
 import { Price } from "@/components/ui/Price"
 import { PriceDetails } from "@/components/ui/PriceDetails"
 import { PriceInput } from "@/components/ui/PriceInput"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/Select"
 import { ButtonLoading } from "@/components/ButtonLoading"
 import { useAssetIs1155 } from "@/components/erc1155/ERC1155Hooks"
 import TokenQuantityInput from "@/components/erc1155/TokenQuantityInput"
@@ -118,6 +111,8 @@ export function MakeBuyOfferPriceDialog({
             <PriceInput
               id="make-buy-offer-price"
               onInputUpdate={(inputValue) => setUnitPrice(inputValue)}
+              placeholder="1.0"
+              type="number"
             />
           </div>
           <div className="flex w-full flex-col gap-2 md:w-1/3">
@@ -157,7 +152,7 @@ export function MakeBuyOfferPriceDialog({
         >
           Make offer for {isErc1155 && <>{quantity.toString()} tokens</>} at the
           price of&nbsp;
-          <Price amount={orderParams?.price} isNativeToken={true} />
+          <Price amount={totalPrice.toString()} isNativeToken={true} />
         </Button>
       </DialogContent>
     </Dialog>

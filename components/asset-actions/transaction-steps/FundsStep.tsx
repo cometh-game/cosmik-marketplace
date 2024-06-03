@@ -40,6 +40,8 @@ export function FundsStep({ price, onValid }: FundsStepProps) {
     price: price,
   })
 
+  console.log("data", data)
+
   useEffect(() => {
     if (data?.hasSufficientFunds === true) {
       return onValid()
@@ -79,9 +81,9 @@ export function FundsStep({ price, onValid }: FundsStepProps) {
         title="Warning"
         description={
           <div className="text-muted-foreground">
-            Cosmik Battle is deployed on the Muster and leverages its own
-            Account Abstraction solution. Prior to engaging in any
-            wallet-related activity, please visit our wallet tutorials.
+            Cosmik Battle is deployed on the {globalConfig.network.name} and
+            leverages its own Account Abstraction solution. Prior to engaging in
+            any wallet-related activity, please visit our wallet tutorials.
             <br />
             <br />
             <div className="flex flex-col items-center justify-center gap-1 sm:flex-row sm:gap-2">

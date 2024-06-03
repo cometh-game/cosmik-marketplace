@@ -30,12 +30,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       }
     }
 
-    const handleBlur = () => {
-      if (props.min !== undefined && value < props.min) {
-        setValue(props.min.toString())
-      }
-    }
-
     // Clear the input
     const handleClear = () => {
       setValue("")
@@ -65,7 +59,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           value={value}
           onChange={handleChange}
-          onBlur={handleBlur}
           className="input size-full !bg-transparent pr-5 font-medium outline-none file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-white/50"
           ref={ref}
           {...props}
