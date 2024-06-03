@@ -32,10 +32,10 @@ export const UserAuthProvider = ({
   const [userIsFullyConnected, setUserIsFullyConnected] = useState(false)
   const { connectComethWallet } = useConnectComethWallet()
   const [userIsReconnecting, setUserIsReconnecting] = useState(false)
-  
+
   const pathname = usePathname()
   const isWalletsPage = pathname === "/wallets"
-  
+
   const currentWalletInStorage =
     typeof window !== "undefined" &&
     window.localStorage.getItem("walletAddress")
@@ -74,7 +74,7 @@ export const UserAuthProvider = ({
       setUserIsReconnecting(false)
     }
 
-    if (!isFetchingUserLogged && currentWalletInStorage) {
+    if (!isFetchingUserLogged && currentWalletInStorage && !isWalletsPage) {
       reconnectingWallet()
     }
   }, [
