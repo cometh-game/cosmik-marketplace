@@ -113,7 +113,15 @@ const ERC20TransferButton = ({
         value: parseUnits(amount, decimalNumber),
       })
     }
-  }, [viewerAddress, tokenAddress, writeContract, receiverAddress, amount, decimalNumber, sendTransaction])
+  }, [
+    viewerAddress,
+    tokenAddress,
+    writeContract,
+    receiverAddress,
+    amount,
+    decimalNumber,
+    sendTransaction,
+  ])
 
   const {
     data: tx,
@@ -129,7 +137,7 @@ const ERC20TransferButton = ({
       toast({
         title: "Transfer confirmed",
         description: "You can follow the transaction on Muster explorer",
-        duration: 10000000,
+        duration: 5000,
         action: (
           <Link
             href={`${globalConfig.network.explorer?.blockUrl}/${tx?.transactionHash}`}
@@ -172,7 +180,11 @@ const ERC20TransferButton = ({
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <DialogContent>
+      <DialogContent
+        onInteractOutside={(e) => {
+          e.preventDefault()
+        }}
+      >
         <DialogHeader>
           <DialogTitle>
             {tokenAddress
@@ -287,7 +299,8 @@ const ERC20TransferButton = ({
           />
           <Label htmlFor="reading" className="cursor-pointer leading-tight">
             I have reviewed the Wallet Management tutorial and understand that
-            my Native Tokens will be transferred to the Receiver Address on Muster Network
+            my Native Tokens will be transferred to the Receiver Address on
+            Muster Network
           </Label>
         </div>
 
