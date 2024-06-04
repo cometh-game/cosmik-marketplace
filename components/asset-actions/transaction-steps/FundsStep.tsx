@@ -12,6 +12,7 @@ import globalConfig from "@/config/globalConfig"
 import { Button } from "@/components/ui/Button"
 import { InfoBox } from "@/components/ui/MessageBox"
 import { Price } from "@/components/ui/Price"
+import { InfoBox } from "@/components/ui/MessageBox"
 
 export type FundsStepProps = {
   price: BigNumber

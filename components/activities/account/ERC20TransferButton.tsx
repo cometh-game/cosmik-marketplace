@@ -63,6 +63,7 @@ const ERC20TransferButton = ({
   const [isPristine, setIsPristine] = useState(true)
   const {
     data: txHash,
+    data: txHash,
     sendTransaction,
     isPending: isPendingSendTransaction,
     isSuccess: isSuccessSendTransaction,
@@ -108,19 +109,12 @@ const ERC20TransferButton = ({
       console.log("sendTransaction")
       // Native token transfer
       sendTransaction({
+        account: viewerAddress as Address,
         to: receiverAddress as Address,
         value: parseUnits(amount, decimalNumber),
       })
     }
-  }, [
-    viewerAddress,
-    tokenAddress,
-    receiverAddress,
-    amount,
-    writeContract,
-    sendTransaction,
-    decimalNumber,
-  ])
+  }, [viewerAddress, tokenAddress, writeContract, receiverAddress, amount, decimalNumber, sendTransaction])
 
   const {
     data: tx,
@@ -308,11 +302,11 @@ const ERC20TransferButton = ({
             isPendingSendTransaction ||
             !hasReading
           }
-          isLoading={isConfirming || isPending}
+          isLoading={isConfirming || isPending || isPendingSendTransaction}
           onClick={transferTokens}
         >
           {isConfirming || isPending || isPendingSendTransaction
-            ? "Processing..."
+            ? "Processing"
             : tokenAddress
               ? "Transfer Tokens"
               : "Send Native Tokens"}
