@@ -49,8 +49,7 @@ export function SellAssetButton({ asset, size = "lg" }: SellAssetButtonProps) {
         </Case>
         <Case value="token-approval">
           <CollectionApprovalStep
-            contractAddress={asset.contractAddress}
-            tokenId={asset.tokenId}
+            asset={asset}
             onValid={nextStep}
           />
         </Case>

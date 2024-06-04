@@ -1,6 +1,5 @@
 "use client"
 
-
 import { MarketplaceWagmiProvider } from "./authentication/wagmi/wagmiProvider"
 import { CurrentCollectionProvider } from "./currentCollection/currentCollectionProvider"
 import { UserAuthProvider } from "./userAuth"

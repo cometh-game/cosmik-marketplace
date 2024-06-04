@@ -32,10 +32,10 @@ export const UserAuthProvider = ({
   const [userIsFullyConnected, setUserIsFullyConnected] = useState(false)
   const { connectComethWallet } = useConnectComethWallet()
   const [userIsReconnecting, setUserIsReconnecting] = useState(false)
-  
+
   const pathname = usePathname()
   const isWalletsPage = pathname === "/wallets"
-  
+
   const currentWalletInStorage =
     typeof window !== "undefined" &&
     window.localStorage.getItem("walletAddress")
@@ -57,6 +57,7 @@ export const UserAuthProvider = ({
         setUser(userLogged)
 
         if (isWalletsPage) {
+          console.log("Setting user is fully connected to true")
           setUserIsReconnecting(false)
           setUserIsFullyConnected(true)
           return

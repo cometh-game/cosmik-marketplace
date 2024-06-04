@@ -30,7 +30,7 @@ export function WrapStep({ price, onValid }: WrapStepProps) {
 
   const onConfirm = useCallback(async () => {
     if (!price) return
-    const res = await wrapToken({ amount: price })
+    await wrapToken({ amount: price })
     onValid()
   }, [onValid, price, wrapToken])
 

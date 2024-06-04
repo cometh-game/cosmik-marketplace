@@ -1,6 +1,9 @@
 "use client"
 
 import React, { useCallback, useEffect, useMemo, useState } from "react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { SendHorizonal } from "lucide-react"
 import { Address, erc20Abi, parseUnits } from "viem"
 import {
   useAccount,
@@ -10,6 +13,7 @@ import {
 } from "wagmi"
 import { z } from "zod"
 
+import globalConfig from "@/config/globalConfig"
 import { Button } from "@/components/ui/Button"
 import {
   Dialog,
@@ -20,7 +24,15 @@ import {
 } from "@/components/ui/Dialog"
 import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
+import { InfoBox } from "@/components/ui/MessageBox"
+import { Switch } from "@/components/ui/Switch"
 import { toast } from "@/components/ui/toast/hooks/useToast"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip"
 
 const addressSchema = z
   .string()
@@ -45,6 +57,7 @@ const ERC20TransferButton = ({
   decimalNumber = 18, // Default to 18 decimals if not specified
   ...buttonProps
 }: ERC20TransferButtonProps) => {
+  const { push } = useRouter()
   const [receiverAddress, setReceiverAddress] = useState("")
   const [amount, setAmount] = useState("")
   const [isPristine, setIsPristine] = useState(true)
@@ -56,6 +69,7 @@ const ERC20TransferButton = ({
   } = useSendTransaction()
   const { data: hash, writeContract, error, isPending } = useWriteContract()
   const [open, setOpen] = useState(false)
+  const [hasReading, setHasReading] = useState(false)
 
   const account = useAccount()
   const viewerAddress = account.address
@@ -91,6 +105,7 @@ const ERC20TransferButton = ({
         args: [receiverAddress as Address, parseUnits(amount, decimalNumber)],
       })
     } else {
+      console.log("sendTransaction")
       // Native token transfer
       sendTransaction({
         account: viewerAddress as Address,
@@ -100,8 +115,11 @@ const ERC20TransferButton = ({
     }
   }, [viewerAddress, tokenAddress, writeContract, receiverAddress, amount, decimalNumber, sendTransaction])
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({ hash: txHash })
+  const {
+    data: tx,
+    isLoading: isConfirming,
+    isSuccess: isConfirmed,
+  } = useWaitForTransactionReceipt({ hash: hash || txHash })
 
   useEffect(() => {
     if (
@@ -110,20 +128,50 @@ const ERC20TransferButton = ({
     ) {
       toast({
         title: "Transfer confirmed",
+        description: "You can follow the transaction on Muster explorer",
+        duration: 10000000,
+        action: (
+          <Link
+            href={`${globalConfig.network.explorer?.blockUrl}/${tx?.transactionHash}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Button size="sm">View</Button>
+          </Link>
+        ),
       })
       setOpen(false)
     }
-  }, [tokenAddress, isConfirmed, isSuccessSendTransaction, setOpen])
+  }, [
+    tokenAddress,
+    isConfirmed,
+    isSuccessSendTransaction,
+    setOpen,
+    hash,
+    tx?.transactionHash,
+  ])
 
   return (
     <Dialog modal open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button {...buttonProps}>
-          {tokenAddress
-            ? "Send Tokens " + tokenSymbol
-            : "Send Native Tokens " + tokenSymbol}
-        </Button>
-      </DialogTrigger>
+      <TooltipProvider delayDuration={200}>
+        <Tooltip defaultOpen={false}>
+          <TooltipTrigger asChild>
+            <DialogTrigger asChild>
+              <Button size="xs" {...buttonProps}>
+                Send&nbsp;
+                <SendHorizonal size={14} />
+              </Button>
+            </DialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent align="end">
+            <p className="text-sm font-bold">
+              {tokenAddress
+                ? "Send Tokens " + tokenSymbol
+                : "Send Native Tokens " + tokenSymbol}
+            </p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
@@ -132,7 +180,72 @@ const ERC20TransferButton = ({
               : "Native Token Transfer: " + tokenSymbol}
           </DialogTitle>
         </DialogHeader>
-        <div className="mt-4">
+
+        {/* <InfoBox
+          title="Information"
+          description={
+            <div className="text-muted-foreground">
+              You are about to transfer assets from your Smart Wallet to an
+              external Wallet. Cosmik Battle is deployed on the Muster and
+              leverages its own Account Abstraction solution. Prior to engaging
+              in any wallet-related activity, please visit our wallet tutorials.
+              <br />
+              <br />
+              <div className="flex flex-col items-center justify-center gap-1 sm:flex-row sm:gap-2">
+                <a
+                  href="https://www.cosmikbattle.com/cosmik-academy/wallet-management"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-accent-foreground font-medium underline transition-colors"
+                >
+                  Wallet Management
+                </a>
+                and
+                <a
+                  href="https://www.cosmikbattle.com/cosmik-academy/marketplace-gettingready"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-accent-foreground font-medium underline transition-colors"
+                >
+                  Marketplace Getting Ready
+                </a>
+              </div>
+            </div>
+          }
+        /> */}
+
+        <div className="text-muted-foreground">
+          <p className="mb-2">
+            You are about to transfer assets from your Smart Wallet to another
+            wallet. Cosmik Battle is deployed on the Muster network and
+            leverages its own Account Abstraction solution. Prior to engaging in
+            any wallet-related activity, please visit :
+          </p>
+          <ul className="ml-5 list-disc">
+            <li>
+              <a
+                href="https://www.cosmikbattle.com/cosmik-academy/wallet-management"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-accent-foreground font-medium underline transition-colors"
+              >
+                Wallet Management
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.cosmikbattle.com/cosmik-academy/marketplace-gettingready"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-accent-foreground font-medium underline transition-colors"
+              >
+                Marketplace Getting Ready
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div className="flex flex-col gap-2">
           {tokenAddress && (
             <div className="mb-3">
               ERC20 Token Address:{" "}
@@ -151,7 +264,8 @@ const ERC20TransferButton = ({
             </div>
           )}
         </div>
-        <div className="mt-4">
+
+        <div className="flex flex-col gap-2">
           <Label htmlFor="amount">Amount:</Label>
           <Input
             id="amount"
@@ -164,13 +278,19 @@ const ERC20TransferButton = ({
             </div>
           )}
         </div>
-        <div className="mt-4">
-          <p className="font-medium">
-            Make sure to enter a valid address for this network. You will
-            permanently loose ownership of your tokens once the transfer is
-            validated.
-          </p>
+
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="reading"
+            checked={hasReading}
+            onCheckedChange={() => setHasReading(!hasReading)}
+          />
+          <Label htmlFor="reading" className="cursor-pointer leading-tight">
+            I have reviewed the Wallet Management tutorial and understand that
+            my Native Tokens will be transferred to the Receiver Address on Muster Network
+          </Label>
         </div>
+
         <Button
           size="lg"
           disabled={
@@ -178,7 +298,8 @@ const ERC20TransferButton = ({
             !amountValidation.success ||
             isConfirming ||
             isPending ||
-            isPendingSendTransaction
+            isPendingSendTransaction ||
+            !hasReading
           }
           isLoading={isConfirming || isPending || isPendingSendTransaction}
           onClick={transferTokens}
@@ -189,10 +310,14 @@ const ERC20TransferButton = ({
               ? "Transfer Tokens"
               : "Send Native Tokens"}
         </Button>
-        {hash && <div>Transaction Hash: {hash}</div>}
+        {/* {hash && <div>Transaction Hash: {hash}</div>}
         {isConfirming && <div>Waiting for confirmation...</div>}
-        {isConfirmed && <div>Transaction confirmed.</div>}
-        {error && <div className="mt-2"><div>Error: {error.message}</div></div>}
+        {isConfirmed && <div>Transaction confirmed.</div>} */}
+        {error && (
+          <div className="mt-2">
+            <div>Error: {error.message}</div>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   )

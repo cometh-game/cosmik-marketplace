@@ -68,11 +68,11 @@ export function SigninDropdown({
         })
       } catch (error) {
         console.error("Error connecting wallet in SigninDropdown", error)
-        Bugsnag.notify(error as Error, function (report) {
-          report.context = "User Login"
-          report.setUser(user.id, user.email, user.userName)
-          report.addMetadata("user", user)
-        })
+        // Bugsnag.notify(error as Error, function (report) {
+        //   report.context = "User Login"
+        //   report.setUser(user.id, user.email, user.userName)
+        //   report.addMetadata("user", user)
+        // })
         // If an error occurs, likely due to a first-time connection, display the authorization modal
         setDisplaySigninDialog(false)
         setDisplayAutorizationProcess(true)

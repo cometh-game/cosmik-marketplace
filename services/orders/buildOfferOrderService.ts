@@ -4,11 +4,14 @@ import {
   Collection,
   CollectionFees,
   SearchAssetWithTradeData,
+  TokenType,
   TradeDirection,
 } from "@cometh/marketplace-sdk"
 import {
   UserFacingERC20AssetDataSerializedV4,
   UserFacingERC721AssetDataSerializedV4,
+  UserFacingERC1155AssetDataSerialized,
+  UserFacingERC1155AssetDataSerializedV4,
   UserFacingFeeStruct,
 } from "@traderxyz/nft-swap-sdk"
 import { BigNumber, ethers } from "ethers"
@@ -28,9 +31,18 @@ export type BuildOfferOrderOptions = {
   price: BigNumber
   validity: string
   collection: Collection & { collectionFees: CollectionFees }
+  quantity?: string
 }
 
-export const useBuildOfferOrder = ({
+const isSerializedERC1155Asset = (
+  serializedAsset:
+    | UserFacingERC721AssetDataSerializedV4
+    | UserFacingERC1155AssetDataSerializedV4
+): serializedAsset is UserFacingERC1155AssetDataSerializedV4 => {
+  return serializedAsset.type === TokenType.ERC1155
+}
+
+export const useBuildOrder = ({
   tradeDirection,
 }: {
   tradeDirection: TradeDirection
@@ -40,14 +52,18 @@ export const useBuildOfferOrder = ({
   const nftSwapSdk = useNFTSwapv4()
 
   return useCallback(
-    ({ asset, price, validity, collection }: BuildOfferOrderOptions) => {
+    ({
+      asset,
+      price,
+      validity,
+      collection,
+      quantity,
+    }: BuildOfferOrderOptions) => {
       if (!nftSwapSdk || !viewer || !collection.collectionFees) return null
 
       const expiry = DateTime.now()
         .plus({ days: parseInt(validity) })
         .toJSDate()
-
-      console.log("expiry", expiry)
 
       const sumOfFeesPercentages = collection.collectionFees.reduce(
         (sum, fee) => sum + fee.feePercentage,
@@ -68,10 +84,16 @@ export const useBuildOfferOrder = ({
         }
       )
 
-      const erc721Asset: UserFacingERC721AssetDataSerializedV4 = {
+      const serializedAsset:
+        | UserFacingERC721AssetDataSerializedV4
+        | UserFacingERC1155AssetDataSerializedV4 = {
         tokenAddress: asset.contractAddress,
         tokenId: asset.tokenId,
-        type: "ERC721",
+        type: asset.tokenType,
+      }
+
+      if (isSerializedERC1155Asset(serializedAsset) && quantity) {
+        serializedAsset.amount = quantity
       }
 
       const tokenAddress =
@@ -86,7 +108,7 @@ export const useBuildOfferOrder = ({
       }
 
       return nftSwapSdk.buildNftAndErc20Order(
-        erc721Asset,
+        serializedAsset,
         erc20Asset,
         tradeDirection,
         viewer,

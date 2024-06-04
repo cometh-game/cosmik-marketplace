@@ -68,7 +68,7 @@ export function TopupCard({
         isLoading={isLoading}
         disabled={isLoading}
       >
-        Topup
+        Buy
       </Button>
     </div>
   )

@@ -28,7 +28,7 @@ export function TransakSuccessDialog({ resumeOrder, onClose }: TransakSuccessDia
             <br />
             You will receive an email when your order is complete. <br />
             You can also track your order here:
-            <a href=""></a>
+            {/* <a href=""></a> */}
           </>
         </DialogDescription>
         <Button size="lg" variant="ghost" onClick={() => onClose()}>

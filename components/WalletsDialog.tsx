@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { useAddExternalWallet } from "@/services/cosmik/addExternalWalletService"
+import {
+  useAddExternalWallet,
+  useRemoveExternalWallet,
+} from "@/services/cosmik/externalWalletService"
 import { User } from "@/services/cosmik/signinService"
 import { useGetUserNonce } from "@/services/cosmik/userNonceService"
 import { SupportedNetworks } from "@cometh/connect-sdk"
@@ -23,6 +26,7 @@ import {
 import { AccountLogoutAction } from "./account-dropdown/AccountLogoutAction"
 import { Button } from "./ui/Button"
 import { Loading } from "./ui/Loading"
+import { toast } from "./ui/toast/hooks/useToast"
 import WalletList from "./wallets/WalletList"
 
 type WalletsDialogProps = {
@@ -35,54 +39,54 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
   const { address: walletAddress } = useAccount()
   const { mutateAsync: getUserNonceAsync } = useGetUserNonce()
   const { mutateAsync: addExternalWallet } = useAddExternalWallet()
+  const { mutate: removeExternalWallet } = useRemoveExternalWallet()
   const { signMessageAsync: signMessage } = useSignMessage()
   const [wallets, setWallets] = useState<
     { address: string; spaceships: number }[]
   >([])
   const [loading, setLoading] = useState(false)
-
   useEffect(() => {
-    const updateWallets = async () => {
-      setLoading(true)
-      const walletAddresses = [user.address, ...user.externalAddresses]
-      const promises = walletAddresses.map(async (address) => {
-        try {
-          const filters: AssetSearchFilters = {
-            contractAddress: globalConfig.shipsContractAddress,
-            owner: address,
-            limit: 9999,
-          }
-          const spaceships =
-            await comethMarketplaceSpaceshipsClient.asset.searchAssets(filters)
-          return { address, spaceships: spaceships.total }
-        } catch (error) {
-          console.error(
-            "Error fetching assets count for address",
-            address,
-            error
-          )
-          return { address, spaceships: 0 }
-        }
-      })
-
-      try {
-        const results = await Promise.all(promises)
-        setWallets(results)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    if (user?.address || user?.externalAddresses.length > 0) {
-      updateWallets()
-    }
-  }, [user?.address, user?.externalAddresses])
+    fetchWallets()
+  }, [user?.externalAddresses])
 
   useEffect(() => {
     if (walletAddress) {
       handleAddExternalWallet()
     }
   }, [walletAddress])
+
+  const fetchWallets = async () => {
+    setLoading(true)
+    const walletAddresses = [user.address, ...user.externalAddresses]
+    const promises = walletAddresses.map((address) => fetchSpaceships(address))
+
+    try {
+      const results = await Promise.all(promises)
+      setWallets(results)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function fetchSpaceships(walletAddress: string) {
+    try {
+      const filters: AssetSearchFilters = {
+        contractAddress: globalConfig.shipsContractAddress,
+        owner: walletAddress,
+        limit: 9999,
+      }
+      const spaceships =
+        await comethMarketplaceSpaceshipsClient.asset.searchAssets(filters)
+      return { address: walletAddress, spaceships: spaceships.total }
+    } catch (error) {
+      console.error(
+        "Error fetching assets count for address",
+        walletAddress,
+        error
+      )
+      return { address: walletAddress, spaceships: 0 }
+    }
+  }
 
   async function createMessage({
     nonce,
@@ -115,10 +119,12 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
       if (!walletAddress) {
         throw new Error("No wallet")
       }
-      // const walletExists = wallets.some(wallet => wallet.address === walletAddress);
-      // if (walletExists) {
-      //   throw new Error("This wallet address has already been added.");
-      // }
+      const walletExists = wallets.some(
+        (wallet) => wallet.address === walletAddress
+      )
+      if (walletExists) {
+        throw new Error("This wallet address has already been added.")
+      }
       const { nonce } = await getUserNonceAsync({ walletAddress })
       const message = await createMessage({
         nonce,
@@ -130,26 +136,41 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
       await addExternalWallet(
         { walletAddress, nonce, signature, message },
         {
-          onSuccess: () => {
-            setWallets((prevWallets) => [
-              ...prevWallets,
-              { address: walletAddress, spaceships: 0 },
-            ])
+          onSuccess: async () => {
+            const newWallet = await fetchSpaceships(walletAddress)
+            setWallets((prevWallets) => [...prevWallets, newWallet])
           },
         }
       )
       // disconnect after added wallet
       await disconnectAsync()
-    } catch (error) {
-      console.error("Error connecting wallet", error)
+    } catch (error: any) {
+      toast({
+        title: "Error adding wallet",
+        description: error?.message || "Please retry or contact support",
+        variant: "destructive",
+      })
     }
   }
 
+  async function handleRemoveExternalWallet(walletAddress: string) {
+    removeExternalWallet(
+      { walletAddress },
+      {
+        onSuccess: () => {
+          setWallets(
+            wallets.filter((wallet) => wallet.address !== walletAddress)
+          )
+        },
+      }
+    )
+  }
+
   return (
-    <div className="dialog max-w-[400px]">
+    <div className="dialog max-w-[440px]">
       <Dialog modal open={true}>
         <DialogContent
-          className="sm:max-w-[400px]"
+          className="sm:max-w-[440px]"
           shouldDisplayOverlay={false}
           shouldDisplayCloseBtn={false}
         >
@@ -161,7 +182,11 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
             {loading ? (
               <Loading />
             ) : (
-              <WalletList wallets={wallets} mainAddress={user?.address} />
+              <WalletList
+                wallets={wallets}
+                mainAddress={user?.address}
+                onRemove={handleRemoveExternalWallet}
+              />
             )}
           </ul>
           <div className="text-muted-foreground">

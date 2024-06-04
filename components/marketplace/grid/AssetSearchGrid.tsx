@@ -16,7 +16,7 @@ import { AssetCard } from "./AssetCard"
 import { AssetCardsList } from "./AssetCardsList"
 import { AssetsSearchEmpty } from "./AssetSearchEmpty"
 import { FiltersDropdown } from "./Filters/FiltersDropdown"
-import { FiltersFullscreen } from "./Filters/FiltersFullscreen"
+import FiltersFullscreen from "./Filters/FiltersFullscreen"
 import { FiltersResetBtn } from "./Filters/FiltersResetBtn"
 import { NFTStateFilters } from "./NftStateFilters"
 import { SearchAsset } from "./SearchAsset"
@@ -38,14 +38,15 @@ export const AssetsSearchGrid = ({
   const [search, setSearch] = useState("")
   const [initialResults, setInitialResults] = useState<number | null>(null)
 
-  const filtersDefinition = useMemo(
+  const attributesFilterOptions = useMemo(
     () => deserializeFilters(filtersRaw),
     [filtersRaw]
   )
 
   const {
     data: nfts,
-    isLoading,
+    isFetching,
+    hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
   } = useFilterableNFTsQuery({
@@ -68,13 +69,11 @@ export const AssetsSearchGrid = ({
   }, [totalNbAssets, initialResults, setInitialResults])
 
   useEffect(() => {
-    if (inView && !isLoading) fetchNextPage()
-  }, [inView, isLoading, fetchNextPage])
+    if (inView && !isFetching && hasNextPage) fetchNextPage()
+    }, [inView, isFetching, hasNextPage, fetchNextPage])
 
   const { width } = useWindowSize()
   const isMobile = width < 768
-
-  console.log("assets", assets)
 
   return (
     <div className="flex w-full flex-col items-center justify-center">
@@ -86,10 +85,14 @@ export const AssetsSearchGrid = ({
           <SearchAsset onChange={setSearch} />
           <div className="flex gap-3">
             {isMobile ? (
-              <FiltersFullscreen filters={filtersDefinition} />
+              <FiltersFullscreen
+                attributeFilterOptions={attributesFilterOptions}
+              />
             ) : (
               <>
-                <FiltersDropdown filters={filtersDefinition} />
+                <FiltersDropdown
+                  attributeFilterOptions={attributesFilterOptions}
+                />
                 <FiltersResetBtn />
               </>
             )}
@@ -106,9 +109,9 @@ export const AssetsSearchGrid = ({
         matching your search
       </p>
 
-      {isLoading && <Loading />}
+      {isFetching && <Loading />}
 
-      {!isLoading && assets.length === 0 ? (
+      {!isFetching && assets.length === 0 ? (
         <AssetsSearchEmpty />
       ) : (
         <>
@@ -118,7 +121,7 @@ export const AssetsSearchGrid = ({
             ))}
           </AssetCardsList>
           <div ref={loadMoreRef} className="py-10">
-            {isFetchingNextPage ? "Loading more NFTs..." : <div></div>}
+            {isFetchingNextPage ? <Loading /> : <div></div>}
           </div>
         </>
       )}

@@ -1,10 +1,11 @@
-import wethAbi from "@/abis/wethAbi"
 import { useMutation } from "@tanstack/react-query"
 import { BigNumber } from "ethers"
-import { usePublicClient, useWalletClient } from "wagmi"
 
 import globalConfig from "@/config/globalConfig"
 import { toast } from "@/components/ui/toast/hooks/useToast"
+import {  usePublicClient, useWalletClient } from "wagmi"
+import wethAbi from "@/abis/wethAbi" 
+
 
 export type UnwrapTokenMutationOptions = {
   amount: BigNumber
@@ -12,7 +13,7 @@ export type UnwrapTokenMutationOptions = {
 
 export const useUnwrapToken = () => {
   const viemPublicClient = usePublicClient()
-  const { data: viemWalletClient } = useWalletClient()
+  const { data: viemWalletClient }  = useWalletClient()
 
   return useMutation({
     mutationKey: ["unwrap"],
@@ -24,13 +25,13 @@ export const useUnwrapToken = () => {
       const txHash = await viemWalletClient.writeContract({
         address: globalConfig.ordersErc20.address,
         abi: wethAbi,
-        functionName: "withdraw",
+        functionName: 'withdraw',
         args: [BigInt(amount.toString())],
-        account: viemWalletClient.account,
+        account: viemWalletClient.account
       })
-      const transaction = await viemPublicClient.waitForTransactionReceipt({
-        hash: txHash,
-      })
+      const transaction = await viemPublicClient.waitForTransactionReceipt( 
+        { hash: txHash }
+      )
       return transaction
     },
 

@@ -22,7 +22,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/Popover"
 
-import { FILTERS_SORT } from "../../../config/filters"
+import { FILTERS_SORT } from "@/config/filters"
 
 interface MarketplaceSortDropdownProps extends PopoverProps {}
 

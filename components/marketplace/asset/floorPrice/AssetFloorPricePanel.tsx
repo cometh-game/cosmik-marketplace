@@ -1,7 +1,6 @@
 import { AssetWithTradeData } from "@cometh/marketplace-sdk"
 import { Loader } from "lucide-react"
 
-import { Button } from "@/components/ui/Button"
 import { Card, CardContent } from "@/components/ui/Card"
 
 import { AssetFloorPriceDisplay } from "./AssetFloorPriceDisplay"
@@ -19,9 +18,6 @@ export default function AssetFloorPricePanel({ asset }: AssetFloorPriceProps) {
 
   const { isLoading, floorPriceAsset } = useFloorPriceAsset(asset)
 
-  console.log("assetFloorPriceAttributes", assetFloorPriceAttributes)
-  console.log("floorPriceAsset", floorPriceAsset)
-
   if (assetFloorPriceAttributes.length === 0) {
     return null
   }
@@ -34,12 +30,6 @@ export default function AssetFloorPricePanel({ asset }: AssetFloorPriceProps) {
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div className="flex grow flex-wrap items-center gap-2">
               {assetFloorPriceAttributes.map((attribute) => (
-                // <Button
-                //   key={attribute.trait_type}
-                //   variant="secondary"
-                //   size="sm"
-                //   className="hover:bg-primary/60 cursor-default text-sm"
-                // >
                 <div>
                   <span className="font-medium capitalize">
                     {attribute.trait_type}:
@@ -50,7 +40,6 @@ export default function AssetFloorPricePanel({ asset }: AssetFloorPriceProps) {
                       : JSON.stringify(attribute.value)}
                   </span>
                 </div>
-                // </Button>
               ))}
             </div>
             <div>

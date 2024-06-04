@@ -1,7 +1,6 @@
 import { FilterIcon } from "lucide-react"
 
 import { useNFTFilters } from "@/lib/utils/nftFilters"
-import { MarketplacePanelFilters } from "@/lib/utils/seed"
 import { Button } from "@/components/ui/Button"
 import {
   DropdownMenu,
@@ -12,12 +11,11 @@ import {
 import { FilterLabel } from "./FilterLabel"
 import { FilterMultiCombobox } from "./FilterMultiCombobox"
 import { FiltersBadgeCounter } from "./FiltersBadgeCounter"
+import { FiltersDropdownProps } from "./types"
 
-type FiltersDropdownProps = {
-  filters: MarketplacePanelFilters
-}
-
-export const FiltersDropdown = ({ filters }: FiltersDropdownProps) => {
+export const FiltersDropdown = ({
+  attributeFilterOptions: filters,
+}: FiltersDropdownProps) => {
   const { filtersCounter } = useNFTFilters()
 
   return (

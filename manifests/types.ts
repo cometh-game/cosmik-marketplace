@@ -1,3 +1,4 @@
+// import init from "@web3-onboard/core"
 import { Address } from "viem"
 
 import { SupportedCurrencies } from "../types/currencies"
@@ -21,6 +22,10 @@ export type Manifest = {
       mainAttributes?: string[]
     }
   }
+
+  // web3Onboard?: {
+  //   theme?: Parameters<typeof init>[0]["theme"]
+  // }
 
   chainId: number
   useNativeTokenForOrders: boolean

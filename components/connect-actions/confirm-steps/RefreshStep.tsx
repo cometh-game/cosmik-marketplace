@@ -8,13 +8,11 @@ import { User } from "@/services/cosmik/signinService"
 
 export type RefreshStepProps = {
   user: User
-  // userAddress: string
   onValid: () => void
 }
 
 export const RefreshStep: React.FC<RefreshStepProps> = ({
   user,
-  // userAddress,
   onValid,
 }) => {
   const { retrieveWalletAddress } = useConnectComethWallet()
@@ -32,7 +30,6 @@ export const RefreshStep: React.FC<RefreshStepProps> = ({
       })
       onValid()
     } catch (error: any) {
-      console.log("Error on refreshing", error?.message)
       Bugsnag.notify(error as Error, function (report) {
         report.context = "User Login - Refresh Authorization Request"
         report.setUser(user.id, user.email, user.userName)
@@ -40,8 +37,8 @@ export const RefreshStep: React.FC<RefreshStepProps> = ({
       })
       toast({
         title: "Something went wrong",
-        description: "Please try again",
-        // variant: "destructive",
+        description: error?.message || "Please try again or contact support",
+        variant: "destructive",
       })
     } finally {
       setIsLoading(false)

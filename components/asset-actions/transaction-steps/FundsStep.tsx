@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import {
-  fetchHasSufficientFunds,
-  useHasSufficientFunds,
-} from "@/services/balance/fundsService"
+  useERC20Balance,
+  useNativeBalance,
+} from "@/services/balance/balanceService"
+import { useHasSufficientFunds } from "@/services/balance/fundsService"
 import { BigNumber } from "ethers"
 import { useAccount } from "wagmi"
 
@@ -20,13 +21,26 @@ export type FundsStepProps = {
 export function FundsStep({ price, onValid }: FundsStepProps) {
   const account = useAccount()
   const viewer = account.address
-  const [isRefreshingBalance, setIsRefreshingBalance] = useState(false)
+  const {
+    balance: nativeBalance,
+    refreshBalance: refreshNativeBalance,
+    isPending: isPendingNativeBalance,
+  } = useNativeBalance(viewer)
+  const {
+    balance: erc20Balance,
+    refreshBalance: refreshErc20Balance,
+    isPending: isPendingErc20Balance,
+  } = useERC20Balance(globalConfig.ordersErc20.address)
+  const isRefreshingBalance = isPendingNativeBalance || isPendingErc20Balance
   const { push } = useRouter()
 
-  const { data } = useHasSufficientFunds({
-    address: viewer,
+  const data = useHasSufficientFunds({
+    nativeBalance: nativeBalance,
+    erc20Balance: erc20Balance,
     price: price,
   })
+
+  console.log("data", data)
 
   useEffect(() => {
     if (data?.hasSufficientFunds === true) {
@@ -34,22 +48,14 @@ export function FundsStep({ price, onValid }: FundsStepProps) {
     }
   }, [data?.hasSufficientFunds, onValid])
 
+  const checkBalance = useCallback(() => {
+    refreshNativeBalance()
+    refreshErc20Balance()
+  }, [refreshNativeBalance, refreshErc20Balance])
+
   if (!data?.missingBalance) return null
 
   const { missingBalance } = data
-
-  const checkBalance = async () => {
-    setIsRefreshingBalance(true)
-    if (!viewer) return
-    const { hasSufficientFunds } = await fetchHasSufficientFunds({
-      address: viewer,
-      price,
-    })
-    if (hasSufficientFunds) {
-      onValid()
-    }
-    setIsRefreshingBalance(false)
-  }
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 pt-8">
@@ -62,6 +68,7 @@ export function FundsStep({ price, onValid }: FundsStepProps) {
           amount={missingBalance}
           hideSymbol={false}
           isNativeToken={true}
+          className="text-accent-foreground"
         />
         . Once you have funded your wallet with some{" "}
         <strong>{globalConfig.ordersDisplayCurrency.name}</strong>, please
@@ -70,38 +77,38 @@ export function FundsStep({ price, onValid }: FundsStepProps) {
       <p>
         Wallet address: <strong>{viewer}</strong>
       </p>
-
       <InfoBox
         title="Warning"
         description={
           <div className="text-muted-foreground">
-            Cosmik Battle is deployed on the Muster and leverages its own
-            Account Abstraction solution. Prior to engaging in any
-            wallet-related activity, please visit our wallet tutorials.
+            Cosmik Battle is deployed on the {globalConfig.network.name} and
+            leverages its own Account Abstraction solution. Prior to engaging in
+            any wallet-related activity, please visit our wallet tutorials.
             <br />
             <br />
-            <a
-              href="https://www.cosmikbattle.com/cosmik-academy/wallet-management"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-accent-foreground font-medium underline transition-colors"
-            >
-              Wallet Management
-            </a>
-            &nbsp;and&nbsp;
-            <a
-              href="https://www.cosmikbattle.com/cosmik-academy/marketplace-gettingready"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-accent-foreground font-medium underline transition-colors"
-            >
-              Marketplace Getting Ready
-            </a>
+            <div className="flex flex-col items-center justify-center gap-1 sm:flex-row sm:gap-2">
+              <a
+                href="https://www.cosmikbattle.com/cosmik-academy/wallet-management"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-accent-foreground font-medium underline transition-colors"
+              >
+                Wallet Management
+              </a>
+              and
+              <a
+                href="https://www.cosmikbattle.com/cosmik-academy/marketplace-gettingready"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-accent-foreground font-medium underline transition-colors"
+              >
+                Marketplace Getting Ready
+              </a>
+            </div>
           </div>
         }
       />
-      
-      <div className="flex gap-4">
+      <div className="mt-2 flex gap-4">
         <Button onClick={() => push("/topup")}>Fill your wallet</Button>
         <Button
           variant="link"

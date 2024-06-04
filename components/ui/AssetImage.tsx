@@ -1,5 +1,6 @@
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useMemo, useRef, useState } from "react"
 import Image, { ImageProps } from "next/image"
+import { z } from "zod"
 
 export const getImageURL = (src?: string | null) => {
   if (!src) return null
@@ -31,17 +32,23 @@ export function AssetImage({
     setSrc(getImageURL(fallback) ?? null)
   }, [_src, fallback])
 
+  const isSrcValid = useMemo(() => {
+    const zodUrl = z.string().url()
+    const urlParseRes = zodUrl.safeParse(_src)
+    return urlParseRes.success
+  }, [_src])
+
   if (imageData && imageData.startsWith("<svg")) {
     return (
       <div
-        className="z-10 size-full bg-background"
+        className="bg-background z-10 size-full"
         dangerouslySetInnerHTML={{ __html: imageData }}
       />
     )
   }
 
-  if (!_src) {
-    return <div className="z-10 h-full w-full bg-background" />
+  if (_src === null || !isSrcValid) {
+    return <div className="bg-background z-10 size-full" />
   }
 
   return (
