@@ -12,16 +12,24 @@ export const FILLED_EVENT_TYPE = "filledEvent"
 
 export type TransferActivity = {
   activityType: "transfer"
-  transfer: AssetTransfer
+  transfer: AssetTransfer & {
+    fromUsername: string
+  }
+}
+
+export type Usernames = {
+  makerUsername: string
+  takerUsername: string
 }
 
 export type OrderActivity = {
   activityType: "order"
-  order: OrderWithAsset
+  order: OrderWithAsset & Usernames
 }
+
 export type FilledEventActivity = {
   activityType: "filledEvent"
-  filledEvent: OrderFilledEventWithAsset
+  filledEvent: OrderFilledEventWithAsset & Usernames
 }
 
 export type AssetActivity =

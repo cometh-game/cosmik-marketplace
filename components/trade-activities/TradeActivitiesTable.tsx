@@ -33,13 +33,19 @@ import { useActivityCollection, useActivityUnitPrice } from "./activityHooks"
 import { ActivityTimestampCell } from "./ActivityTimestampCell"
 import { ActivityUsersCell } from "./ActivityUsersCell"
 import { ActivityAssetCell } from "./AssetActivityCell"
-import { AssetActivity} from "./AssetActivityTypes"
+import { AssetActivity } from "./AssetActivityTypes"
 
 type TransfersListProps = {
   assetTransfers?: AssetTransfers
   maxTransfersToShow?: number
-  orders?: Order[]
-  orderFilledEvents?: OrderFilledEventWithAsset[]
+  orders?: Order[] & {
+    makerUsername?: string
+    takerUsername?: string
+  }
+  orderFilledEvents?: OrderFilledEventWithAsset[] & {
+    makerUsername?: string
+    takerUsername?: string
+  }
   display1155Columns: boolean
   displayAssetColumns: boolean
 }
@@ -105,7 +111,7 @@ const ActivityRow = ({
 
   return (
     <TableRow className={bgClass}>
-    {/* <TableRow> */}
+      {/* <TableRow> */}
       <TableCell className="items-center">
         <ActivityEventCell activity={activity} />
       </TableCell>
