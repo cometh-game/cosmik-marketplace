@@ -22,7 +22,6 @@ export const ActivityUsersCell = ({
 }) => {
   const account = useAccount()
   const viewerAddress = account.address
-
   const nftOwner = useMemo(
     () => getActivityNftOwner(activity, viewerAddress),
     [activity, viewerAddress]
@@ -31,11 +30,6 @@ export const ActivityUsersCell = ({
     () => getActivityNftReceiver(activity, viewerAddress),
     [activity, viewerAddress]
   )
-
-  const { usernames, isFetchingUsernames } = useUsernames([
-    nftOwner.address,
-    nftReceiver.address,
-  ])
 
   const shouldOnlyShowOneUser = useMemo(() => {
     return (
@@ -67,9 +61,7 @@ export const ActivityUsersCell = ({
         <>
           <UserButton
             user={{
-              username: isFetchingUsernames
-                ? "..."
-                : usernames[nftOwner.address],
+              username: nftOwner.username,
               address: nftOwner.address,
             }}
           />
@@ -81,9 +73,7 @@ export const ActivityUsersCell = ({
         <>
           <UserButton
             user={{
-              username: isFetchingUsernames
-                ? "..."
-                : usernames[nftReceiver.address],
+              username: nftReceiver.username,
               address: nftReceiver.address,
             }}
           />

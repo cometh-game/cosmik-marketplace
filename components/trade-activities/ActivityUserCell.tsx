@@ -1,10 +1,8 @@
 "use client"
 
 import React, { useMemo } from "react"
-import { useGetUser, useUsernames } from "@/services/cosmik/userService"
 import { TokenType, TradeDirection, TradeStatus } from "@cometh/marketplace-sdk"
 import { ArrowRightIcon } from "lucide-react"
-import { Address } from "viem"
 import { useAccount } from "wagmi"
 
 import { CopyButton } from "../ui/CopyButton"
@@ -32,8 +30,6 @@ export const ActivityUsersCell = ({
     () => getActivityNftReceiver(activity, viewerAddress),
     [activity, viewerAddress]
   )
-
-  const { usernames, isFetchingUsernames } = useUsernames([nftOwner.address, nftReceiver.address])
 
   const shouldOnlyShowOneUser = useMemo(() => {
     return (
@@ -65,7 +61,7 @@ export const ActivityUsersCell = ({
         <>
           <UserButton
             user={{
-              username: isFetchingUsernames ? "..." : usernames[nftOwner.address],
+              username: nftOwner.username,
               address: nftOwner.address,
             }}
           />
@@ -77,7 +73,7 @@ export const ActivityUsersCell = ({
         <>
           <UserButton
             user={{
-              username: isFetchingUsernames ? "..." : usernames[nftReceiver.address],
+              username: nftReceiver.username,
               address: nftReceiver.address,
             }}
           />

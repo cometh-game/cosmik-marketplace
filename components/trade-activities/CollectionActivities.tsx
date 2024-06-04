@@ -4,6 +4,7 @@ import { useMemo, useState } from "react"
 import { useGetCollection } from "@/services/cometh-marketplace/collectionService"
 import { useSearchFilledEvents } from "@/services/cometh-marketplace/searchFilledEventsService"
 import { useSearchOrders } from "@/services/cometh-marketplace/searchOrdersService"
+import { useUsernames } from "@/services/cosmik/userService"
 import {
   CollectionStandard,
   FilterDirection,
@@ -67,7 +68,39 @@ export const CollectionActivities = ({
         filtersOverride?.statuses?.length !== 0
     )
   const { data: collection } = useGetCollection(contractAddress as Address)
-  const isPending = isPendingOrders || isPendingFilledEvents
+
+  const wallets = useMemo(() => {
+    const makers = orderSearch?.orders.map((order) => order.maker) ?? []
+    const takers = orderSearch?.orders.map((order) => order.taker) ?? []
+    const filledMakers =
+      filledEventsSearch?.filledEvents.map((event) => event.maker) ?? []
+    const filledTakers =
+      filledEventsSearch?.filledEvents.map((event) => event.taker) ?? []
+    return [
+      ...new Set([...makers, ...takers, ...filledMakers, ...filledTakers]),
+    ]
+  }, [orderSearch, filledEventsSearch])
+
+  const { usernames, isFetchingUsernames } = useUsernames(wallets as Address[])
+
+  const ordersWithUsernames = orderSearch?.orders.map((order) => {
+    return {
+      ...order,
+      makerUsername: usernames[order.maker],
+      takerUsername: usernames[order.taker],
+    }
+  })
+
+  const eventsWithUsernames = filledEventsSearch?.filledEvents.map((event) => {
+    return {
+      ...event,
+      makerUsername: usernames[event.maker],
+      takerUsername: usernames[event.taker],
+    }
+  })
+  const isPending =
+    isPendingOrders || isPendingFilledEvents || isFetchingUsernames
+
   return (
     <div className="w-full">
       <div className="mb-3">
@@ -98,8 +131,8 @@ export const CollectionActivities = ({
             {orderSearch && orderSearch.total > 1 ? "orders" : "order"} found
           </div>
           <TradeActivitiesTable
-            orders={orderSearch?.orders}
-            orderFilledEvents={filledEventsSearch?.filledEvents}
+            orders={ordersWithUsernames}
+            orderFilledEvents={eventsWithUsernames}
             display1155Columns={
               collection?.standard === CollectionStandard.ERC1155
             }
