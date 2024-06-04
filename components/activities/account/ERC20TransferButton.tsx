@@ -63,7 +63,6 @@ const ERC20TransferButton = ({
   const [isPristine, setIsPristine] = useState(true)
   const {
     data: txHash,
-    data: txHash,
     sendTransaction,
     isPending: isPendingSendTransaction,
     isSuccess: isSuccessSendTransaction,
