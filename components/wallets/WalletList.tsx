@@ -1,6 +1,4 @@
 import React from "react"
-import { useRemoveExternalWallet } from "@/services/cosmik/externalWalletService"
-import { CircleX } from "lucide-react"
 import { Address } from "viem"
 
 import { shortenAddress } from "@/lib/utils/addresses"
