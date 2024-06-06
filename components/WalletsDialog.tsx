@@ -39,7 +39,7 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
   const { address: walletAddress } = useAccount()
   const { mutateAsync: getUserNonceAsync } = useGetUserNonce()
   const { mutateAsync: addExternalWallet } = useAddExternalWallet()
-  const { mutate: removeExternalWallet } = useRemoveExternalWallet()
+  const { mutateAsync: removeExternalWallet } = useRemoveExternalWallet()
   const { signMessageAsync: signMessage } = useSignMessage()
   const [wallets, setWallets] = useState<
     { address: string; spaceships: number }[]
@@ -154,16 +154,20 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
   }
 
   async function handleRemoveExternalWallet(walletAddress: string) {
-    removeExternalWallet(
-      { walletAddress },
-      {
-        onSuccess: () => {
-          setWallets(
-            wallets.filter((wallet) => wallet.address !== walletAddress)
-          )
-        },
-      }
-    )
+    try {
+      await removeExternalWallet(
+        { walletAddress },
+        {
+          onSuccess: () => {
+            setWallets(
+              wallets.filter((wallet) => wallet.address !== walletAddress)
+            )
+          },
+        }
+      )
+    } catch (error) {
+      console.log("Error removing wallet", error)
+    }
   }
 
   return (

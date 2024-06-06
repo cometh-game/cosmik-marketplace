@@ -1,10 +1,7 @@
 "use client"
 
-import { useCallback } from "react"
-import { useConnectComethWallet } from "@/providers/authentication/comethConnectHooks"
 import { CircleX } from "lucide-react"
 
-import { Button } from "@/components/ui/Button"
 import {
   Tooltip,
   TooltipContent,
