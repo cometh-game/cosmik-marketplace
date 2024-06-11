@@ -119,15 +119,14 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
       if (!walletAddress) {
         throw new Error("No wallet")
       }
+      if (user.address === walletAddress) {
+        throw new Error("Cannot add primary wallet")
+      }
       const walletExists = wallets.some(
         (wallet) => wallet.address === walletAddress
       )
 
       if (walletExists) {
-        throw new Error("This wallet address has already been added.")
-      }
-      
-      if (user.address === walletAddress) {
         throw new Error("This wallet address has already been added.")
       }
       
@@ -161,6 +160,9 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
 
   async function handleRemoveExternalWallet(walletAddress: string) {
     try {
+      if (user.address === walletAddress) {
+        throw new Error("Cannot remove main wallet")
+      }
       await removeExternalWallet(
         { walletAddress },
         {
