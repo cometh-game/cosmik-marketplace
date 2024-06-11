@@ -122,9 +122,15 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
       const walletExists = wallets.some(
         (wallet) => wallet.address === walletAddress
       )
+
       if (walletExists) {
         throw new Error("This wallet address has already been added.")
       }
+      
+      if (user.address === walletAddress) {
+        throw new Error("This wallet address has already been added.")
+      }
+      
       const { nonce } = await getUserNonceAsync({ walletAddress })
       const message = await createMessage({
         nonce,
