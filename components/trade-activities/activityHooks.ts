@@ -61,25 +61,22 @@ export const useEchanceActivitiesWithUsernames = (
   maxActivitiesToShow?: number
 ): { activitiesWithUsernames: AssetActivity[]; isFetching: boolean } => {
   const addresses = useMemo(() => {
-    const addresses = new Set<string>()
+    const addresses: string[] = []
 
     assetTransfers.forEach((transfer) => {
-      addresses.add(transfer.fromAddress)
-      addresses.add(transfer.toAddress)
+      addresses.push(transfer.fromAddress, transfer.toAddress)
     })
     assetOrders.forEach((order) => {
-      addresses.add(order.maker)
-      addresses.add(order.taker)
+      addresses.push(order.maker, order.taker)
     })
     assetFilledEvents.forEach((filledEvent) => {
-      addresses.add(filledEvent.maker)
-      addresses.add(filledEvent.taker)
+      addresses.push(filledEvent.maker, filledEvent.taker)
     })
 
     return addresses
   }, [assetTransfers, assetOrders, assetFilledEvents])
 
-  const { usernames, isFetchingUsernames } = useUsernames(Array.from(addresses))
+  const { usernames, isFetchingUsernames } = useUsernames(addresses)
 
   const activities = useMemo(() => {
     const transferActivites = assetTransfers.map((asset) => ({
