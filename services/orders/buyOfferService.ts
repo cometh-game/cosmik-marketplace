@@ -53,7 +53,6 @@ export const usePresignOrder = () => {
     tradeDirection = TradeDirection.BUY,
   }: BuyOfferParams) {
     const signedOrder = await signBuyOfferOrder({ order })
-    console.log("signedOrder", { order, signedOrder })
     const isERC1155 = asset.tokenType === TokenType.ERC1155
 
     const buyOffer: NewOrder = {

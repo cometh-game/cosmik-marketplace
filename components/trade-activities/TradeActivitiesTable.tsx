@@ -20,16 +20,20 @@ import {
 } from "@/components/ui/Table"
 
 import TokenQuantity from "../erc1155/TokenQuantity"
+import { Loading } from "../ui/Loading"
 import { Price } from "../ui/Price"
 import { ActivityEventCell } from "./ActivityEventCell"
 import {
   getActivityId,
-  getMergedActivities,
   isFilledEventActivity,
   isOrderActivity,
   isTransferActivity,
 } from "./activityHelper"
-import { useActivityCollection, useActivityUnitPrice } from "./activityHooks"
+import {
+  useActivityCollection,
+  useActivityUnitPrice,
+  useEchanceActivitiesWithUsernames,
+} from "./activityHooks"
 import { ActivityTimestampCell } from "./ActivityTimestampCell"
 import { ActivityUsersCell } from "./ActivityUsersCell"
 import { ActivityAssetCell } from "./AssetActivityCell"
@@ -38,14 +42,8 @@ import { AssetActivity } from "./AssetActivityTypes"
 type TransfersListProps = {
   assetTransfers?: AssetTransfers
   maxTransfersToShow?: number
-  orders?: Order[] & {
-    makerUsername?: string
-    takerUsername?: string
-  }
-  orderFilledEvents?: OrderFilledEventWithAsset[] & {
-    makerUsername?: string
-    takerUsername?: string
-  }
+  orders?: Order[]
+  orderFilledEvents?: OrderFilledEventWithAsset[]
   display1155Columns: boolean
   displayAssetColumns: boolean
 }
@@ -111,7 +109,6 @@ const ActivityRow = ({
 
   return (
     <TableRow className={bgClass}>
-      {/* <TableRow> */}
       <TableCell className="items-center">
         <ActivityEventCell activity={activity} />
       </TableCell>
@@ -131,11 +128,7 @@ const ActivityRow = ({
       )}
       <TableCell>
         {activityUnitPrice && (
-          <Price
-            // variant="accent"
-            amount={activityUnitPrice}
-            className="font-bold text-white"
-          />
+          <Price amount={activityUnitPrice} className="font-bold text-white" />
         )}
       </TableCell>
       <TableCell className="justify-start">
@@ -156,14 +149,17 @@ export function TradeActivitiesTable({
   display1155Columns,
   displayAssetColumns = false,
 }: TransfersListProps) {
-  const mergedActivities = useMemo(() => {
-    return getMergedActivities(
+  const { activitiesWithUsernames, isFetching } =
+    useEchanceActivitiesWithUsernames(
       assetTransfers,
       orders,
       orderFilledEvents,
       maxTransfersToShow
     )
-  }, [assetTransfers, orders, orderFilledEvents, maxTransfersToShow])
+
+  if (isFetching) {
+    return <Loading />
+  }
 
   return (
     <Table>
@@ -178,8 +174,8 @@ export function TradeActivitiesTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {mergedActivities?.length ? (
-          mergedActivities.map((activity, index) => (
+        {activitiesWithUsernames?.length ? (
+          activitiesWithUsernames.map((activity, index) => (
             <ActivityRow
               key={getActivityId(activity)}
               activity={activity}

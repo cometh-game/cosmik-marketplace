@@ -54,7 +54,6 @@ export const useSellAsset = (
       })
       if (!order) throw new Error("Could not build order")
       if (!signer) throw new Error("Could not get signer")
-      console.log("order", order)
       return await presignOrder({
         asset,
         signer,
@@ -64,7 +63,6 @@ export const useSellAsset = (
     },
 
     onSuccess: (_, { asset }) => {
-      console.log("asset", asset)
       invalidateAssetQueries(
         asset.contractAddress as Address,
         asset.tokenId,

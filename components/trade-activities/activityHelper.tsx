@@ -18,7 +18,6 @@ import {
   TRANSFER_TYPE,
   TransferActivity,
 } from "./AssetActivityTypes"
-import { a } from "react-spring"
 
 export const isTransferActivity = (
   assetActivity: AssetActivity
@@ -91,7 +90,7 @@ export const getActivityNftOwner = (
     return getFormattedUser(
       assetActivity.transfer.fromAddress as Address,
       viewerAddress,
-      assetActivity.transfer.fromUsername
+      assetActivity.transfer.toUsername
     )
   } else if (isOrderActivity(assetActivity)) {
     return getFormattedUser(
@@ -101,7 +100,7 @@ export const getActivityNftOwner = (
       viewerAddress,
       assetActivity.order.direction === TradeDirection.SELL
         ? assetActivity.order.makerUsername
-        : assetActivity.order.takerUsername,
+        : assetActivity.order.takerUsername
     )
   } else if (isFilledEventActivity(assetActivity)) {
     return getFormattedUser(
@@ -111,7 +110,7 @@ export const getActivityNftOwner = (
       viewerAddress,
       assetActivity.filledEvent.direction === TradeDirection.SELL
         ? assetActivity.filledEvent.makerUsername
-        : assetActivity.filledEvent.takerUsername,
+        : assetActivity.filledEvent.takerUsername
     )
   } else {
     throw new Error("Unknown activity type")
@@ -125,7 +124,8 @@ export const getActivityNftReceiver = (
   if (isTransferActivity(assetActivity)) {
     return getFormattedUser(
       assetActivity.transfer.toAddress as Address,
-      viewerAddress
+      viewerAddress,
+      assetActivity.transfer.toUsername
     )
   } else if (isOrderActivity(assetActivity)) {
     return getFormattedUser(
@@ -135,7 +135,7 @@ export const getActivityNftReceiver = (
       viewerAddress,
       assetActivity.order.direction === TradeDirection.SELL
         ? assetActivity.order.takerUsername
-        : assetActivity.order.makerUsername,
+        : assetActivity.order.makerUsername
     )
   } else if (isFilledEventActivity(assetActivity)) {
     return getFormattedUser(
@@ -145,7 +145,7 @@ export const getActivityNftReceiver = (
       viewerAddress,
       assetActivity.filledEvent.direction === TradeDirection.SELL
         ? assetActivity.filledEvent.takerUsername
-        : assetActivity.filledEvent.makerUsername,
+        : assetActivity.filledEvent.makerUsername
     )
   } else {
     throw new Error("Unknown activity type")
@@ -162,36 +162,4 @@ export const getActivityId = (assetActivity: AssetActivity) => {
   } else {
     throw new Error("Unknown activity type")
   }
-}
-
-export const getMergedActivities = (
-  assetTransfers: AssetTransfers,
-  assetOrders: Order[],
-  assetFilledEvents: OrderFilledEventWithAsset[],
-  maxActivitiesToShow?: number
-): AssetActivity[] => {
-  const transferActivites = assetTransfers.map((asset) => ({
-    activityType: TRANSFER_TYPE,
-    transfer: asset,
-  }))
-  const orderActivities = assetOrders.map((order) => ({
-    activityType: ORDER_TYPE,
-    order,
-  }))
-  const filledEventActivities = assetFilledEvents.map((filledEvent) => ({
-    activityType: FILLED_EVENT_TYPE,
-    filledEvent,
-  }))
-  const activities = [
-    ...transferActivites,
-    ...orderActivities,
-    ...filledEventActivities,
-  ] as AssetActivity[]
-  activities.sort((activity1, activity2) => {
-    const activity1Timestamp = getActivityTimestamp(activity1)
-    const activity2Timestamp = getActivityTimestamp(activity2)
-
-    return activity2Timestamp - activity1Timestamp
-  })
-  return activities.slice(0, maxActivitiesToShow)
 }

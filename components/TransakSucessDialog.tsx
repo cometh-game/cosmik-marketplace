@@ -14,7 +14,6 @@ export type TransakSuccessDialogProps = {
 }
 
 export function TransakSuccessDialog({ resumeOrder, onClose }: TransakSuccessDialogProps) {
-
   return (
     <Dialog open={true}>
       <DialogContent className="sm:max-w-[480px]">
@@ -27,7 +26,7 @@ export function TransakSuccessDialog({ resumeOrder, onClose }: TransakSuccessDia
             take up to 3 minutes.
             <br />
             You will receive an email when your order is complete. <br />
-            You can also track your order here:
+            {/* You can also track your order here: */}
             {/* <a href=""></a> */}
           </>
         </DialogDescription>

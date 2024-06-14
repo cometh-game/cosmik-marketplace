@@ -14,6 +14,7 @@ export type TransferActivity = {
   activityType: "transfer"
   transfer: AssetTransfer & {
     fromUsername: string
+    toUsername: string
   }
 }
 

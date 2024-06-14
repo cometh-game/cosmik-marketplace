@@ -75,7 +75,6 @@ export const fetchRequiredMakeBuyOfferSteps = async ({
         price,
       })?.hasSufficientFunds
     : false
-  console.log("displayAddFundsStep", displayAddFundsStep)
 
   const displayWrapStep =
     globalConfig.useNativeForOrders &&
