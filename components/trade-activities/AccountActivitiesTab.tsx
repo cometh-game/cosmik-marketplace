@@ -44,7 +44,7 @@ export const AccountActivitiesTab = ({
       limit: NB_COLLECTION_ORDERS_SHOWN,
       orderBy: SearchOrdersSortOption.UPDATED_AT,
       orderByDirection: FilterDirection.DESC,
-      ...hackedFiltersOverride,
+      ...filtersOverride,
     })
   const { data: takerOrdersSearch, isPending: isPendingTakerOrders } =
     useSearchOrders({
@@ -52,7 +52,7 @@ export const AccountActivitiesTab = ({
       limit: NB_COLLECTION_ORDERS_SHOWN,
       orderBy: SearchOrdersSortOption.UPDATED_AT,
       orderByDirection: FilterDirection.DESC,
-      ...hackedFiltersOverride,
+      ...filtersOverride,
     })
 
   const searchFilledEventsLimit = hackedFiltersOverride?.statuses?.includes(
@@ -60,6 +60,7 @@ export const AccountActivitiesTab = ({
   )
     ? NB_COLLECTION_ORDERS_SHOWN
     : 0
+
   const {
     data: takerFilledEventsSearch,
     isPending: isPendingTakerFilledEvents,
@@ -104,16 +105,14 @@ export const AccountActivitiesTab = ({
         disableAttributesFilters
       />
       {isPending ? (
-        <div className=" w-full text-center text-xl">
-          Loading profile activities
-          <br />
+        <div className="w-full text-center text-xl">
           <Loading />
         </div>
       ) : (
         <TradeActivitiesTable
           orders={allOrders}
           orderFilledEvents={allFilledEvents}
-          display1155Columns={true}
+          display1155Columns={false}
           maxTransfersToShow={NB_COLLECTION_ORDERS_SHOWN}
           displayAssetColumns={true}
         />

@@ -22,6 +22,7 @@ export const useClipboard = (): [CopiedValue, CopyFn] => {
         title: "Copied to clipboard!",
         description: text,
         duration: 3000,
+        className: "truncate",
       })
       return true
     } catch (error) {

@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useMemo } from "react"
-import { useUsernames } from "@/services/cosmik/userService"
 import { TokenType, TradeDirection, TradeStatus } from "@cometh/marketplace-sdk"
 import { ArrowRightIcon } from "lucide-react"
 import { useAccount } from "wagmi"

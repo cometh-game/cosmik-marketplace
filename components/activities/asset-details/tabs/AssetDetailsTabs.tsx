@@ -21,8 +21,14 @@ export type AssetActivitiesProps = {
   asset: AssetWithTradeData
   assetTransfers: AssetTransfers
   assetOwners: AssetOwners
-  assetOrders: OrderWithAsset[]
-  assetFilledEvents: OrderFilledEventWithAsset[]
+  assetOrders: OrderWithAsset[] & {
+    makerUsername?: string
+    takerUsername?: string
+  }
+  assetFilledEvents: OrderFilledEventWithAsset[] & {
+    makerUsername?: string
+    takerUsername?: string
+  }
 }
 
 export const AssetDetailsTabs = ({

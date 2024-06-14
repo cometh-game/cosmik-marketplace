@@ -1,5 +1,7 @@
 "use client"
 
+import { cn } from "@/lib/utils/utils"
+import { useToast } from "@/components/ui/toast/hooks/useToast"
 import {
   Toast,
   ToastClose,
@@ -8,7 +10,6 @@ import {
   ToastTitle,
   ToastViewport,
 } from "@/components/ui/toast/Toast"
-import { useToast } from "@/components/ui/toast/hooks/useToast"
 
 export function Toaster() {
   const { toasts } = useToast()
@@ -28,13 +29,7 @@ export function Toaster() {
             <div className="grid gap-1">
               {title && <ToastTitle>{title}</ToastTitle>}
               {description && (
-                <ToastDescription
-                  className={
-                    title === "Copied!"
-                      ? "overflow-hidden text-ellipsis"
-                      : "break-words"
-                  }
-                >
+                <ToastDescription className={cn("break-words", className)}>
                   {description}
                 </ToastDescription>
               )}

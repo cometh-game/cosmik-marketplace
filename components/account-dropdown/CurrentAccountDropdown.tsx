@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-// import { useUsername } from "@/services/user/userNameService"
+import { useGetUser } from "@/services/cosmik/userService"
 import { User } from "lucide-react"
 import { useWindowSize } from "usehooks-ts"
 import { useAccount } from "wagmi"
@@ -17,10 +17,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu"
 
-import { CopyButton } from "../ui/CopyButton"
 import { AccountBalance } from "./AccountBalance"
 import { AccountLogoutAction } from "./AccountLogoutAction"
-import { useGetUser } from "@/services/cosmik/userService"
 
 export type AccountDropdownProps = {
   buttonVariant?: ButtonProps["variant"]
@@ -33,8 +31,9 @@ export function CurrentAccountDropdown({
   const account = useAccount()
   const viewerAddress = account.address
   const { width } = useWindowSize()
-  // const { username, isFetchingUsername } = useUsername(viewerAddress as string)
-  const { user, isFetching: isFetchingUsername } = useGetUser(viewerAddress as string)
+  const { user, isFetching: isFetchingUsername } = useGetUser(
+    viewerAddress as string
+  )
 
   const isMobile = width < 640
 
@@ -43,11 +42,12 @@ export function CurrentAccountDropdown({
       <DropdownMenuTrigger asChild>
         <Button size={isMobile ? "icon" : "default"} variant={buttonVariant}>
           <User size="18" className="md:mr-1" />
-          {!isMobile && (isFetchingUsername ? (
-                    <span>...</span>
-                  ) : (
-                    <span>@{user?.userName}</span>
-                  ))}
+          {!isMobile &&
+            (isFetchingUsername ? (
+              <span>...</span>
+            ) : (
+              <span>@{user?.userName}</span>
+            ))}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent variant="dialog" align="end" asChild>
@@ -63,7 +63,7 @@ export function CurrentAccountDropdown({
               />
               <Link href={`/profile/${viewerAddress}`} className="group">
                 <div className="relative -mb-0.5 text-base font-bold uppercase">
-                 My account
+                  My account
                 </div>
                 {viewerAddress && (
                   <div className="text-accent mr-2 text-sm font-medium transition-colors group-hover:text-white">
