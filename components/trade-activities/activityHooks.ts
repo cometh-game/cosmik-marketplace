@@ -15,8 +15,6 @@ import { calculateFeesAmount, totalFeesFromCollection } from "@/lib/utils/fees"
 
 import {
   getActivityTimestamp,
-  getActivityWallets,
-  getMergedActivities,
   isFilledEventActivity,
   isOrderActivity,
   isTransferActivity,
