@@ -34,7 +34,8 @@ export const UserAuthProvider = ({
   const [userIsReconnecting, setUserIsReconnecting] = useState(false)
 
   const pathname = usePathname()
-  const isWalletsPage = pathname === "/wallets"
+  const isWalletConnectionNotRequired =
+    pathname === "/wallets" || pathname === "/legenda-program"
 
   const currentWalletInStorage =
     typeof window !== "undefined" &&
@@ -56,8 +57,7 @@ export const UserAuthProvider = ({
       if (userLogged && userLogged.address) {
         setUser(userLogged)
 
-        if (isWalletsPage) {
-          console.log("Setting user is fully connected to true")
+        if (isWalletConnectionNotRequired) {
           setUserIsReconnecting(false)
           setUserIsFullyConnected(true)
           return
@@ -67,21 +67,23 @@ export const UserAuthProvider = ({
           await connectComethWallet(userLogged.address)
           setUserIsFullyConnected(true)
         } catch (error) {
-          console.error("Error reconnecting wallet", error)
           setUserIsFullyConnected(false)
         }
       }
       setUserIsReconnecting(false)
     }
 
-    if (!isFetchingUserLogged && currentWalletInStorage) {
+    if (
+      !isFetchingUserLogged &&
+      (currentWalletInStorage || isWalletConnectionNotRequired)
+    ) {
       reconnectingWallet()
     }
   }, [
     userLogged,
     isFetchingUserLogged,
     currentWalletInStorage,
-    isWalletsPage,
+    isWalletConnectionNotRequired,
     connectComethWallet,
   ])
 

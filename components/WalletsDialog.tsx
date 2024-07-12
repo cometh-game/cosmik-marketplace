@@ -37,7 +37,7 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
   const { open } = useWeb3Modal()
   const { disconnectAsync } = useDisconnect()
   const { address: walletAddress } = useAccount()
-  const { mutateAsync: getUserNonceAsync } = useGetUserNonce()
+  const { getUserNonceAsync } = useGetUserNonce()
   const { mutateAsync: addExternalWallet } = useAddExternalWallet()
   const { mutateAsync: removeExternalWallet } = useRemoveExternalWallet()
   const { signMessageAsync: signMessage } = useSignMessage()
@@ -45,6 +45,7 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
     { address: string; spaceships: number }[]
   >([])
   const [loading, setLoading] = useState(false)
+  
   useEffect(() => {
     fetchWallets()
   }, [user?.externalAddresses])
@@ -188,7 +189,7 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
         >
           <DialogHeader className="flex-row items-center justify-between space-y-0">
             <DialogTitle className="normal-case">@{user?.userName}</DialogTitle>
-            {(user || walletAddress) && <AccountLogoutAction />}
+            <AccountLogoutAction />
           </DialogHeader>
           <ul className="space-y-3">
             {loading ? (
