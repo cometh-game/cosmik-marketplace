@@ -10,21 +10,19 @@ import { toast } from "@/components/ui/toast/hooks/useToast"
 
 const DynamicSigninDialog = dynamic(
   () =>
-    import("@/components/signin/SignInDialog").then(
-      (mod) => mod.SignInDialog
-    ),
+    import("@/components/signin/SignInDialog").then((mod) => mod.SignInDialog),
   { ssr: false }
 )
 
-const DynamicWalletsDialog = dynamic(
+const DynamicLegendaProgramProcess = dynamic(
   () =>
-    import("@/components/WalletsDialog").then(
-      (mod) => mod.WalletsDialog
+    import("@/components/legenda-program/LegendaProgramProcess").then(
+      (mod) => mod.LegendaProgramProcess
     ),
   { ssr: false }
 )
 
-export default function WalletsPage() {
+export default function LegendaProgramPage() {
   const {
     userIsReconnecting,
     userIsFullyConnected,
@@ -39,11 +37,11 @@ export default function WalletsPage() {
       try {
         setIsLoading(true)
         setUser(user)
+        setUserIsFullyConnected(true)
         toast({
           title: "Login successful",
           duration: 3000,
         })
-        setUserIsFullyConnected(true)
       } catch (error) {
         console.error("Error connecting wallet", error)
       } finally {
@@ -62,7 +60,7 @@ export default function WalletsPage() {
           isLoading={isLoading}
         />
       ) : (
-        <DynamicWalletsDialog user={getUser()} />
+        <DynamicLegendaProgramProcess user={getUser()} />
       )}
     </div>
   )

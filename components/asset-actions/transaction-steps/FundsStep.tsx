@@ -40,8 +40,6 @@ export function FundsStep({ price, onValid }: FundsStepProps) {
     price: price,
   })
 
-  console.log("data", data)
-
   useEffect(() => {
     if (data?.hasSufficientFunds === true) {
       return onValid()

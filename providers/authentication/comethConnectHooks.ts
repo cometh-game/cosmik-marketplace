@@ -134,7 +134,6 @@ export const useConnectComethWallet = () => {
       if (!isAddress(walletAddress)) {
         throw new Error("Invalid wallet address.")
       }
-      console.log("Retrieving wallet address", walletAddress)
       const adaptor = new ConnectAdaptor({
         chainId: chainId,
         apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
@@ -145,7 +144,6 @@ export const useConnectComethWallet = () => {
         apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
         rpcUrl: env.NEXT_PUBLIC_RPC_URL!,
       })
-      console.log("Connecting wallet", walletAddress)
       await wallet.connect(walletAddress)
     },
     [chainId]
