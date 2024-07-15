@@ -5,7 +5,7 @@ import { SiweMessage } from "siwe"
 import { cosmikClient } from "@/lib/clients"
 
 import { toast } from "../ui/toast/hooks/useToast"
-import { LegendaReward } from "./types"
+import { LegendaRewards } from "./types"
 
 type RegisterAddressMutationOptions = {
   walletAddress: string
@@ -44,11 +44,10 @@ export const useRegisterAddress = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["legenda-rewards"] })
       toast({
-        title: "Rewards claim successful!",
+        title: "Your wallet has been linked!",
       })
     },
     onError: (error: AxiosError<{ error?: string }>) => {
-      // console.log("error.response?.data?.error", error.response?.data?.error)
       if (error.response?.status === 404) {
         toast({
           title: "Something went wrong!",
@@ -63,7 +62,7 @@ export const useRegisterAddress = () => {
 }
 
 export const useGetRewards = (): {
-  rewards: LegendaReward[]
+  rewards: LegendaRewards
   isLoadingRewards: boolean
 } => {
   const { data: rewards, isLoading: isLoadingRewards } = useQuery({
@@ -75,10 +74,20 @@ export const useGetRewards = (): {
 }
 
 export const useClaimRewards = () => {
-  const { data: claimRewards, isLoading: isClaimingRewards } = useQuery({
-    queryKey: ["legenda-rewards"],
-    queryFn: () => cosmikClient.patch("/legenda/claim-rewards"),
+  const queryClient = useQueryClient()
+  const { mutateAsync: claimRewards, data } = useMutation({
+    mutationKey: ["legenda-claim-rewards"],
+    mutationFn: async () => {
+      const response = await cosmikClient.patch("/legenda/claim-rewards")
+      return response.data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["legenda-status"] })
+      toast({
+        title: "Rewards claimed!",
+      })
+    },
   })
 
-  return { claimRewards, isClaimingRewards }
+  return { claimRewards, claimedRewards: data }
 }

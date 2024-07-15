@@ -16,32 +16,39 @@ type RewardsStepProps = {
 export function RewardsStep({ user, onValid }: RewardsStepProps) {
   const { rewards, isLoadingRewards } = useGetRewards()
 
-  console.log("rewards", rewards)
-
   return (
     <>
-      <div className="mb-2">
-        <p className="text-muted-foreground">
-          The rewards were assigned based on the content of your wallet as of
-          <span className="font-semibold">May 29, 2 PM CET</span>. For more
-          information about the Legenda Program and your rewards, please visit .
-          <a
-            href=""
-            target="_blank"
-            rel="noreferrer"
-            className="hover:text-accent-foreground font-medium underline transition-colors"
-          >
-            XXX
-          </a>
-          .
-        </p>
+      <h3 className="text-xl font-semibold">Your rewards</h3>
+      <p className="mb-3">
+        The rewards were assigned based on the content of your wallet as
+        of&nbsp;
+        <span className="text-accent-foreground font-semibold">
+          May 29, 2 PM CET
+        </span>
+        . For more information about the Legenda Program and your rewards,
+        please visit&nbsp;
+        <a
+          href=""
+          target="_blank"
+          rel="noreferrer"
+          className="hover:text-accent-foreground font-medium underline transition-colors"
+        >
+          XXX
+        </a>
+        .
+      </p>
 
+      {isLoadingRewards ? (
+        <p>Loading rewards...</p>
+      ) : (
         <RewardsList rewards={rewards} />
-      </div>
+      )}
 
-      <Button size="lg" onClick={onValid} disabled={isLoadingRewards}>
-        Get my rewards
-      </Button>
+      <div className="mt-2">
+        <Button size="lg" onClick={onValid} disabled={isLoadingRewards}>
+          Get my rewards
+        </Button>
+      </div>
     </>
   )
 }
