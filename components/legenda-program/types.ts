@@ -1,11 +1,17 @@
 export type Legenda = {
   userId: string
-    address: string
+  address: string
   claimed: boolean
-  rewards: LegendaReward[]
+  rewards: LegendaRewards
+}
+
+export type LegendaRewards = {
+  cards: LegendaReward[]
+  credits: number
+  cosmetics: LegendaReward[]
 }
 
 export type LegendaReward = {
-  type: string
-  value: string
+  name: string
+  count: number
 }

@@ -45,7 +45,7 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
     { address: string; spaceships: number }[]
   >([])
   const [loading, setLoading] = useState(false)
-  
+
   useEffect(() => {
     fetchWallets()
   }, [user?.externalAddresses])
@@ -130,14 +130,15 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
       if (walletExists) {
         throw new Error("This wallet address has already been added.")
       }
-      
+
       const { nonce } = await getUserNonceAsync({ walletAddress })
       const message = await createMessage({
         nonce,
         statement: "Connect to Cosmik Battle to link your wallet.",
       })
+      const messageToSign = message.prepareMessage()
       const signature = await signMessage({
-        message: message.prepareMessage(),
+        message: messageToSign,
       })
       await addExternalWallet(
         { walletAddress, nonce, signature, message },

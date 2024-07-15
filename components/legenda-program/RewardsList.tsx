@@ -1,15 +1,37 @@
-import { LegendaReward } from "./types"
+import { LegendaReward, LegendaRewards } from "./types"
 
 type RewardsListProps = {
-  rewards: LegendaReward[]
+  rewards: LegendaRewards
 }
+
+const RewardItem = ({ name, count }: LegendaReward) => (
+  <div key={name} className="flex gap-x-2">
+    <div className="mr-0.5 font-medium">{name}:</div>
+    <div className="font-bold">{count}</div>
+  </div>
+)
 
 export function RewardsList({ rewards }: RewardsListProps) {
   return (
-    <div>
-      {rewards.map((reward) => (
-        <div key={reward.type}>{reward.type}</div>
-      ))}
+    <div className="w-full space-y-3">
+      <div>
+        <div className="mb-0.5 font-bold">
+          Cometh Battle NFTs Migrated to Cosmik Battle:
+        </div>
+        <div className="max-h-[220px] overflow-y-auto">
+          {rewards.cards.map(RewardItem)}
+        </div>
+      </div>
+      <div>
+        <div className="mb-0.5 font-bold">Your Rank and Cosmetic Reward:</div>
+        <div>{rewards.cosmetics.map(RewardItem)}</div>
+      </div>
+      {rewards.credits > 0 && (
+        <RewardItem
+          name="Galactic Credits Converted"
+          count={rewards.credits}
+        />
+      )}
     </div>
   )
 }

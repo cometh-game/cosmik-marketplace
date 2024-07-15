@@ -14,7 +14,7 @@ import { RewardsStep } from "./steps/RewardsStep"
 
 const legendaProgramSteps = [
   { label: "Add wallet", value: "add-wallet" },
-  { label: "Rewards", value: "claim-rewards" },
+  { label: "Preview your rewards", value: "claim-rewards" },
   {
     label: `Confirm`,
     value: "confirm",

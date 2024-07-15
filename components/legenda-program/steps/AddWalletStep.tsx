@@ -12,6 +12,7 @@ import { Loading } from "@/components/ui/Loading"
 
 import { Button } from "../../ui/Button"
 import { useGetStatus, useRegisterAddress } from "../LegendaRewardsHook"
+import { toast } from "@/components/ui/toast/hooks/useToast"
 
 type AddWalletStepProps = {
   user: User
@@ -19,9 +20,9 @@ type AddWalletStepProps = {
 }
 
 export function AddWalletStep({ user, onValid }: AddWalletStepProps) {
-  const { open } = useWeb3Modal()
+  const { open, close } = useWeb3Modal()
   const { disconnectAsync } = useDisconnect()
-  const { address: walletAddress } = useAccount()
+  const { address: walletAddress, isConnected } = useAccount()
   const { status: hasClaimedRewards, isLoadingStatus } = useGetStatus()
   const { getUserNonceAsync } = useGetUserNonce()
   const { registerAddress } = useRegisterAddress()
@@ -79,8 +80,9 @@ export function AddWalletStep({ user, onValid }: AddWalletStepProps) {
       if (!message) {
         throw new Error("No message found")
       }
+      const messageToSign = message.prepareMessage()
       const signature = await signMessage({
-        message: message.prepareMessage(),
+        message: messageToSign,
       })
 
       await registerAddress({ walletAddress, nonce, signature, message })
@@ -89,7 +91,11 @@ export function AddWalletStep({ user, onValid }: AddWalletStepProps) {
 
       onValid()
     } catch (error: any) {
-      console.log("error", error)
+      toast({
+        title: "Error adding wallet",
+        description: error?.message || "Please retry or contact support",
+        variant: "destructive",
+      })
     }
   }
 

@@ -30,7 +30,7 @@ export const UserAuthProvider = ({
   const user = useRef<any | null>(null)
   const { userLogged, isFetchingUserLogged } = useUserIsLogged()
   const [userIsFullyConnected, setUserIsFullyConnected] = useState(false)
-  const { connectComethWallet } = useConnectComethWallet()
+  const { connectComethWallet, disconnect } = useConnectComethWallet()
   const [userIsReconnecting, setUserIsReconnecting] = useState(false)
 
   const pathname = usePathname()
