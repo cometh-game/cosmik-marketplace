@@ -37,7 +37,7 @@ export function LegendaProgramProcess({ user }: LegendaProgramProcessProps) {
     if (walletAddress) {
       disconnectAsync()
     }
-  }, [walletAddress])
+  }, [])
 
   if (!currentStep || !user) return null
 
