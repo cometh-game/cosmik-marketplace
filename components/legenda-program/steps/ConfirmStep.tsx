@@ -52,6 +52,10 @@ export const ConfirmStep: React.FC<ConfirmStepProps> = ({ userAddress }) => {
           <h3 className="text-xl font-semibold">
             Your rewards have been successfully claimed!
           </h3>
+          <p>
+            The rewards may take a few minutes to appear in your Nexus. If you
+            don&apos;t see your rewards in game, please log out and log back in.
+          </p>
           {hasRewardsError && (
             <p>
               However, we detected some errors during the retrieval of your

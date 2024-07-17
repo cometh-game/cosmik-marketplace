@@ -9,10 +9,10 @@ import { useAccount, useDisconnect, useSignMessage } from "wagmi"
 
 import { env } from "@/config/env"
 import { Loading } from "@/components/ui/Loading"
+import { toast } from "@/components/ui/toast/hooks/useToast"
 
 import { Button } from "../../ui/Button"
 import { useGetStatus, useRegisterAddress } from "../LegendaRewardsHook"
-import { toast } from "@/components/ui/toast/hooks/useToast"
 
 type AddWalletStepProps = {
   user: User
@@ -109,7 +109,7 @@ export function AddWalletStep({ user, onValid }: AddWalletStepProps) {
         <>
           <h3 className="text-xl font-semibold">Add your wallet</h3>
           <p>
-            Hi there Pilot, you have already claimed your Legenda Program.
+            Hi there Pilot, you have already claimed your Legenda Program REWARDS.
             Pilots can only redeem rewards once per account and per wallet. For
             more information about the Legenda Program and your rewards, please
             visit{" "}
@@ -128,8 +128,8 @@ export function AddWalletStep({ user, onValid }: AddWalletStepProps) {
         <>
           <h3 className="text-xl font-semibold">Add your wallet</h3>
           <p>
-            You are fully connected to the Legenda program. You can claim your
-            rewards by clicking the button below.
+            Welcome to the Legenda Program, our reward initiative for former
+            Cometh Battle players
           </p>
           <div className="mt-2 flex gap-4">
             <Button
@@ -139,7 +139,7 @@ export function AddWalletStep({ user, onValid }: AddWalletStepProps) {
               }}
               disabled={isLoadingStatus || hasClaimedRewards}
             >
-              Add external wallet
+              Please connect your external wallet to claim your rewards
             </Button>
           </div>
         </>

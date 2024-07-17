@@ -15,22 +15,26 @@ export function RewardsList({ rewards }: RewardsListProps) {
   return (
     <div className="w-full space-y-3">
       <div>
-        <div className="mb-0.5 font-bold">
-          Cometh Battle NFTs Migrated to Cosmik Battle:
+        <div className="mb-0.5 font-bold uppercase">
+          Cometh Battle NFTs Migrated to core cards in Cosmik Battle:
         </div>
         <div className="max-h-[220px] overflow-y-auto">
           {rewards.cards.map(RewardItem)}
         </div>
       </div>
       <div>
-        <div className="mb-0.5 font-bold">Your Rank and Cosmetic Reward:</div>
+        <div className="mb-0.5 font-bold uppercase">
+          Your Rank and Cosmetic Reward:
+        </div>
         <div>{rewards.cosmetics.map(RewardItem)}</div>
       </div>
       {rewards.credits > 0 && (
-        <RewardItem
-          name="Galactic Credits Converted"
-          count={rewards.credits}
-        />
+        <div>
+          <div className="mb-0.5 font-bold uppercase">
+            Galactic Credits Converted
+          </div>
+          <div className="font-bold">{rewards.credits}</div>
+        </div>
       )}
     </div>
   )
