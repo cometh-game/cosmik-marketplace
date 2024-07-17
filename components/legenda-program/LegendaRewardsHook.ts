@@ -48,6 +48,12 @@ export const useRegisterAddress = () => {
       })
     },
     onError: (error: AxiosError<{ error?: string }>) => {
+      if (
+        error.response?.status === 400 &&
+        error.response?.data?.error === "WALLET_ALREADY_CLAIMED"
+      ) {
+        throw new Error("WALLET_ALREADY_CLAIMED")
+      }
       if (error.response?.status === 404) {
         toast({
           title: "Something went wrong!",

@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { User } from "@/services/cosmik/signinService"
 import { useGetUserNonce } from "@/services/cosmik/userNonceService"
 import { SupportedNetworks } from "@cometh/connect-sdk"
@@ -27,6 +27,7 @@ export function AddWalletStep({ user, onValid }: AddWalletStepProps) {
   const { getUserNonceAsync } = useGetUserNonce()
   const { registerAddress } = useRegisterAddress()
   const { signMessageAsync: signMessage } = useSignMessage()
+  const [isWalletAlreadyClaimed, setIsWalletAlreadyClaimed] = useState(false)
 
   useEffect(() => {
     if (walletAddress) {
@@ -91,11 +92,16 @@ export function AddWalletStep({ user, onValid }: AddWalletStepProps) {
 
       onValid()
     } catch (error: any) {
-      toast({
-        title: "Error adding wallet",
-        description: error?.message || "Please retry or contact support",
-        variant: "destructive",
-      })
+      console.error(error)
+      if (error.message === "WALLET_ALREADY_CLAIMED") {
+        setIsWalletAlreadyClaimed(true)
+      } else {
+        toast({
+          title: "Error adding wallet",
+          description: error?.message || "Please retry or contact support",
+          variant: "destructive",
+        })
+      }
     }
   }
 
@@ -105,14 +111,14 @@ export function AddWalletStep({ user, onValid }: AddWalletStepProps) {
 
   return (
     <>
-      {hasClaimedRewards ? (
+      {hasClaimedRewards || isWalletAlreadyClaimed ? (
         <>
           <h3 className="text-xl font-semibold">Add your wallet</h3>
           <p>
-            Hi there Pilot, you have already claimed your Legenda Program REWARDS.
-            Pilots can only redeem rewards once per account and per wallet. For
-            more information about the Legenda Program and your rewards, please
-            visit{" "}
+            Hi there Pilot, you have already claimed your Legenda Program
+            rewards {isWalletAlreadyClaimed ? "with this wallet" : ""}. Pilots
+            can only redeem rewards once per account and per wallet. For more
+            information about the Legenda Program and your rewards, please visit{" "}
             <a
               href=""
               target="_blank"
@@ -139,7 +145,7 @@ export function AddWalletStep({ user, onValid }: AddWalletStepProps) {
               }}
               disabled={isLoadingStatus || hasClaimedRewards}
             >
-              Please connect your external wallet to claim your rewards
+              Connect your external wallet to claim your rewards
             </Button>
           </div>
         </>
