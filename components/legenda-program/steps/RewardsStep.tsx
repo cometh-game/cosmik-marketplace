@@ -28,12 +28,12 @@ export function RewardsStep({ user, onValid }: RewardsStepProps) {
         . For more information about the Legenda Program and your rewards,
         please visit&nbsp;
         <a
-          href=""
+          href="www.cosmikbattle.com/cosmik-academy/legenda-program"
           target="_blank"
           rel="noreferrer"
           className="hover:text-accent-foreground font-medium underline transition-colors"
         >
-          XXX
+          Legenda Program Workshop
         </a>
         .
       </p>

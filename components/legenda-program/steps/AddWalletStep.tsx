@@ -120,12 +120,12 @@ export function AddWalletStep({ user, onValid }: AddWalletStepProps) {
             can only redeem rewards once per account and per wallet. For more
             information about the Legenda Program and your rewards, please visit{" "}
             <a
-              href=""
+              href="www.cosmikbattle.com/cosmik-academy/legenda-program"
               target="_blank"
               rel="noreferrer"
               className="hover:text-accent-foreground font-medium underline transition-colors"
             >
-              XXX
+              Legenda Program Workshop
             </a>
             .
           </p>
