@@ -1,7 +1,7 @@
 import { useUserAuthContext } from "@/providers/userAuth"
 
 import { CurrentAccountDropdown } from "./account-dropdown/CurrentAccountDropdown"
-import { SigninDropdown } from "./account-dropdown/SigninDropdown"
+import { SigninDialog } from "./account-dropdown/SigninDialog"
 import { Button } from "./ui/Button"
 
 export function AuthenticationButton({
@@ -21,7 +21,7 @@ export function AuthenticationButton({
 
   if (!userIsFullyConnected) {
     return (
-      <SigninDropdown
+      <SigninDialog
         isReconnecting={userIsReconnecting}
         fullVariant={fullVariant}
         customText={customText}

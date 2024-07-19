@@ -1,10 +1,9 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import dynamic from "next/dynamic"
 import { useUserAuthContext } from "@/providers/userAuth"
 import { User } from "@/services/cosmik/signinService"
-import { useAccount, useDisconnect } from "wagmi"
 
 import { Loading } from "@/components/ui/Loading"
 import { toast } from "@/components/ui/toast/hooks/useToast"
@@ -15,12 +14,15 @@ const DynamicSigninDialog = dynamic(
   { ssr: false }
 )
 
-const DynamicWalletsDialog = dynamic(
-  () => import("@/components/WalletsDialog").then((mod) => mod.WalletsDialog),
+const DynamicLegendaProgramProcess = dynamic(
+  () =>
+    import("@/components/legenda-program/LegendaProgramProcess").then(
+      (mod) => mod.LegendaProgramProcess
+    ),
   { ssr: false }
 )
 
-export default function WalletsPage() {
+export default function LegendaProgramPage() {
   const {
     userIsReconnecting,
     userIsFullyConnected,
@@ -29,26 +31,17 @@ export default function WalletsPage() {
     setUserIsFullyConnected,
   } = useUserAuthContext()
   const [isLoading, setIsLoading] = useState(false)
-  const { disconnectAsync } = useDisconnect()
-  const { address: walletAddress } = useAccount()
-
-  useEffect(() => {
-    // disconnect wallet if user is already connected
-    if (walletAddress) {
-      disconnectAsync()
-    }
-  }, [])
 
   const handleLoginSuccess = useCallback(
     async (user: User) => {
       try {
         setIsLoading(true)
         setUser(user)
+        setUserIsFullyConnected(true)
         toast({
           title: "Login successful",
           duration: 3000,
         })
-        setUserIsFullyConnected(true)
       } catch (error) {
         console.error("Error connecting wallet", error)
       } finally {
@@ -67,7 +60,7 @@ export default function WalletsPage() {
           isLoading={isLoading}
         />
       ) : (
-        <DynamicWalletsDialog user={getUser()} />
+        <DynamicLegendaProgramProcess user={getUser()} />
       )}
     </div>
   )

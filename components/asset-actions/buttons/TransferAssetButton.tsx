@@ -178,7 +178,7 @@ export function TransferAssetButton({
         </div>
         <div className="text-muted-foreground">
           <p className="mb-2">
-            Attention pilot! You’re about to transfer a Digital Collectible to
+            Attention pilot! You are about to transfer a Digital Collectible to
             another wallet.{" "}
             <span className="font-semibold">
               Please make sure that the recipient address is compatible with the

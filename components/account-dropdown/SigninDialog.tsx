@@ -19,19 +19,19 @@ import { toast } from "@/components/ui/toast/hooks/useToast"
 import { AuthorizationProcess } from "@/components/connect-actions/buttons/AuthorizationProcess"
 import { SignInForm } from "@/components/signin/SignInForm"
 
-export type SigninDropdownProps = {
+export type SigninDialogProps = {
   isReconnecting: boolean
   fullVariant?: boolean
   customText?: string
   hideIcon?: boolean
 }
 
-export function SigninDropdown({
+export function SigninDialog({
   isReconnecting,
   fullVariant,
   customText,
   hideIcon,
-}: SigninDropdownProps) {
+}: SigninDialogProps) {
   const [user, setUser] = useState<User | null>(null)
   const [displayAutorizationProcess, setDisplayAutorizationProcess] =
     useState(false)
@@ -67,7 +67,7 @@ export function SigninDropdown({
           duration: 3000,
         })
       } catch (error) {
-        console.error("Error connecting wallet in SigninDropdown", error)
+        console.error("Error connecting wallet in SigninDialog", error)
         // Bugsnag.notify(error as Error, function (report) {
         //   report.context = "User Login"
         //   report.setUser(user.id, user.email, user.userName)

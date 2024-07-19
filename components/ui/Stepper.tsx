@@ -28,6 +28,7 @@ export const Stepper = <T extends Step>({ steps, value }: StepperProps<T>) => {
             key={index}
             index={index}
             active={index <= currentIndex}
+            current={index === currentIndex}
             name={step.label}
           />
         ))
@@ -39,10 +40,11 @@ export const Stepper = <T extends Step>({ steps, value }: StepperProps<T>) => {
 export type StepperStepProps = {
   index: number
   active: boolean
+  current: boolean
   name: string
 }
 
-export const StepperStep = ({ index, active, name }: StepperStepProps) => {
+export const StepperStep = ({ index, active, current, name }: StepperStepProps) => {
   return (
     <div className="relative flex flex-col items-center">
       <div
@@ -58,7 +60,8 @@ export const StepperStep = ({ index, active, name }: StepperStepProps) => {
       <p
         className={cn(
           "absolute translate-y-[32px] whitespace-nowrap text-sm font-semibold",
-          active ? "text-white" : "text-white/80"
+          active ? "text-white" : "text-white/80",
+          current ? "text-accent-foreground" : null
         )}
       >
         {name}

@@ -241,7 +241,6 @@
 .dialog {
   background-size: auto;
   border-radius: 0 !important;
-  /* width: auto; */
   position: relative;
 
   background:
@@ -259,45 +258,12 @@
     0 calc(100% - 7px),
     0 7px
   );
-  @apply bg-card;
+  @apply bg-card outline-none;
 }
 
 /* Table */
 table tbody > tr {
   @apply bg-primary/70 text-third-foreground;
-}
-
-table tbody > tr td {
-  /* @apply relative border-y border-border; */
-}
-
-table tbody tr > td:first-child {
-  /* @apply border-l; */
-}
-
-table tbody tr > td:last-child {
-  /* @apply border-r; */
-}
-
-table tbody > tr td:first-child:after,
-table tbody tr > td:last-child:after {
-  /* content: "";
-  position: absolute;
-  inset: -1px; */
-}
-
-table tbody > tr td:first-child:after {
-  /* background:
-    url("/cards/third-top-left.png") top left no-repeat,
-    url("/cards/third-bottom-left.png") bottom left no-repeat;
-  background-size: auto; */
-}
-
-table tbody tr > td:last-child:after {
-  /* background:
-    url("/cards/third-top-right.png") top right no-repeat,
-    url("/cards/third-bottom-right.png") bottom right no-repeat;
-  background-size: auto; */
 }
 
 /* Fix Gas fees Connect Wallet */

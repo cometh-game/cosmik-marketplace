@@ -20,6 +20,7 @@ export const useStepper = <T>({ steps }: StepperOptions<T>) => {
     setIndex(0)
   }, [setIndex])
 
+
   const currentStep = useMemo(() => steps?.[index], [index, steps])
 
   return {

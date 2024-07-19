@@ -37,7 +37,7 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
   const { open } = useWeb3Modal()
   const { disconnectAsync } = useDisconnect()
   const { address: walletAddress } = useAccount()
-  const { mutateAsync: getUserNonceAsync } = useGetUserNonce()
+  const { getUserNonceAsync } = useGetUserNonce()
   const { mutateAsync: addExternalWallet } = useAddExternalWallet()
   const { mutateAsync: removeExternalWallet } = useRemoveExternalWallet()
   const { signMessageAsync: signMessage } = useSignMessage()
@@ -45,6 +45,7 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
     { address: string; spaceships: number }[]
   >([])
   const [loading, setLoading] = useState(false)
+
   useEffect(() => {
     fetchWallets()
   }, [user?.externalAddresses])
@@ -129,14 +130,15 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
       if (walletExists) {
         throw new Error("This wallet address has already been added.")
       }
-      
+
       const { nonce } = await getUserNonceAsync({ walletAddress })
       const message = await createMessage({
         nonce,
         statement: "Connect to Cosmik Battle to link your wallet.",
       })
+      const messageToSign = message.prepareMessage()
       const signature = await signMessage({
-        message: message.prepareMessage(),
+        message: messageToSign,
       })
       await addExternalWallet(
         { walletAddress, nonce, signature, message },
@@ -188,7 +190,7 @@ export function WalletsDialog({ user }: WalletsDialogProps) {
         >
           <DialogHeader className="flex-row items-center justify-between space-y-0">
             <DialogTitle className="normal-case">@{user?.userName}</DialogTitle>
-            {(user || walletAddress) && <AccountLogoutAction />}
+            <AccountLogoutAction />
           </DialogHeader>
           <ul className="space-y-3">
             {loading ? (

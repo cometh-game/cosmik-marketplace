@@ -12,6 +12,7 @@ import { isAddress } from "viem"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
 
 import { env } from "@/config/env"
+import { toast } from "@/components/ui/toast/hooks/useToast"
 
 import { useUserAuthContext } from "../userAuth"
 
@@ -22,7 +23,10 @@ export const useIsComethConnectWallet = () => {
 
 export const useComethConnectConnector = (userWalletAddress?: string) => {
   return useMemo(() => {
-    if (!env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY || typeof window === 'undefined') {
+    if (
+      !env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY ||
+      typeof window === "undefined"
+    ) {
       return undefined
     }
     return comethConnectConnector({
@@ -61,7 +65,6 @@ export const useComethConnectLogin = (
   }, [connect, comethConnectConnector])
 }
 
-
 function numberToHex(value: number): string {
   return `0x${value.toString(16)}`
 }
@@ -99,14 +102,22 @@ export const useConnectComethWallet = () => {
           throw new Error("Invalid wallet address. Please contact support")
         }
         await connect({ connector } as any)
-        if (account.isConnected && account.address !== walletAddress) {
-          disconnect()
+        if (
+          account.isConnected &&
+          account.address !== walletAddress &&
+          account.address !== getUser()?.address
+        ) {
           throw new Error(
             "Your Cosmik wallet address doesn't match the one stored in your browser. Please contact support."
           )
         }
       } catch (error) {
-        console.error("Error connecting wallet", error)
+        await disconnect()
+        toast({
+          title: "Error connecting wallet",
+          description: (error as Error).message || "Please contact support",
+          variant: "destructive",
+        })
       }
     },
     [connect]
@@ -134,7 +145,6 @@ export const useConnectComethWallet = () => {
       if (!isAddress(walletAddress)) {
         throw new Error("Invalid wallet address.")
       }
-      console.log("Retrieving wallet address", walletAddress)
       const adaptor = new ConnectAdaptor({
         chainId: chainId,
         apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
@@ -145,7 +155,6 @@ export const useConnectComethWallet = () => {
         apiKey: env.NEXT_PUBLIC_COMETH_CONNECT_API_KEY!,
         rpcUrl: env.NEXT_PUBLIC_RPC_URL!,
       })
-      console.log("Connecting wallet", walletAddress)
       await wallet.connect(walletAddress)
     },
     [chainId]
