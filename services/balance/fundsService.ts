@@ -40,7 +40,9 @@ export const computeHasSufficientFunds = ({
   if (globalConfig.useNativeForOrders) {
     availableFunds = availableFunds.add(nativeBalance)
   }
+
   const hasSufficientFunds = availableFunds.gte(price ?? 0)
+  
   const missingBalance = hasSufficientFunds
     ? BigNumber.from(0)
     : price?.sub(availableFunds)
@@ -68,3 +70,4 @@ export const useHasSufficientFunds = ({
     })
   }, [price, nativeBalance, erc20Balance, includeWrappedNative])
 }
+
