@@ -48,7 +48,7 @@ export function ProductBlock({ asset }: ProductBlockProps) {
 
   const shouldDisplaySellButton = isViewerAnOwner && (isAsset1155 || !isOnSale)
   const shouldDisplayBuyButton = isOnSale && (isAsset1155 || !isViewerAnOwner)
-  const shoulmdDisplayMakeOfferButton = isAsset1155 || !isViewerAnOwner
+  const shouldDisplayMakeOfferButton = isAsset1155 || !isViewerAnOwner
   const shouldDisplayCancelListingButton =
     isAsset721 && isOnSale && isViewerAnOwner
 
@@ -121,7 +121,7 @@ export function ProductBlock({ asset }: ProductBlockProps) {
                   Listings
                 </Button>
               ))}
-            {shoulmdDisplayMakeOfferButton && (
+            {shouldDisplayMakeOfferButton && (
               <MakeBuyOfferButton variant="secondary" asset={asset} />
             )}
           </SwitchNetwork>

@@ -161,7 +161,6 @@ const WalletDebugPanels = () => {
     })
     connect({ connector: connector as any })
   }, [newWalletAddress, disconnect, connect, account?.isConnected])
-  console.log("account", account)
 
   return (
     <div className="container mx-auto flex w-full max-w-[880px] flex-col gap-4 py-4 max-sm:pt-4">

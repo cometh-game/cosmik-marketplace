@@ -31,10 +31,14 @@ const useDefinedOrCheapestOrder = (
   tokenId: string,
   order?: OrderWithAsset
 ) => {
-  const { data: cheapestListing } = useCheapestListing(tokenAddress, tokenId)
-
-  if (order) return order
-  return cheapestListing
+  const { data: cheapestListing, isLoading } = useCheapestListing(
+    tokenAddress,
+    tokenId
+  )
+  return {
+    data: order || cheapestListing,
+    isLoading,
+  }
 }
 
 export function BuyAssetButton({
@@ -42,13 +46,19 @@ export function BuyAssetButton({
   listing,
   size = "lg",
 }: BuyAssetButtonProps) {
-  const order = useDefinedOrCheapestOrder(
+  const { data: order, isLoading: orderLoading } = useDefinedOrCheapestOrder(
     asset.contractAddress,
     asset.tokenId,
     listing
   )
-  const { requiredSteps, isLoading, currentStep, nextStep, reset } =
-    useBuyAssetButton({ asset, order })
+  const {
+    requiredSteps,
+    isLoading: stepsLoading,
+    currentStep,
+    nextStep,
+    reset,
+  } = useBuyAssetButton({ asset, order })
+
   const [open, setOpen] = useState(false)
   const [quantity, setQuantity] = useState(BigInt(1))
   const unitPrice = order?.totalUnitPrice
@@ -57,7 +67,9 @@ export function BuyAssetButton({
     () => (unitPrice ? BigInt(unitPrice) * quantity : BigInt(0)),
     [unitPrice, quantity]
   )
-  if (!requiredSteps?.length || !currentStep || !order) return null
+
+  if (!requiredSteps?.length || !currentStep || !order)
+    return null
 
   const closeDialog = () => {
     setQuantity(BigInt(1))
@@ -84,7 +96,7 @@ export function BuyAssetButton({
       steps={requiredSteps}
       onClose={reset}
       size={size}
-      isLoading={isLoading}
+      isLoading={stepsLoading || orderLoading}
     >
       <Switch value={currentStep.value}>
         <Case value="add-gas">
