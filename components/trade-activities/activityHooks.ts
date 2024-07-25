@@ -75,7 +75,6 @@ export const useEchanceActivitiesWithUsernames = (
   }, [assetTransfers, assetOrders, assetFilledEvents])
 
   const { usernames, isFetchingUsernames } = useUsernames(addresses)
-
   const activities = useMemo(() => {
     const transferActivites = assetTransfers.map((asset) => ({
       activityType: TRANSFER_TYPE,

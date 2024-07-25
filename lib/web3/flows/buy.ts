@@ -54,7 +54,6 @@ export const fetchRequiredBuyingSteps = async ({
   erc20Balance,
 }: FetchRequiredBuyingStepsOptions) => {
   if (!order) {
-    console.log("Order is undefined, returning default steps")
     return []
   }
 
@@ -142,8 +141,6 @@ export const useRequiredBuyingSteps = ({
         erc20Balance,
         isComethWallet,
       })
-
-      console.log("steps in useRequiredBuyingSteps", steps)
 
       return steps
     },

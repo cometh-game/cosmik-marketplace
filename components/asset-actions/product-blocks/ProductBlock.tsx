@@ -33,7 +33,6 @@ export type ProductBlockProps = {
 
 export function ProductBlock({ asset }: ProductBlockProps) {
   const isOnSale = !!asset.orderbookStats.lowestListingPrice
-  console.log("isOnSale", isOnSale)
 
   const isViewerAnOwner = useIsViewerAnOwner(asset)
   const assetOwnedQuantity = useAssetOwnedQuantity(asset)

@@ -1,9 +1,6 @@
 "use client"
 
 import {
-  AssetTransfers,
-  Order,
-  OrderFilledEventWithAsset,
   TradeDirection,
   TradeStatus,
 } from "@cometh/marketplace-sdk"
@@ -68,6 +65,10 @@ export const getUsername = (
     return "You"
   }
 
+  if (isAddressEqual(address, "0x0000000000000000000000000000000000000000")) {
+    return "0x...0"
+  }
+
   return username
 }
 
@@ -77,7 +78,7 @@ export const getFormattedUser = (
   username?: string
 ) => {
   return {
-    username: getUsername(address as Address, viewerAddress, username),
+    username: getUsername(address, viewerAddress, username),
     address: address,
   }
 }
@@ -90,7 +91,7 @@ export const getActivityNftOwner = (
     return getFormattedUser(
       assetActivity.transfer.fromAddress as Address,
       viewerAddress,
-      assetActivity.transfer.toUsername
+      assetActivity.transfer.fromUsername
     )
   } else if (isOrderActivity(assetActivity)) {
     return getFormattedUser(

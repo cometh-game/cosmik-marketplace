@@ -30,7 +30,7 @@ export default function AssetFloorPricePanel({ asset }: AssetFloorPriceProps) {
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div className="flex grow flex-wrap items-center gap-2">
               {assetFloorPriceAttributes.map((attribute) => (
-                <div>
+                <>
                   <span className="font-medium capitalize">
                     {attribute.trait_type}:
                   </span>{" "}
@@ -39,7 +39,7 @@ export default function AssetFloorPricePanel({ asset }: AssetFloorPriceProps) {
                       ? attribute.value.toString()
                       : JSON.stringify(attribute.value)}
                   </span>
-                </div>
+                </>
               ))}
             </div>
             <div>
