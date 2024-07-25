@@ -11,7 +11,7 @@ import {
   AssetWithTradeData,
   OrderWithAsset,
   SearchAssetWithTradeData,
-  TokenType
+  TokenType,
 } from "@cometh/marketplace-sdk"
 import { useQuery } from "@tanstack/react-query"
 import { BigNumber } from "ethers"
@@ -54,8 +54,10 @@ export const fetchRequiredBuyingSteps = async ({
   erc20Balance,
 }: FetchRequiredBuyingStepsOptions) => {
   if (!order) {
+    console.log("Order is undefined, returning default steps")
     return []
   }
+
   const rawPrice = order.totalPrice
   if (!rawPrice) {
     throw new Error(
@@ -92,7 +94,11 @@ export const fetchRequiredBuyingSteps = async ({
     globalConfig.useNativeForOrders &&
     !displayAddFundsStep
 
-  const { hasEnoughGas } = computeHasEnoughGas(address, isComethWallet, nativeBalance)
+  const { hasEnoughGas } = computeHasEnoughGas(
+    address,
+    isComethWallet,
+    nativeBalance
+  )
   const displayAddGasStep = !hasEnoughGas
 
   const buyingSteps = [
@@ -121,6 +127,7 @@ export const useRequiredBuyingSteps = ({
   const { balance: erc20Balance } = useERC20Balance(
     globalConfig.ordersErc20.address
   )
+
   return useQuery({
     queryKey: ["requiredBuyingSteps", asset, viewerAddress],
     queryFn: async () => {
@@ -129,17 +136,19 @@ export const useRequiredBuyingSteps = ({
       }
       const steps = await fetchRequiredBuyingSteps({
         asset,
-        order: order,
+        order,
         address: viewerAddress,
         nativeBalance,
         erc20Balance,
         isComethWallet,
       })
 
+      console.log("steps in useRequiredBuyingSteps", steps)
+
       return steps
     },
 
-    enabled: !!viewerAddress,
+    enabled: !!viewerAddress && !!order,
   })
 }
 
