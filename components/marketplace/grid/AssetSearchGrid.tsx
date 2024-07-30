@@ -70,7 +70,7 @@ export const AssetsSearchGrid = ({
 
   useEffect(() => {
     if (inView && !isFetching && hasNextPage) fetchNextPage()
-    }, [inView, isFetching, hasNextPage, fetchNextPage])
+  }, [inView, isFetching, hasNextPage, fetchNextPage])
 
   const { width } = useWindowSize()
   const isMobile = width < 768
@@ -109,7 +109,7 @@ export const AssetsSearchGrid = ({
         matching your search
       </p>
 
-      {isFetching && <Loading />}
+      {isFetching && assets.length === 0 && <Loading />}
 
       {!isFetching && assets.length === 0 ? (
         <AssetsSearchEmpty />

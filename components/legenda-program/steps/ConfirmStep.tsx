@@ -16,7 +16,6 @@ export const ConfirmStep: React.FC<ConfirmStepProps> = ({ userAddress }) => {
   const [isLoading, setIsLoading] = useState(false)
   const { claimRewards, claimedRewards } = useClaimRewards()
   const { status: hasClaimedRewards, isLoadingStatus } = useGetStatus()
-  console.log("claimRewards", claimRewards)
 
   const hasRewardsError = useMemo(() => {
     return (
