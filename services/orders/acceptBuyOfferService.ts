@@ -10,6 +10,7 @@ import { useInvalidateAssetQueries } from "@/components/marketplace/asset/AssetD
 import { useIsViewerAnOwner } from "../cometh-marketplace/assetOwners"
 import { useFillSignedOrder } from "../exchange/fillSignedOrderService"
 import { getViemSignedOrderFromOrder } from "../exchange/viemOrderHelper"
+import { waitForTransferTxIndexingAndStats } from "./indexingProgressService"
 
 export type AcceptBuyOfferOptions = {
   offer: OrderWithAsset
@@ -53,6 +54,8 @@ export const useAcceptBuyOffer = () => {
       if (!fillTxHash) {
         throw new Error("Could not fill order")
       }
+
+      await waitForTransferTxIndexingAndStats(fillTxHash)
 
       const fillTxReceipt = await viemPublicClient.waitForTransactionReceipt({
         hash: fillTxHash,

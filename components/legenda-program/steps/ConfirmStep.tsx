@@ -29,7 +29,6 @@ export const ConfirmStep: React.FC<ConfirmStepProps> = ({ userAddress }) => {
       setIsLoading(true)
       try {
         const result = await claimRewards()
-        console.log("result", result)
         // onValid()
         // CALL onReset ?
       } catch (error: any) {

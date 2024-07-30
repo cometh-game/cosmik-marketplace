@@ -4,8 +4,17 @@ import { Address } from "viem"
 
 import { UserButton } from "@/components/ui/user/UserButton"
 
-export type EmitterCellProps = { row: Row<OrderWithAsset> }
+export type EmitterCellProps = {
+  row: Row<OrderWithAsset & { makerUsername?: string }>
+}
 
 export const EmitterCell = ({ row }: EmitterCellProps) => {
-  return <UserButton user={{ address: row.original.maker as Address }} />
+  return (
+    <UserButton
+      user={{
+        username: row.original.makerUsername,
+        address: row.original.maker as Address,
+      }}
+    />
+  )
 }

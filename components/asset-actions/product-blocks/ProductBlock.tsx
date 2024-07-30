@@ -52,6 +52,9 @@ export function ProductBlock({ asset }: ProductBlockProps) {
   const shouldDisplayCancelListingButton =
     isAsset721 && isOnSale && isViewerAnOwner
 
+
+  console.log({asset, isOnSale, shouldDisplaySellButton, shouldDisplayBuyButton})
+
   return (
     <ProductBlockContainer>
       <ProductBlockDividedColumn>

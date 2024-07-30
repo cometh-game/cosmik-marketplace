@@ -83,9 +83,9 @@ export function ConfirmAcceptBuyOfferStep({
         unitPrice={BigInt(offer.totalUnitPrice)}
       />
       {isPending ? (
-        <ButtonLoading />
+        <ButtonLoading size="lg" />
       ) : (
-        <Button onClick={onConfirm}>Confirm</Button>
+        <Button onClick={onConfirm} size="lg">Confirm</Button>
       )}
     </div>
   )
