@@ -52,25 +52,26 @@ export const UserAuthProvider = ({
 
   useEffect(() => {
     const reconnectingWallet = async () => {
+      if (!userLogged || !userLogged.address) return
+
       setUserIsReconnecting(true)
-      // If the user is logged in and has an address, attempt to connect the wallet
-      if (userLogged && userLogged.address) {
-        setUser(userLogged)
+      setUser(userLogged)
 
-        if (isWalletConnectionNotRequired) {
-          setUserIsReconnecting(false)
-          setUserIsFullyConnected(true)
-          return
-        }
-
-        try {
-          await connectComethWallet(userLogged.address)
-          setUserIsFullyConnected(true)
-        } catch (error) {
-          setUserIsFullyConnected(false)
-        }
+      if (isWalletConnectionNotRequired) {
+        setUserIsFullyConnected(true)
+        setUserIsReconnecting(false)
+        return
       }
-      setUserIsReconnecting(false)
+
+      try {
+        await connectComethWallet(userLogged.address)
+        setUserIsFullyConnected(true)
+      } catch (error) {
+        console.error("Erreur de reconnexion du portefeuille", error)
+        setUserIsFullyConnected(false)
+      } finally {
+        setUserIsReconnecting(false)
+      }
     }
 
     if (
