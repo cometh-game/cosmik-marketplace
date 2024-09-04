@@ -38,6 +38,7 @@ export const AccountActivitiesTab = ({
     return hackedFiltersOverride
   }, [filtersOverride])
 
+
   const { data: makerOrdersSearch, isPending: isPendingMakerOrders } =
     useSearchOrders({
       maker: walletAddress,
@@ -46,6 +47,7 @@ export const AccountActivitiesTab = ({
       orderByDirection: FilterDirection.DESC,
       ...filtersOverride,
     })
+  
   const { data: takerOrdersSearch, isPending: isPendingTakerOrders } =
     useSearchOrders({
       taker: walletAddress,
@@ -54,7 +56,7 @@ export const AccountActivitiesTab = ({
       orderByDirection: FilterDirection.DESC,
       ...filtersOverride,
     })
-
+    
   const searchFilledEventsLimit = hackedFiltersOverride?.statuses?.includes(
     TradeStatus.FILLED
   )
@@ -68,6 +70,7 @@ export const AccountActivitiesTab = ({
     taker: walletAddress,
     limit: searchFilledEventsLimit,
   })
+  
   const {
     data: makerFilledEventsSearch,
     isPending: isPendingMakerFilledEvents,
