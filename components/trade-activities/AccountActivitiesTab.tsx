@@ -69,6 +69,7 @@ export const AccountActivitiesTab = ({
   } = useSearchFilledEvents({
     taker: walletAddress,
     limit: searchFilledEventsLimit,
+    attributes: hackedFiltersOverride.attributes
   })
   
   const {
@@ -77,6 +78,7 @@ export const AccountActivitiesTab = ({
   } = useSearchFilledEvents({
     maker: walletAddress,
     limit: searchFilledEventsLimit,
+    attributes: hackedFiltersOverride.attributes
   })
 
   const allOrders = useMemo(() => {
