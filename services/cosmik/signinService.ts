@@ -38,11 +38,11 @@ export const useCosmikSignin = () => {
     onError: (error: any) => {
       const errorMessage =
         error.response?.status === 400
-          ? "Please check your username and password"
+          ? "Please check your email and password"
           : error?.message || "An error occurred"
 
       toast({
-        title: "Échec de la connexion",
+        title: "Error",
         description: errorMessage,
         variant: "destructive",
         duration: 5000,
