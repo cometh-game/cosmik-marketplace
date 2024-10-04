@@ -31,7 +31,7 @@ export function useAuth() {
 
         if (!toastShownRef.current) {
           toast({
-            title: "Connexion réussie",
+            title: "Login successful",
             duration: 3000,
           })
           toastShownRef.current = true
@@ -47,7 +47,7 @@ export function useAuth() {
       connectComethWallet,
       retrieveWalletAddress,
       setUser,
-      setUserIsFullyConnected,
+      // setUserIsFullyConnected,
     ]
   )
 
