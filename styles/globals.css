@@ -72,6 +72,16 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1 "calt" 1;
   }
+
+  /* divider "OR" component */
+  .divider {
+    @apply flex items-center justify-center gap-2.5;
+  }
+
+  .divider::before,
+  .divider::after {
+    @apply content-[''] flex-1 h-[1px] bg-white/10;
+  }
 }
 
 .tabs-trigger[aria-selected="true"] {

@@ -23,8 +23,8 @@ export const useCosmikSignin = () => {
 
   return useMutation({
     mutationKey: ["cosmik, signin"],
-    mutationFn: async (credentials: SignInBody) => {
-      const { data } = await cosmikClient.post("/login", credentials)
+    mutationFn: async (redirectUrl: SignInBody) => {
+      const { data } = await cosmikClient.post("/login", redirectUrl)
       if (typeof data.user.address === "undefined" || !data.user.address) {
         throw new Error("Wallet address is not defined. Please contact support")
       }
