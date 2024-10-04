@@ -66,46 +66,6 @@ export function SigninDialog({
     oauthRedirect()
   }, [oauthRedirect])
 
-  console.log("getUser() in SigninDialog : ", getUser())
-  console.log("displayAuthorizationProcess in SigninDialog : ", displayAuthorizationProcess)
-
-  // const handleLoginSuccess = useCallback(
-  //   async (user: User) => {
-  //     if (!user) return
-
-  //     try {
-  //       setIsLoading(true)
-  //       setUser(user)
-  //       // Attempt to retrieve the wallet address to determine if it is the first connection
-  //       await retrieveWalletAddress(user.address)
-  //       // If passkey signer is found for this address, connect the wallet
-  //       await connectComethWallet(user.address)
-  //       // Bugsnag.setUser(user.id, user.email, user.userName)
-  //       toast({
-  //         title: "Login successful",
-  //         duration: 3000,
-  //       })
-  //     } catch (error) {
-  //       console.error("Error connecting wallet in SigninDialog", error)
-  //       // Bugsnag.notify(error as Error, function (report) {
-  //       //   report.context = "User Login"
-  //       //   report.setUser(user.id, user.email, user.userName)
-  //       //   report.addMetadata("user", user)
-  //       // })
-  //       // If an error occurs, likely due to a first-time connection, display the authorization modal
-  //       setDisplaySigninDialog(false)
-  //       setDisplayAutorizationProcess(true)
-  //     } finally {
-  //       setIsLoading(false)
-  //     }
-  //   },
-  //   [connectComethWallet, retrieveWalletAddress]
-  // )
-
-  // const handleGoogleSignin = useCallback(() => {
-  //   oauthRedirect()
-  // }, [oauthRedirect])
-
   return (
     <>
       <Dialog

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useState } from "react"
 import { useConnectComethWallet } from "@/providers/authentication/comethConnectHooks"
 import { useUserAuthContext } from "@/providers/userAuth"
 import { useCosmikOauthCodeVerification } from "@/services/cosmik/oauthService"
@@ -13,7 +13,6 @@ export function useAuth() {
   const { oauthCodeVerification } = useCosmikOauthCodeVerification()
   const { toast } = useToast()
   const { setUser, setUserIsFullyConnected } = useUserAuthContext()
-  const toastShownRef = useRef(false)
 
   const handleLoginSuccess = useCallback(
     async (user: User) => {
@@ -21,6 +20,7 @@ export function useAuth() {
 
       try {
         setIsLoading(true)
+        console.log("user in handleLoginSuccess : ", user)
         setUser(user)
         // Attempt to retrieve the wallet address to determine if it is the first connection
         await retrieveWalletAddress(user.address)
@@ -29,13 +29,10 @@ export function useAuth() {
         // Bugsnag.setUser(user.id, user.email, user.userName)
         // setUserIsFullyConnected(true)
 
-        if (!toastShownRef.current) {
-          toast({
-            title: "Login successful",
-            duration: 3000,
-          })
-          toastShownRef.current = true
-        }
+        toast({
+          title: "Login successful",
+          duration: 3000,
+        })
       } catch (error) {
         console.error("Error connecting wallet in SigninDialog", error)
         setDisplayAuthorizationProcess(true)
@@ -46,7 +43,7 @@ export function useAuth() {
     [
       connectComethWallet,
       retrieveWalletAddress,
-      setUser,
+      // setUser,
       // setUserIsFullyConnected,
     ]
   )
