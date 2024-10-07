@@ -19,14 +19,12 @@ export const ConfirmStep: React.FC<ConfirmStepProps> = ({
   const [hasReading, setHasReading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { connectComethWallet } = useConnectComethWallet()
-  const { setUserIsFullyConnected } = useUserAuthContext()
 
   const handleConfirmClick = async () => {
     if (hasReading) {
       setIsLoading(true)
       try {
         await connectComethWallet(userAddress)
-        setUserIsFullyConnected(true)
         onValid()
       } catch (error: any) {
         toast({

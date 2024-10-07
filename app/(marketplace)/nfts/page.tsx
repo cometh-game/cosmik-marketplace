@@ -5,5 +5,6 @@ import { useCurrentCollectionContext } from "@/providers/currentCollection/curre
 
 export default function MarketplacePage() {
   const { currentCollectionAddress } = useCurrentCollectionContext()
+
   redirect("/nfts/" + currentCollectionAddress)
 }

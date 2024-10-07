@@ -170,11 +170,6 @@ export const useConnectComethWallet = () => {
         setUserIsFullyConnected(false)
       } catch (error) {
         console.error("Error disconnecting wallet", error)
-        // Bugsnag.notify(error as Error, function (report) {
-        //   report.context = "User Logout from /wallets page"
-        //   report.setUser(getUser().id, getUser().email, getUser().userName)
-        //   report.addMetadata("user", getUser())
-        // })
       }
     }
   }, [

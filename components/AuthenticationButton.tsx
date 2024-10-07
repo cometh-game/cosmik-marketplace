@@ -15,14 +15,14 @@ export function AuthenticationButton({
   customText?: string
   hideIcon?: boolean
 } & React.ComponentProps<typeof Button>) {
-  const { userIsReconnecting, userIsFullyConnected } = useUserAuthContext()
+  const { userIsConnecting, userIsFullyConnected } = useUserAuthContext()
 
   if (userIsFullyConnected && !children) return <CurrentAccountDropdown />
 
   if (!userIsFullyConnected) {
     return (
       <SigninDialog
-        isReconnecting={userIsReconnecting}
+        isReconnecting={userIsConnecting}
         fullVariant={fullVariant}
         customText={customText}
         hideIcon={hideIcon}
