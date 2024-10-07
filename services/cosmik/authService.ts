@@ -4,22 +4,21 @@ import { useUserAuthContext } from "@/providers/userAuth"
 import { useCosmikOauthCodeVerification } from "@/services/cosmik/oauthService"
 import { User } from "@/services/cosmik/signinService"
 
-import { useToast } from "@/components/ui/toast/hooks/useToast"
-
 export function useAuth() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [displayAuthorizationProcess, setDisplayAuthorizationProcess] = useState(false)
-  const { connectComethWallet, retrieveWalletAddress } = useConnectComethWallet()
+  const [displayAuthorizationProcess, setDisplayAuthorizationProcess] =
+    useState(false)
+  const { connectComethWallet, retrieveWalletAddress } =
+    useConnectComethWallet()
   const { oauthCodeVerification } = useCosmikOauthCodeVerification()
-  const { toast } = useToast()
-  const { setUser, setUserIsFullyConnected } = useUserAuthContext()
+  const { setUser, setUserIsConnecting, setUserIsFullyConnected } =
+    useUserAuthContext()
 
   const handleLoginSuccess = useCallback(
     async (user: User) => {
       if (!user) return
 
       try {
-        setIsLoading(true)
+        setUserIsConnecting(true)
         console.log("user in handleLoginSuccess : ", user)
         setUser(user)
         // Attempt to retrieve the wallet address to determine if it is the first connection
@@ -27,17 +26,12 @@ export function useAuth() {
         // If passkey signer is found for this address, connect the wallet
         await connectComethWallet(user.address)
         // Bugsnag.setUser(user.id, user.email, user.userName)
-        // setUserIsFullyConnected(true)
-
-        toast({
-          title: "Login successful",
-          duration: 3000,
-        })
+        setUserIsFullyConnected(true)
       } catch (error) {
         console.error("Error connecting wallet in SigninDialog", error)
         setDisplayAuthorizationProcess(true)
       } finally {
-        setIsLoading(false)
+        setUserIsConnecting(false)
       }
     },
     [
@@ -61,7 +55,6 @@ export function useAuth() {
   )
 
   return {
-    isLoading,
     displayAuthorizationProcess,
     setDisplayAuthorizationProcess,
     handleLoginSuccess,

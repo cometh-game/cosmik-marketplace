@@ -21,7 +21,7 @@ export default function TopupPage() {
   const { push } = useRouter()
   const { mutateAsync: buildTransakOrder } = useBuildTransakOrder()
   const { transakProcessing } = useTransak()
-  const { userIsReconnecting, getUser, userIsFullyConnected } =
+  const { userIsConnecting, getUser, userIsFullyConnected } =
     useUserAuthContext()
   const [showTransakSuccessDialog, setShowTransakSuccessDialog] =
     useState(false)
@@ -72,12 +72,12 @@ export default function TopupPage() {
     [buildTransakOrder, transakProcessing, getUser, currency]
   )
 
-  if (!userIsReconnecting && !userIsFullyConnected) {
+  if (!userIsConnecting && !userIsFullyConnected) {
     // push("/nfts")
     return null
   }
 
-  if (userIsReconnecting) {
+  if (userIsConnecting) {
     return <Loading />
   }
 

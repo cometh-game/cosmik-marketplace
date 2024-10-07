@@ -3,7 +3,10 @@
 import { useCallback, useEffect, useState } from "react"
 import { useUserAuthContext } from "@/providers/userAuth"
 import { useAuth } from "@/services/cosmik/authService"
-import { useCosmikOauthRedirect } from "@/services/cosmik/oauthService"
+import {
+  useCosmikOauthCodeVerification,
+  useCosmikOauthRedirect,
+} from "@/services/cosmik/oauthService"
 import { useCosmikSignin } from "@/services/cosmik/signinService"
 import Bugsnag from "@bugsnag/js"
 import { cx } from "class-variance-authority"
@@ -37,10 +40,8 @@ export function SigninDialog({
   hideIcon,
 }: SigninDialogProps) {
   const [displaySigninDialog, setDisplaySigninDialog] = useState(false)
-  const { isPending } = useCosmikSignin()
-  const { oauthRedirect } = useCosmikOauthRedirect()
+  const { oauthRedirect, isPending } = useCosmikOauthRedirect()
   const {
-    isLoading,
     displayAuthorizationProcess,
     setDisplayAuthorizationProcess,
     handleLoginSuccess,
@@ -77,8 +78,8 @@ export function SigninDialog({
             className={cx({
               "h-12 w-full": fullVariant,
             })}
-            disabled={isReconnecting || isPending}
-            isLoading={isReconnecting || isPending}
+            disabled={isReconnecting}
+            isLoading={isReconnecting}
           >
             {!hideIcon && <WalletIcon size="16" className="mr-2" />}
             {customText ? customText : "Login"}
@@ -103,10 +104,15 @@ export function SigninDialog({
           </p>
           <SignInForm
             onLoginSuccess={handleLoginSuccess}
-            isLoading={isReconnecting || isLoading}
+            isLoading={isReconnecting}
           />
           <OrDivider text="or" />
-          <Button variant="ghost" size="lg" onClick={handleGoogleSignin}>
+          <Button
+            variant="ghost"
+            size="lg"
+            onClick={handleGoogleSignin}
+            disabled={isPending}
+          >
             <Providers.Google size={20} className="mr-2" />
             Signin with Google
           </Button>

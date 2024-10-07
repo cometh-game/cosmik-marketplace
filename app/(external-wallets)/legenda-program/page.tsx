@@ -24,7 +24,7 @@ const DynamicLegendaProgramProcess = dynamic(
 
 export default function LegendaProgramPage() {
   const {
-    userIsReconnecting,
+    userIsConnecting,
     userIsFullyConnected,
     getUser,
     setUser,
@@ -53,8 +53,8 @@ export default function LegendaProgramPage() {
 
   return (
     <div className="container mx-auto flex items-center justify-center gap-4 py-5 sm:py-6">
-      {(userIsReconnecting || isLoading) && <Loading />}
-      {!userIsFullyConnected && !userIsReconnecting ? (
+      {(userIsConnecting || isLoading) && <Loading />}
+      {!userIsFullyConnected && !userIsConnecting ? (
         <DynamicSigninDialog
           onLoginSuccess={handleLoginSuccess}
           isLoading={isLoading}

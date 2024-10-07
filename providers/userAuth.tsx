@@ -2,18 +2,22 @@ import { createContext, useContext, useEffect, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
 import { useUserIsLogged } from "@/services/cosmik/userLoggedService"
 
+import { toast } from "@/components/ui/toast/hooks/useToast"
+
 import { useConnectComethWallet } from "./authentication/comethConnectHooks"
 
 const UserAuthContext = createContext<{
   getUser: () => any | null
   setUser: (newValue: any) => any
-  userIsReconnecting: boolean
+  userIsConnecting: boolean
+  setUserIsConnecting: (value: boolean) => void
   userIsFullyConnected: boolean
-  setUserIsFullyConnected: (val: boolean) => void
+  setUserIsFullyConnected: (value: boolean) => void
 }>({
   getUser: () => null,
   setUser: () => null,
-  userIsReconnecting: false,
+  userIsConnecting: false,
+  setUserIsConnecting: () => null,
   userIsFullyConnected: false,
   setUserIsFullyConnected: () => null,
 })
@@ -31,7 +35,7 @@ export const UserAuthProvider = ({
   const { userLogged, isFetchingUserLogged } = useUserIsLogged()
   const [userIsFullyConnected, setUserIsFullyConnected] = useState(false)
   const { connectComethWallet, disconnect } = useConnectComethWallet()
-  const [userIsReconnecting, setUserIsReconnecting] = useState(false)
+  const [userIsConnecting, setUserIsConnecting] = useState(false)
 
   const pathname = usePathname()
   const isWalletConnectionNotRequired =
@@ -54,12 +58,12 @@ export const UserAuthProvider = ({
     const reconnectingWallet = async () => {
       if (!userLogged || !userLogged.address) return
 
-      setUserIsReconnecting(true)
+      setUserIsConnecting(true)
       setUser(userLogged)
 
       if (isWalletConnectionNotRequired) {
         setUserIsFullyConnected(true)
-        setUserIsReconnecting(false)
+        setUserIsConnecting(false)
         return
       }
 
@@ -67,10 +71,10 @@ export const UserAuthProvider = ({
         await connectComethWallet(userLogged.address)
         setUserIsFullyConnected(true)
       } catch (error) {
-        console.error("Erreur de reconnexion du portefeuille", error)
+        console.error("Error reconnecting wallet", error)
         setUserIsFullyConnected(false)
       } finally {
-        setUserIsReconnecting(false)
+        setUserIsConnecting(false)
       }
     }
 
@@ -88,12 +92,22 @@ export const UserAuthProvider = ({
     connectComethWallet,
   ])
 
+  useEffect(() => {
+    if (userIsFullyConnected) {
+      toast({
+        title: "Login successful",
+        duration: 3000,
+      })
+    }
+  }, [userIsFullyConnected])
+
   return (
     <UserAuthContext.Provider
       value={{
         getUser,
         setUser,
-        userIsReconnecting,
+        userIsConnecting,
+        setUserIsConnecting,
         userIsFullyConnected,
         setUserIsFullyConnected,
       }}

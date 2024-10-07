@@ -5,20 +5,14 @@ import { cosmikClient } from "@/lib/clients"
 import { toast } from "@/components/ui/toast/hooks/useToast"
 
 export const useCosmikOauthRedirect = () => {
-  const client = useQueryClient()
+  const origin = typeof window !== "undefined" ? window.location.origin : ""
 
   const { mutate: oauthRedirect, isPending } = useMutation({
-    // mutationKey: ["cosmik, oauth"],
     mutationFn: async () => {
       const { data } = await cosmikClient.post("/oauth/url", {
-        redirectUrl: "http://localhost:3000/nfts",
+        redirectUrl: `${origin}/auth/callback`,
       })
       window.location.href = data.url
-    },
-    onSuccess: () => {
-      // client.invalidateQueries({
-      //   queryKey: ["cosmik", "logged"],
-      // })
     },
     onError: (error: AxiosError) => {
       const errorMessage =
@@ -38,15 +32,14 @@ export const useCosmikOauthRedirect = () => {
 
 export const useCosmikOauthCodeVerification = () => {
   const client = useQueryClient()
+  const origin = typeof window !== "undefined" ? window.location.origin : ""
 
   const { mutateAsync: oauthCodeVerification, isPending } = useMutation({
-    // mutationKey: ["cosmik, oauth"],
     mutationFn: async (code: string) => {
       const { data } = await cosmikClient.post("/oauth/authenticate", {
         code,
-        redirectUrl: "http://localhost:3000/nfts",
+        redirectUrl: `${origin}/auth/callback`,
       })
-      console.log("data code verification : ", data)
       return data
     },
     onSuccess: () => {

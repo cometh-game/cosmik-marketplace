@@ -22,7 +22,7 @@ const DynamicWalletsDialog = dynamic(
 
 export default function WalletsPage() {
   const {
-    userIsReconnecting,
+    userIsConnecting,
     userIsFullyConnected,
     getUser,
     setUser,
@@ -60,8 +60,8 @@ export default function WalletsPage() {
 
   return (
     <div className="container mx-auto flex items-center justify-center gap-4 py-5 sm:py-6">
-      {userIsReconnecting && <Loading />}
-      {!userIsFullyConnected && !userIsReconnecting ? (
+      {userIsConnecting && <Loading />}
+      {!userIsFullyConnected && !userIsConnecting ? (
         <DynamicSigninDialog
           onLoginSuccess={handleLoginSuccess}
           isLoading={isLoading}
