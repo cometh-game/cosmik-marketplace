@@ -2,7 +2,7 @@ import NextBundleAnalyzer from '@next/bundle-analyzer'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   output: "standalone",
   images: {
     remotePatterns: [

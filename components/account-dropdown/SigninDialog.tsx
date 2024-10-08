@@ -4,10 +4,8 @@ import { useCallback, useEffect, useState } from "react"
 import { useUserAuthContext } from "@/providers/userAuth"
 import { useAuth } from "@/services/cosmik/authService"
 import {
-  useCosmikOauthCodeVerification,
   useCosmikOauthRedirect,
 } from "@/services/cosmik/oauthService"
-import { useCosmikSignin } from "@/services/cosmik/signinService"
 import Bugsnag from "@bugsnag/js"
 import { cx } from "class-variance-authority"
 import { WalletIcon } from "lucide-react"
@@ -41,18 +39,12 @@ export function SigninDialog({
 }: SigninDialogProps) {
   const [displaySigninDialog, setDisplaySigninDialog] = useState(false)
   const { oauthRedirect, isPending } = useCosmikOauthRedirect()
+  const { signIn } = useAuth()
   const {
+    getUser,
     displayAuthorizationProcess,
     setDisplayAuthorizationProcess,
-    handleLoginSuccess,
-  } = useAuth()
-  const { getUser } = useUserAuthContext()
-
-  useEffect(() => {
-    if (displayAuthorizationProcess) {
-      setDisplaySigninDialog(false)
-    }
-  }, [displayAuthorizationProcess])
+  } = useUserAuthContext()
 
   const handleSigninDialogChange = useCallback(
     (open: boolean) => {
@@ -102,10 +94,7 @@ export function SigninDialog({
               Download Cosmik Battle
             </a>
           </p>
-          <SignInForm
-            onLoginSuccess={handleLoginSuccess}
-            isLoading={isReconnecting}
-          />
+          <SignInForm onLoginSuccess={signIn} isLoading={isReconnecting} />
           <OrDivider text="or" />
           <Button
             variant="ghost"
@@ -119,7 +108,7 @@ export function SigninDialog({
         </DialogContent>
       </Dialog>
 
-      {displayAuthorizationProcess && getUser() && (
+      {displayAuthorizationProcess && (
         <AuthorizationProcess
           isOpen={displayAuthorizationProcess}
           onClose={() => setDisplayAuthorizationProcess(false)}

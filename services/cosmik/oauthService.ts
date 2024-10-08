@@ -1,5 +1,7 @@
+import { useRouter } from "next/navigation"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { AxiosError } from "axios"
+import { Router } from "lucide-react"
 
 import { cosmikClient } from "@/lib/clients"
 import { toast } from "@/components/ui/toast/hooks/useToast"
@@ -33,6 +35,7 @@ export const useCosmikOauthRedirect = () => {
 export const useCosmikOauthCodeVerification = () => {
   const client = useQueryClient()
   const origin = typeof window !== "undefined" ? window.location.origin : ""
+  const router = useRouter()
 
   const { mutateAsync: oauthCodeVerification, isPending } = useMutation({
     mutationFn: async (code: string) => {
@@ -40,6 +43,7 @@ export const useCosmikOauthCodeVerification = () => {
         code,
         redirectUrl: `${origin}/auth/callback`,
       })
+      console.log("data", data)
       return data
     },
     onSuccess: () => {
@@ -48,15 +52,7 @@ export const useCosmikOauthCodeVerification = () => {
       })
     },
     onError: (error: AxiosError) => {
-      const errorMessage =
-        (error.response?.data as string) || "An error occurred"
-
-      toast({
-        title: "Error",
-        description: errorMessage,
-        variant: "destructive",
-        duration: 5000,
-      })
+      console.error(error)
     },
   })
 
