@@ -9,14 +9,14 @@ import { Loading } from "@/components/ui/Loading"
 
 export default function AuthCallbackPage() {
   const searchParams = useSearchParams()
-  const { handleOAuthCallback } = useAuth()
   const { userIsConnecting, userIsFullyConnected } = useUserAuthContext()
+  const code = searchParams.get("code")
 
-  // We need to disable strict mode locally to make the first connection flow with Google
+  const { verifyOAuthCodeAndSignIn } = useAuth()
+
   useEffect(() => {
-    const code = searchParams.get("code")
-    handleOAuthCallback(code)
-  }, [searchParams, handleOAuthCallback])
+    verifyOAuthCodeAndSignIn(code)
+  }, [code])
 
   if (userIsConnecting && !userIsFullyConnected) {
     return <Loading />

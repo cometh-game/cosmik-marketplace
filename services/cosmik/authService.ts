@@ -1,29 +1,31 @@
 import { useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { useConnectComethWallet } from "@/providers/authentication/comethConnectHooks"
-import { useCurrentCollectionContext } from "@/providers/currentCollection/currentCollectionContext"
 import { useUserAuthContext } from "@/providers/userAuth"
-import { useCosmikOauthCodeVerification } from "@/services/cosmik/oauthService"
 import { User } from "@/services/cosmik/signinService"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { AxiosError } from "axios"
+
+import { cosmikClient } from "@/lib/clients"
+import { toast } from "@/components/ui/toast/hooks/useToast"
 
 export function useAuth() {
   const router = useRouter()
   const { connectComethWallet, retrieveWalletAddress } =
     useConnectComethWallet()
-  const { currentCollectionAddress } = useCurrentCollectionContext()
   const {
     setUser,
     setUserIsConnecting,
     setUserIsFullyConnected,
     setDisplayAuthorizationProcess,
     userIsFullyConnected,
+    displayAuthorizationProcess,
   } = useUserAuthContext()
   const { oauthCodeVerification } = useCosmikOauthCodeVerification()
 
   const signIn = useCallback(
     async (user: User) => {
-      if (!user) return
-
+      if (!user || userIsFullyConnected) return
       try {
         setUserIsConnecting(true)
         setUser(user)
@@ -41,42 +43,79 @@ export function useAuth() {
     [connectComethWallet, retrieveWalletAddress]
   )
 
-  const handleOAuthCallback = useCallback(
+  const verifyOAuthCodeAndSignIn = useCallback(
     async (code: string | null) => {
-      const redirectTo = `/nfts/${currentCollectionAddress}`
-
       if (!code) {
-        router.push(redirectTo)
+        console.error("Code not found")
+        router.push("/nfts")
         return
       }
+      const { success, user } = await oauthCodeVerification(code)
 
-      try {
-        const { success, user } = await oauthCodeVerification(code)
-        if (success) {
+      if (success) {
+        router.push("/nfts")
+
+        if (!displayAuthorizationProcess) {
           await signIn(user)
-          if (userIsFullyConnected) {
-            console.log("user is fully connected", userIsFullyConnected)
-            // router.push(redirectTo)
-          }
-        } else {
-          throw new Error("OAuth code verification failed")
         }
-      } catch (error) {
-        console.error("Error during OAuth code verification", error)
-        // router.push("/redirectTo")
       }
     },
-    [
-      oauthCodeVerification,
-      signIn,
-      userIsFullyConnected,
-      router,
-      currentCollectionAddress,
-    ]
+    [displayAuthorizationProcess]
   )
 
   return {
     signIn,
-    handleOAuthCallback,
+    verifyOAuthCodeAndSignIn,
   }
+}
+
+export const useCosmikOauthRedirect = () => {
+  const origin = typeof window !== "undefined" ? window.location.origin : ""
+
+  const { mutate: oauthRedirect, isPending } = useMutation({
+    mutationFn: async () => {
+      const { data } = await cosmikClient.post("/oauth/url", {
+        redirectUrl: `${origin}/auth/callback`,
+      })
+      window.location.href = data.url
+    },
+    onError: (error: AxiosError) => {
+      const errorMessage =
+        (error.response?.data as string) || "An error occurred"
+
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+        duration: 5000,
+      })
+    },
+  })
+
+  return { oauthRedirect, isPending }
+}
+
+export const useCosmikOauthCodeVerification = () => {
+  const client = useQueryClient()
+  const origin = typeof window !== "undefined" ? window.location.origin : ""
+
+  const { mutateAsync: oauthCodeVerification, isPending } = useMutation({
+    mutationFn: async (code: string) => {
+      const { data } = await cosmikClient.post("/oauth/authenticate", {
+        code,
+        redirectUrl: `${origin}/auth/callback`,
+      })
+      return data
+    },
+    onSuccess: () => {
+      client.invalidateQueries({
+        queryKey: ["cosmik", "logged"],
+      })
+    },
+    onError: (error: AxiosError) => {
+      console.error(error)
+    },
+  })
+
+  return { oauthCodeVerification, isPending }
 }

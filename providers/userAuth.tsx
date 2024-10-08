@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react"
-import { usePathname } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
 import { useUserIsLogged } from "@/services/cosmik/userLoggedService"
 
 import { toast } from "@/components/ui/toast/hooks/useToast"
