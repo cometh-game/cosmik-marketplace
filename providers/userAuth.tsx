@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react"
-import { usePathname } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
 import { useUserIsLogged } from "@/services/cosmik/userLoggedService"
 
 import { toast } from "@/components/ui/toast/hooks/useToast"
@@ -13,6 +13,8 @@ const UserAuthContext = createContext<{
   setUserIsConnecting: (value: boolean) => void
   userIsFullyConnected: boolean
   setUserIsFullyConnected: (value: boolean) => void
+  displayAuthorizationProcess: boolean
+  setDisplayAuthorizationProcess: (value: boolean) => void
 }>({
   getUser: () => null,
   setUser: () => null,
@@ -20,6 +22,8 @@ const UserAuthContext = createContext<{
   setUserIsConnecting: () => null,
   userIsFullyConnected: false,
   setUserIsFullyConnected: () => null,
+  displayAuthorizationProcess: false,
+  setDisplayAuthorizationProcess: () => null,
 })
 
 export function useUserAuthContext() {
@@ -36,6 +40,8 @@ export const UserAuthProvider = ({
   const [userIsFullyConnected, setUserIsFullyConnected] = useState(false)
   const { connectComethWallet, disconnect } = useConnectComethWallet()
   const [userIsConnecting, setUserIsConnecting] = useState(false)
+  const [displayAuthorizationProcess, setDisplayAuthorizationProcess] =
+    useState(false)
 
   const pathname = usePathname()
   const isWalletConnectionNotRequired =
@@ -110,6 +116,8 @@ export const UserAuthProvider = ({
         setUserIsConnecting,
         userIsFullyConnected,
         setUserIsFullyConnected,
+        displayAuthorizationProcess,
+        setDisplayAuthorizationProcess,
       }}
     >
       {children}

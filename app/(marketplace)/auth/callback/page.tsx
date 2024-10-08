@@ -1,51 +1,24 @@
 "use client"
 
 import { useEffect } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { useCurrentCollectionContext } from "@/providers/currentCollection/currentCollectionContext"
+import { useSearchParams } from "next/navigation"
 import { useUserAuthContext } from "@/providers/userAuth"
 import { useAuth } from "@/services/cosmik/authService"
 
 import { Loading } from "@/components/ui/Loading"
 
-export default function Page() {
+export default function AuthCallbackPage() {
   const searchParams = useSearchParams()
+  const { userIsConnecting, userIsFullyConnected } = useUserAuthContext()
   const code = searchParams.get("code")
 
-  const router = useRouter()
-
-  const { currentCollectionAddress } = useCurrentCollectionContext()
-  const { displayAuthorizationProcess, handleGoogleAuth } = useAuth()
-  const { userIsConnecting, setUserIsConnecting } = useUserAuthContext()
+  const { verifyOAuthCodeAndSignIn } = useAuth()
 
   useEffect(() => {
-    const handleAuth = async () => {
-      const redirectTo = `/nfts/${currentCollectionAddress}`
+    verifyOAuthCodeAndSignIn(code)
+  }, [code])
 
-      if (code) {
-        try {
-          setUserIsConnecting(true)
-          await handleGoogleAuth(code)
-          if (!displayAuthorizationProcess) {
-            router.push(redirectTo)
-          }
-        } catch (error) {
-          console.error(error)
-        }
-      } else {
-        router.push(redirectTo)
-      }
-    }
-
-    handleAuth()
-  }, [
-    code,
-    currentCollectionAddress,
-    handleGoogleAuth,
-    displayAuthorizationProcess,
-  ])
-
-  if (userIsConnecting || displayAuthorizationProcess) {
+  if (userIsConnecting && !userIsFullyConnected) {
     return <Loading />
   }
 

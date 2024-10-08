@@ -32,7 +32,7 @@ export default function LegendaProgramPage() {
   } = useUserAuthContext()
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleLoginSuccess = useCallback(
+  const signIn = useCallback(
     async (user: User) => {
       try {
         setIsLoading(true)
@@ -56,7 +56,7 @@ export default function LegendaProgramPage() {
       {(userIsConnecting || isLoading) && <Loading />}
       {!userIsFullyConnected && !userIsConnecting ? (
         <DynamicSigninDialog
-          onLoginSuccess={handleLoginSuccess}
+          onLoginSuccess={signIn}
           isLoading={isLoading}
         />
       ) : (

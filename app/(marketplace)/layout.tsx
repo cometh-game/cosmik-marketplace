@@ -27,12 +27,12 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     // <ErrorBoundary>
-      <MarketplaceProviders>
-        <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden">
-          <SiteHeader />
-          <AppContent>{children}</AppContent>
-        </div>
-      </MarketplaceProviders>
+    <MarketplaceProviders>
+      <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+        <SiteHeader />
+        <AppContent>{children}</AppContent>
+      </div>
+    </MarketplaceProviders>
     // </ErrorBoundary>
   )
 }

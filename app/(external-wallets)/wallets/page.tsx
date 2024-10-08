@@ -39,7 +39,7 @@ export default function WalletsPage() {
     }
   }, [])
 
-  const handleLoginSuccess = useCallback(
+  const signIn = useCallback(
     async (user: User) => {
       try {
         setIsLoading(true)
@@ -63,7 +63,7 @@ export default function WalletsPage() {
       {userIsConnecting && <Loading />}
       {!userIsFullyConnected && !userIsConnecting ? (
         <DynamicSigninDialog
-          onLoginSuccess={handleLoginSuccess}
+          onLoginSuccess={signIn}
           isLoading={isLoading}
         />
       ) : (
