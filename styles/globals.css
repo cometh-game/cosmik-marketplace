@@ -41,8 +41,8 @@
   --secondary: 233 31% 11%;
   --secondary-foreground: 0 0% 100%;
 
-  --third: 240 38% 21%;
-  --third-foreground: 225 54% 70%;
+  --tertiary: 240 38% 21%;
+  --tertiary-foreground: 225 54% 70%;
 
   --accent: 234 28% 75%;
   --accent-foreground: 61 100% 84%;
@@ -71,6 +71,16 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1 "calt" 1;
+  }
+
+  /* divider "OR" component */
+  .divider {
+    @apply flex items-center justify-center gap-2.5;
+  }
+
+  .divider::before,
+  .divider::after {
+    @apply content-[''] flex-1 h-[1px] bg-white/10;
   }
 }
 

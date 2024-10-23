@@ -31,9 +31,7 @@ export function CurrentAccountDropdown({
   const account = useAccount()
   const viewerAddress = account.address
   const { width } = useWindowSize()
-  const { user, isFetching: isFetchingUsername } = useGetUser(
-    viewerAddress as string
-  )
+  const { user } = useGetUser(viewerAddress as `0x${string}`)
 
   const isMobile = width < 640
 
@@ -42,12 +40,7 @@ export function CurrentAccountDropdown({
       <DropdownMenuTrigger asChild>
         <Button size={isMobile ? "icon" : "default"} variant={buttonVariant}>
           <User size="18" className="md:mr-1" />
-          {!isMobile &&
-            (isFetchingUsername ? (
-              <span>...</span>
-            ) : (
-              <span>@{user?.userName}</span>
-            ))}
+          {!isMobile && <span>@{user?.userName}</span>}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent variant="dialog" align="end" asChild>

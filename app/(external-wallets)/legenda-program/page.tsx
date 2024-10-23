@@ -24,7 +24,7 @@ const DynamicLegendaProgramProcess = dynamic(
 
 export default function LegendaProgramPage() {
   const {
-    userIsReconnecting,
+    userIsConnecting,
     userIsFullyConnected,
     getUser,
     setUser,
@@ -32,7 +32,7 @@ export default function LegendaProgramPage() {
   } = useUserAuthContext()
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleLoginSuccess = useCallback(
+  const signIn = useCallback(
     async (user: User) => {
       try {
         setIsLoading(true)
@@ -53,10 +53,10 @@ export default function LegendaProgramPage() {
 
   return (
     <div className="container mx-auto flex items-center justify-center gap-4 py-5 sm:py-6">
-      {(userIsReconnecting || isLoading) && <Loading />}
-      {!userIsFullyConnected && !userIsReconnecting ? (
+      {(userIsConnecting || isLoading) && <Loading />}
+      {!userIsFullyConnected && !userIsConnecting ? (
         <DynamicSigninDialog
-          onLoginSuccess={handleLoginSuccess}
+          onLoginSuccess={signIn}
           isLoading={isLoading}
         />
       ) : (

@@ -1,6 +1,7 @@
 "use client"
 
 import { useAttributeFilters } from "@/services/cometh-marketplace/filtersService"
+import { useGetUser } from "@/services/cosmik/userService"
 import { ArrowLeftIcon, UserIcon } from "lucide-react"
 import { Address } from "viem"
 
@@ -11,7 +12,6 @@ import { Link } from "@/components/ui/Link"
 import { ShareButton } from "@/components/ui/ShareButton"
 import { AccountAssetActivities } from "@/components/activities/account/tabs/AccountAssetActivities"
 import { AssetsSearchGrid } from "@/components/marketplace/grid/AssetSearchGrid"
-import { useGetUser } from "@/services/cosmik/userService"
 
 export default function ProfilePage({
   params,
@@ -21,7 +21,7 @@ export default function ProfilePage({
   const attributesFilters = useAttributeFilters()
   const { user, isFetching: isFetchingUsername } = useGetUser(params.address)
   const userName =
-  user?.userName && !isFetchingUsername
+    user?.userName && !isFetchingUsername
       ? `@${user.userName}`
       : shortenAddress(params.address)
 

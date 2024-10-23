@@ -41,8 +41,8 @@ export default {
           foreground: "hsl(var(--secondary-foreground))",
         },
         third: {
-          DEFAULT: "hsl(var(--third))",
-          foreground: "hsl(var(--third-foreground))",
+          DEFAULT: "hsl(var(--tertiary))",
+          foreground: "hsl(var(--tertiary-foreground))",
         },
         success: {
           DEFAULT: "hsl(var(--success))",

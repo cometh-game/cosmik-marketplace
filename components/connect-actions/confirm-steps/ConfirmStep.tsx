@@ -59,9 +59,10 @@ export const ConfirmStep: React.FC<ConfirmStepProps> = ({
           <br />
           In order to make purchases within the marketplace, players must
           possess ETH in their Smart Wallet on the Muster Network. <br />
-          <span className="font-semibold">Please visit
-          our tutorials for comprehensive guidance on wallet management and
-          funds transfer:</span>
+          <span className="font-semibold">
+            Please visit our tutorials for comprehensive guidance on wallet
+            management and funds transfer:
+          </span>
         </p>
         <ul className="ml-5 list-disc">
           <li>
@@ -97,7 +98,12 @@ export const ConfirmStep: React.FC<ConfirmStepProps> = ({
           with ETH
         </Label>
       </div>
-      <Button size="lg" onClick={handleConfirmClick} disabled={!hasReading} isLoading={isLoading}>
+      <Button
+        size="lg"
+        onClick={handleConfirmClick}
+        disabled={!hasReading}
+        isLoading={isLoading}
+      >
         Confirm
       </Button>
     </>

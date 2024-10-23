@@ -30,7 +30,7 @@ export const UserButton = function UserButton({
 
   return (
     <Link href={userProfileHref} className="color-inherit">
-      <Button variant={variant ?? "third"} className="font-medium" {...props}>
+      <Button variant={variant ?? "tertiary"} className="font-medium" {...props}>
         {icon(user)} {content}
       </Button>
     </Link>

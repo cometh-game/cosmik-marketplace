@@ -82,7 +82,7 @@ const WalletAssetTransfer = () => {
       <div>
         <div className="flex items-center justify-between gap-2">
           <div className="text-xl font-bold">Assets</div>
-          <Button size="sm" variant="third" onClick={refreshAssets}>
+          <Button size="sm" variant="tertiary" onClick={refreshAssets}>
             <RotateCcw size={16} />
           </Button>
         </div>
@@ -169,7 +169,7 @@ const WalletDebugPanels = () => {
           <div className="text-xl font-bold">
             Cometh Wallets stored in your local storage
           </div>
-          <Button size="sm" variant="third" onClick={refresh}>
+          <Button size="sm" variant="tertiary" onClick={refresh}>
             <RotateCcw size={16} />
           </Button>
         </div>
